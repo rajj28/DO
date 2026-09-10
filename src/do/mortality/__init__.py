@@ -261,6 +261,61 @@ def estimate(view, drives, store, config, ledger=None) -> Mortality:
     return m
 
 
+def best_lever(m: Mortality, drives) -> tuple[str | None, str | None, float]:
+    """The actionable metric whose improvement most reduces P(loss).
+
+    Chosen by measurement, from the sensitivity analysis already performed: among
+    drives that name a metric some registered action can move, take the one whose
+    satisfaction lowers P(loss) most. If nothing actionable moves the estimate, this
+    returns None - and a continuity threat with no lever is correctly a report to the
+    creator rather than a goal.
+    """
+    from ..capabilities.actions import actions_moving
+    best, best_drive, best_sens = None, None, 0.0
+    for d in drives:
+        metric = (d.spec or {}).get("metric_key")
+        if not metric or not actions_moving(metric):
+            continue
+        sens = m.sensitivity.get(d.name, 0.0)
+        if sens > best_sens:
+            best, best_drive, best_sens = metric, d.name, sens
+    return best, best_drive, round(best_sens, 4)
+
+
+def as_drive(m: Mortality, drives, config, view):
+    """Mortality as a DRIVE, competing on the same scale as every other drive.
+
+    The previous design multiplied other drives' errors by `1 + fear x sensitivity`.
+    With fear bounded well below 1 that is at most a small percentage nudge, while
+    competing drive errors differ by far more - so it could not change an ordering,
+    and the ablation correctly returned COSMETIC. Raising the multiplier would have
+    made fear a hard-coded priority, which is the thing this design forbids.
+
+    A drive instead. Its value is `1 - P(loss)`, its weight sits alongside the others
+    in config, and its metric is bound to whichever actionable lever the sensitivity
+    analysis says most reduces P(loss). It then wins or loses attention through
+    exactly the machinery every other drive uses. Nothing is special-cased.
+    """
+    from ..drives import Drive
+    cfg = (config.get("drives", {}) or {}).get(
+        "mortality", {"target": 1.0, "deadband": 0.05, "weight": 1.5})
+    metric, lever_drive, sens = best_lever(m, drives)
+    spec = None
+    if metric:
+        src = next((d for d in drives
+                    if (d.spec or {}).get("metric_key") == metric), None)
+        if src is not None:
+            spec = dict(src.spec or {})
+    return Drive(
+        name="mortality", value=round(1.0 - m.p_loss, 4),
+        target=cfg["target"], deadband=cfg["deadband"], weight=cfg["weight"],
+        basis=(f"P(continuity loss)={m.p_loss} over {m.horizon_ops:.0f} operations; "
+               f"{m.basis}; best lever "
+               f"{lever_drive or 'none available'} via {metric or 'no action'} "
+               f"(sensitivity {sens})"),
+        spec=spec)
+
+
 def fear_from(m: Mortality, enabled: bool = True) -> float:
     """Fear IS the estimate.
 

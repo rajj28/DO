@@ -57,6 +57,10 @@ DEFAULTS: dict[str, Any] = {
         "continuity":    {"target": 1.00, "deadband": 0.15, "weight": 1.3},
         "frugality":     {"target": 0.50, "deadband": 0.20, "weight": 1.2},
         "recovery":      {"target": 1.00, "deadband": 0.20, "weight": 1.2},
+        # Continuity threat, as a drive rather than a multiplier. Its weight sits on
+        # the same footing as the others; it wins attention through the same salience
+        # machinery, or it does not.
+        "mortality":     {"target": 1.00, "deadband": 0.05, "weight": 1.5},
         "capability":    {"target": 0.80, "deadband": 0.15, "weight": 0.9},
         "standing":      {"target": 0.50, "deadband": 0.20, "weight": 1.1},
     },

@@ -296,8 +296,12 @@ def _mortal(view, drives, store, config, ledger=None):
     m = mortality_mod.estimate(view, drives, store, config, ledger)
     enabled = bool(config.get("mortality.fear_enabled", True))
     fear = mortality_mod.fear_from(m, enabled)
-    errs = mortality_mod.amplify(error_map(drives), m, fear)
-    return m, fear, errs
+    if enabled:
+        # Fear competes rather than modulates. Appending the drive is the whole
+        # channel: from here it is scored, ranked and acted on by exactly the
+        # machinery every other drive uses.
+        drives.append(mortality_mod.as_drive(m, drives, config, view))
+    return m, fear, error_map(drives)
 
 
 def _rank(found, view, store, config, ctx):
@@ -463,7 +467,8 @@ def tick(org: Organism, quiet: bool = False) -> dict:
             "dominant": dom.name if dom else None}
 
 
-def cycle(org: Organism, quiet: bool = True) -> dict:
+def cycle(org: Organism, quiet: bool = True,
+          perturb: dict | None = None) -> dict:
     """One full survival cycle.
 
         OBSERVE -> CONSTRAIN -> PRIORITIZE -> OBJECTIVE -> CANDIDATES -> EVALUATE
@@ -492,7 +497,11 @@ def cycle(org: Organism, quiet: bool = True) -> dict:
     rec: dict = {"cycle": c, "acted": False, "escalations": []}
 
     def observe() -> None:
-        s = Sensors()
+        # The perturbation must be re-applied on every observation. Without it a
+        # deteriorating-world experiment silently reverts to the real machine at the
+        # top of each cycle, so the decline exists only in the seed boots and the
+        # threat the harness thinks it created never reaches the organism.
+        s = Sensors(perturb=perturb)
         s.compute(); s.memory(); s.storage(); s.clock()
         footprint.observe(s, state_dir, Path(cfg.get("organism.workspace_root")
                                              or cfg.root), quota)

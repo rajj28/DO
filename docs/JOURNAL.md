@@ -265,3 +265,72 @@ goal went unmet in both arms.
 Also: `experiments/first_boot/environment.json` embeds 96 environment *variable names*
 (values never read). Acceptable in a private repo; must be scrubbed before anything
 public.
+
+---
+
+## M8 — Mortality and the fear ablation
+
+**Question.** environment changes → P(continuity loss) → fear → goal priorities →
+plans → **actions**. Control: identical world and state, `fear_enabled = False`.
+
+**Design constraint that shaped everything:** fear must not become a second hidden
+rule. So `P(loss) = P(interruption) × P(cannot recover)` is *estimated* from trends
+over D.O.'s own episodic history, **fear is defined as** that estimate, and each
+drive's relevance to continuity is **measured** by setting its metric to the
+satisfying value and recomputing. No list of survival-relevant drives exists.
+
+### First result: COSMETIC — and correct to report
+
+Fear rose with deterioration, stayed at 0.0 in a stable world, and localised the
+threat correctly. Behaviour was **identical to the control**.
+
+The cause was structural, not a bug. Fear reached behaviour through
+`err × (1 + fear × sensitivity)` — at most a ~17% nudge, while competing drive errors
+differ by far more. **It could not flip an ordering by construction.** Raising the
+multiplier would have made fear a hard-coded priority, so it was left and reported.
+
+### Three instrument defects found before any verdict was trusted
+
+1. **Resource gaps came from a hand-written list of three metrics**, so the `recovery`
+   drive could never become a gap and `write_recovery_snapshot` was unreachable. The
+   mechanism could not fire. Gaps are now derived from any drive declaring a metric.
+2. **Trends were fitted over wall-clock seconds** while boots occur milliseconds
+   apart: a 100 MB RAM jitter read as −50 MB/s and ~1 minute of runway, putting fear
+   at 0.33 in a stable world. Rates are now fitted **per operation**, with a
+   consistency test that rejects a slope through noise.
+3. **`cycle()` re-observes at the top**, silently overwriting the harness's injected
+   decay with the real machine. The deteriorating world existed only during seed
+   boots and never reached the organism. `cycle()` now accepts the perturbation.
+
+### The fix: fear competes, it does not modulate
+
+Mortality now emits a **drive** whose value is `1 − P(loss)`, with a weight alongside
+every other drive in config, and its metric bound to whichever **actionable** lever
+the sensitivity analysis says most reduces `P(loss)`. It then wins or loses attention
+through exactly the machinery every other drive uses.
+
+### Second result: SUPPORTED
+
+| | fear ON | fear OFF (identical world) |
+|---|---|---|
+| p_interrupt | 0.6193 | 0.6193 |
+| recovery paths | 1 | 1 |
+| p_loss = fear | **0.3096** | 0.0 |
+| sensitivity | continuity 0.667, recovery 0.333, rest 0.0 | — |
+| focus | `resources.own.recovery_paths` | `resources.own.quota_used_ratio` |
+| action | **`write_recovery_snapshot`** | `diagnose_footprint` |
+| end paths | 2 | 1 |
+
+Under rising continuity risk D.O. switched from **reclaiming storage to preserving
+persistent state**; the control facing the same world kept reclaiming. In a stable
+world both arms were byte-identical and fear stayed at 0.0 — the signal does not fire
+when nothing is wrong.
+
+`continuity` had the highest sensitivity (0.667) but no action moves the host disk, so
+the lever selection skipped it for `recovery` (0.333). **Nothing says "when
+threatened, snapshot."** The chain is: trend → p_interrupt → p_loss → mortality drive
+→ sensitivity picks the actionable lever → gap → objective → action.
+
+**What is still seeded:** the mortality drive's weight (1.5), the horizon (20
+operations), and `CONTINUITY_METRICS` — the three resources whose exhaustion counts as
+an interruption. Those are assumptions, not discoveries.

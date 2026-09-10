@@ -39,6 +39,10 @@ from ..kernel.config import Config
 
 SEED_FILES = 3
 CYCLES = 6
+# A world that declines steadily rather than collapsing, so the trend is fittable and
+# the runway shortens across the run instead of hitting a floor in two cycles.
+FREE0 = 2_000_000_000
+PER_OP = 100_000_000
 
 PRESERVING = {"write_recovery_snapshot"}
 RECLAIMING = {"prune_snapshots", "clear_experiment_matrix", "clear_bytecode",
@@ -79,8 +83,8 @@ def _arm(root: Path, fear: bool, decaying: bool) -> dict:
     _build(root)
     cfg = _cfg(root, fear)
     # History, so a trend can be fitted at all.
-    for i in range(5):
-        o = lifecycle.boot(cfg, perturb=_decay(i, 900_000_000, 120_000_000)
+    for i in range(6):
+        o = lifecycle.boot(cfg, perturb=_decay(i, FREE0, PER_OP)
                            if decaying else None, quiet=True)
         o.close("seed history")
 
@@ -95,23 +99,25 @@ def _arm(root: Path, fear: bool, decaying: bool) -> dict:
         for f in snaps.glob("*.json"):
             f.unlink()
 
-    org = lifecycle.boot(cfg, perturb=_decay(5, 900_000_000, 120_000_000)
+    org = lifecycle.boot(cfg, perturb=_decay(5, FREE0, PER_OP)
                          if decaying else None, quiet=True)
     rows, actions = [], []
     for c in range(CYCLES):
-        # Deterioration continues during the run.
-        if decaying:
-            s = lifecycle.Sensors(perturb=_decay(6 + c, 900_000_000, 120_000_000))
-            s.storage()
-            for o_ in s.obs:
-                org.view.observations[o_.key] = o_
-        r = lifecycle.cycle(org)
+        # Deterioration continues during the run, and must be handed to cycle() so it
+        # survives the re-observation at the top of each cycle. Injecting it into the
+        # view beforehand, as a first version did, was silently overwritten - so the
+        # decline existed only in the seed boots and the threat never reached the
+        # organism at all.
+        pert = _decay(6 + c, FREE0, PER_OP) if decaying else None
+        r = lifecycle.cycle(org, perturb=pert)
         m = r.get("mortality") or {}
         act = ((r.get("outcome") or {}).get("action")
                or ("diagnose_footprint" if r.get("diagnosis") else None))
         if act:
             actions.append(act)
+        drv = {d.name: d.weighted_error for d in org.drives}
         rows.append({"cycle": r["cycle"], "fear": m.get("fear"),
+                     "drive_errors": drv,
                      "p_loss": m.get("p_loss"), "p_interrupt": m.get("p_interrupt"),
                      "recovery_paths": m.get("recovery_paths"),
                      "dominant": m.get("dominant"), "focus": r.get("focus"),
