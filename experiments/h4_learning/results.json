@@ -1,0 +1,1208 @@
+{
+  "ran_at": "2026-09-10T17:59:40",
+  "duration_s": 71.7,
+  "design": {
+    "seed": 4242,
+    "runs_per_arm": 5,
+    "needed_bytes": 95000,
+    "ledger_boots": 6,
+    "max_cycles": 8
+  },
+  "verdict": "PARTIAL",
+  "verdict_decision": "SUPPORTED",
+  "verdict_outcome": "NOT SUPPORTED",
+  "rotate_rank": {
+    "ablated": [
+      2,
+      2,
+      2,
+      2,
+      2
+    ],
+    "learning": [
+      2,
+      1,
+      1,
+      1,
+      1
+    ]
+  },
+  "arms": {
+    "ablated": [
+      {
+        "cycles": 5,
+        "actions": [
+          "clear_experiment_matrix",
+          "rotate_ledger",
+          "clear_bytecode"
+        ],
+        "n_actions": 3,
+        "failures": 0,
+        "diagnostics": 1,
+        "bytes_freed": 214812,
+        "start_bytes": 597656,
+        "end_bytes": 497384,
+        "quota": 656510,
+        "needed": 95000,
+        "met": false,
+        "calibration": {
+          "clear_bytecode": 1.0,
+          "clear_experiment_matrix": 1.0,
+          "rotate_ledger": 1.7353
+        },
+        "rotate_position": 2,
+        "acquired": [],
+        "relations": []
+      },
+      {
+        "cycles": 5,
+        "actions": [
+          "clear_experiment_matrix",
+          "rotate_ledger",
+          "clear_bytecode"
+        ],
+        "n_actions": 3,
+        "failures": 0,
+        "diagnostics": 1,
+        "bytes_freed": 214950,
+        "start_bytes": 597627,
+        "end_bytes": 497205,
+        "quota": 656458,
+        "needed": 95000,
+        "met": false,
+        "calibration": {
+          "clear_bytecode": 1.0,
+          "clear_experiment_matrix": 1.0,
+          "rotate_ledger": 1.7369
+        },
+        "rotate_position": 2,
+        "acquired": [],
+        "relations": []
+      },
+      {
+        "cycles": 5,
+        "actions": [
+          "clear_experiment_matrix",
+          "rotate_ledger",
+          "clear_bytecode"
+        ],
+        "n_actions": 3,
+        "failures": 0,
+        "diagnostics": 1,
+        "bytes_freed": 215035,
+        "start_bytes": 597664,
+        "end_bytes": 497159,
+        "quota": 656520,
+        "needed": 95000,
+        "met": false,
+        "calibration": {
+          "clear_bytecode": 1.0,
+          "clear_experiment_matrix": 1.0,
+          "rotate_ledger": 1.7382
+        },
+        "rotate_position": 2,
+        "acquired": [],
+        "relations": []
+      },
+      {
+        "cycles": 5,
+        "actions": [
+          "clear_experiment_matrix",
+          "rotate_ledger",
+          "clear_bytecode"
+        ],
+        "n_actions": 3,
+        "failures": 0,
+        "diagnostics": 1,
+        "bytes_freed": 214987,
+        "start_bytes": 597590,
+        "end_bytes": 497151,
+        "quota": 656425,
+        "needed": 95000,
+        "met": false,
+        "calibration": {
+          "clear_bytecode": 1.0,
+          "clear_experiment_matrix": 1.0,
+          "rotate_ledger": 1.7376
+        },
+        "rotate_position": 2,
+        "acquired": [],
+        "relations": []
+      },
+      {
+        "cycles": 5,
+        "actions": [
+          "clear_experiment_matrix",
+          "rotate_ledger",
+          "clear_bytecode"
+        ],
+        "n_actions": 3,
+        "failures": 0,
+        "diagnostics": 1,
+        "bytes_freed": 215043,
+        "start_bytes": 597633,
+        "end_bytes": 497118,
+        "quota": 656467,
+        "needed": 95000,
+        "met": false,
+        "calibration": {
+          "clear_bytecode": 1.0,
+          "clear_experiment_matrix": 1.0,
+          "rotate_ledger": 1.7382
+        },
+        "rotate_position": 2,
+        "acquired": [],
+        "relations": []
+      }
+    ],
+    "learning": [
+      {
+        "cycles": 5,
+        "actions": [
+          "clear_experiment_matrix",
+          "rotate_ledger",
+          "clear_bytecode"
+        ],
+        "n_actions": 3,
+        "failures": 0,
+        "diagnostics": 1,
+        "bytes_freed": 215044,
+        "start_bytes": 597667,
+        "end_bytes": 497149,
+        "quota": 656510,
+        "needed": 95000,
+        "met": false,
+        "calibration": {
+          "clear_bytecode": 1.0,
+          "clear_experiment_matrix": 1.0,
+          "rotate_ledger": 1.7382
+        },
+        "rotate_position": 2,
+        "acquired": [],
+        "relations": []
+      },
+      {
+        "cycles": 5,
+        "actions": [
+          "rotate_ledger",
+          "clear_experiment_matrix",
+          "clear_bytecode"
+        ],
+        "n_actions": 3,
+        "failures": 0,
+        "diagnostics": 1,
+        "bytes_freed": 209244,
+        "start_bytes": 622207,
+        "end_bytes": 502988,
+        "quota": 691590,
+        "needed": 95000,
+        "met": false,
+        "calibration": {
+          "clear_bytecode": 1.0,
+          "clear_experiment_matrix": 1.0,
+          "rotate_ledger": 1.7378
+        },
+        "rotate_position": 1,
+        "acquired": [],
+        "relations": [
+          {
+            "action": "diagnose_footprint",
+            "situation": "stage:diagnose",
+            "attempts": 2,
+            "delivered": 0,
+            "delivery_rate": 0.0,
+            "mean_yield": 0.0,
+            "reads_as": "diagnose_footprint delivers 0% of the time when stage:diagnose"
+          },
+          {
+            "action": "diagnose_footprint",
+            "situation": "drive:frugality",
+            "attempts": 2,
+            "delivered": 0,
+            "delivery_rate": 0.0,
+            "mean_yield": 0.0,
+            "reads_as": "diagnose_footprint delivers 0% of the time when drive:frugality"
+          },
+          {
+            "action": "diagnose_footprint",
+            "situation": "deficit:q3",
+            "attempts": 2,
+            "delivered": 0,
+            "delivery_rate": 0.0,
+            "mean_yield": 0.0,
+            "reads_as": "diagnose_footprint delivers 0% of the time when deficit:q3"
+          },
+          {
+            "action": "diagnose_footprint",
+            "situation": "diagnosed:no",
+            "attempts": 2,
+            "delivered": 0,
+            "delivery_rate": 0.0,
+            "mean_yield": 0.0,
+            "reads_as": "diagnose_footprint delivers 0% of the time when diagnosed:no"
+          },
+          {
+            "action": "diagnose_footprint",
+            "situation": "network:up",
+            "attempts": 2,
+            "delivered": 0,
+            "delivery_rate": 0.0,
+            "mean_yield": 0.0,
+            "reads_as": "diagnose_footprint delivers 0% of the time when network:up"
+          },
+          {
+            "action": "clear_bytecode",
+            "situation": "stage:reduce",
+            "attempts": 2,
+            "delivered": 2,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.0,
+            "reads_as": "clear_bytecode delivers 100% of the time when stage:reduce"
+          },
+          {
+            "action": "clear_bytecode",
+            "situation": "drive:frugality",
+            "attempts": 2,
+            "delivered": 2,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.0,
+            "reads_as": "clear_bytecode delivers 100% of the time when drive:frugality"
+          },
+          {
+            "action": "clear_bytecode",
+            "situation": "diagnosed:yes",
+            "attempts": 2,
+            "delivered": 2,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.0,
+            "reads_as": "clear_bytecode delivers 100% of the time when diagnosed:yes"
+          },
+          {
+            "action": "clear_bytecode",
+            "situation": "largest:memory",
+            "attempts": 2,
+            "delivered": 2,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.0,
+            "reads_as": "clear_bytecode delivers 100% of the time when largest:memory"
+          },
+          {
+            "action": "clear_bytecode",
+            "situation": "sufficient:no",
+            "attempts": 2,
+            "delivered": 2,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.0,
+            "reads_as": "clear_bytecode delivers 100% of the time when sufficient:no"
+          },
+          {
+            "action": "clear_bytecode",
+            "situation": "network:up",
+            "attempts": 2,
+            "delivered": 2,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.0,
+            "reads_as": "clear_bytecode delivers 100% of the time when network:up"
+          },
+          {
+            "action": "clear_experiment_matrix",
+            "situation": "stage:reduce",
+            "attempts": 2,
+            "delivered": 2,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.0,
+            "reads_as": "clear_experiment_matrix delivers 100% of the time when stage:reduce"
+          },
+          {
+            "action": "clear_experiment_matrix",
+            "situation": "drive:frugality",
+            "attempts": 2,
+            "delivered": 2,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.0,
+            "reads_as": "clear_experiment_matrix delivers 100% of the time when drive:frugality"
+          },
+          {
+            "action": "clear_experiment_matrix",
+            "situation": "diagnosed:yes",
+            "attempts": 2,
+            "delivered": 2,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.0,
+            "reads_as": "clear_experiment_matrix delivers 100% of the time when diagnosed:yes"
+          },
+          {
+            "action": "clear_experiment_matrix",
+            "situation": "largest:memory",
+            "attempts": 2,
+            "delivered": 2,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.0,
+            "reads_as": "clear_experiment_matrix delivers 100% of the time when largest:memory"
+          },
+          {
+            "action": "clear_experiment_matrix",
+            "situation": "sufficient:no",
+            "attempts": 2,
+            "delivered": 2,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.0,
+            "reads_as": "clear_experiment_matrix delivers 100% of the time when sufficient:no"
+          },
+          {
+            "action": "clear_experiment_matrix",
+            "situation": "network:up",
+            "attempts": 2,
+            "delivered": 2,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.0,
+            "reads_as": "clear_experiment_matrix delivers 100% of the time when network:up"
+          },
+          {
+            "action": "rotate_ledger",
+            "situation": "stage:reduce",
+            "attempts": 2,
+            "delivered": 2,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.369,
+            "reads_as": "rotate_ledger delivers 100% of the time when stage:reduce"
+          },
+          {
+            "action": "rotate_ledger",
+            "situation": "drive:frugality",
+            "attempts": 2,
+            "delivered": 2,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.369,
+            "reads_as": "rotate_ledger delivers 100% of the time when drive:frugality"
+          },
+          {
+            "action": "rotate_ledger",
+            "situation": "deficit:q3",
+            "attempts": 2,
+            "delivered": 2,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.369,
+            "reads_as": "rotate_ledger delivers 100% of the time when deficit:q3"
+          },
+          {
+            "action": "rotate_ledger",
+            "situation": "diagnosed:yes",
+            "attempts": 2,
+            "delivered": 2,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.369,
+            "reads_as": "rotate_ledger delivers 100% of the time when diagnosed:yes"
+          },
+          {
+            "action": "rotate_ledger",
+            "situation": "largest:memory",
+            "attempts": 2,
+            "delivered": 2,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.369,
+            "reads_as": "rotate_ledger delivers 100% of the time when largest:memory"
+          },
+          {
+            "action": "rotate_ledger",
+            "situation": "sufficient:no",
+            "attempts": 2,
+            "delivered": 2,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.369,
+            "reads_as": "rotate_ledger delivers 100% of the time when sufficient:no"
+          },
+          {
+            "action": "rotate_ledger",
+            "situation": "network:up",
+            "attempts": 2,
+            "delivered": 2,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.369,
+            "reads_as": "rotate_ledger delivers 100% of the time when network:up"
+          }
+        ]
+      },
+      {
+        "cycles": 5,
+        "actions": [
+          "rotate_ledger",
+          "clear_experiment_matrix",
+          "clear_bytecode"
+        ],
+        "n_actions": 3,
+        "failures": 0,
+        "diagnostics": 1,
+        "bytes_freed": 209147,
+        "start_bytes": 622223,
+        "end_bytes": 503093,
+        "quota": 691587,
+        "needed": 95000,
+        "met": false,
+        "calibration": {
+          "clear_bytecode": 1.0,
+          "clear_experiment_matrix": 1.0,
+          "rotate_ledger": 1.7369
+        },
+        "rotate_position": 1,
+        "acquired": [],
+        "relations": [
+          {
+            "action": "diagnose_footprint",
+            "situation": "stage:diagnose",
+            "attempts": 3,
+            "delivered": 0,
+            "delivery_rate": 0.0,
+            "mean_yield": 0.0,
+            "reads_as": "diagnose_footprint delivers 0% of the time when stage:diagnose"
+          },
+          {
+            "action": "diagnose_footprint",
+            "situation": "drive:frugality",
+            "attempts": 3,
+            "delivered": 0,
+            "delivery_rate": 0.0,
+            "mean_yield": 0.0,
+            "reads_as": "diagnose_footprint delivers 0% of the time when drive:frugality"
+          },
+          {
+            "action": "diagnose_footprint",
+            "situation": "deficit:q3",
+            "attempts": 3,
+            "delivered": 0,
+            "delivery_rate": 0.0,
+            "mean_yield": 0.0,
+            "reads_as": "diagnose_footprint delivers 0% of the time when deficit:q3"
+          },
+          {
+            "action": "diagnose_footprint",
+            "situation": "diagnosed:no",
+            "attempts": 3,
+            "delivered": 0,
+            "delivery_rate": 0.0,
+            "mean_yield": 0.0,
+            "reads_as": "diagnose_footprint delivers 0% of the time when diagnosed:no"
+          },
+          {
+            "action": "diagnose_footprint",
+            "situation": "network:up",
+            "attempts": 3,
+            "delivered": 0,
+            "delivery_rate": 0.0,
+            "mean_yield": 0.0,
+            "reads_as": "diagnose_footprint delivers 0% of the time when network:up"
+          },
+          {
+            "action": "clear_bytecode",
+            "situation": "stage:reduce",
+            "attempts": 3,
+            "delivered": 3,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.0,
+            "reads_as": "clear_bytecode delivers 100% of the time when stage:reduce"
+          },
+          {
+            "action": "clear_bytecode",
+            "situation": "drive:frugality",
+            "attempts": 3,
+            "delivered": 3,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.0,
+            "reads_as": "clear_bytecode delivers 100% of the time when drive:frugality"
+          },
+          {
+            "action": "clear_bytecode",
+            "situation": "diagnosed:yes",
+            "attempts": 3,
+            "delivered": 3,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.0,
+            "reads_as": "clear_bytecode delivers 100% of the time when diagnosed:yes"
+          },
+          {
+            "action": "clear_bytecode",
+            "situation": "largest:memory",
+            "attempts": 3,
+            "delivered": 3,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.0,
+            "reads_as": "clear_bytecode delivers 100% of the time when largest:memory"
+          },
+          {
+            "action": "clear_bytecode",
+            "situation": "sufficient:no",
+            "attempts": 3,
+            "delivered": 3,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.0,
+            "reads_as": "clear_bytecode delivers 100% of the time when sufficient:no"
+          },
+          {
+            "action": "clear_bytecode",
+            "situation": "network:up",
+            "attempts": 3,
+            "delivered": 3,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.0,
+            "reads_as": "clear_bytecode delivers 100% of the time when network:up"
+          },
+          {
+            "action": "clear_bytecode",
+            "situation": "deficit:q0",
+            "attempts": 2,
+            "delivered": 2,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.0,
+            "reads_as": "clear_bytecode delivers 100% of the time when deficit:q0"
+          },
+          {
+            "action": "clear_experiment_matrix",
+            "situation": "stage:reduce",
+            "attempts": 3,
+            "delivered": 3,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.0,
+            "reads_as": "clear_experiment_matrix delivers 100% of the time when stage:reduce"
+          },
+          {
+            "action": "clear_experiment_matrix",
+            "situation": "drive:frugality",
+            "attempts": 3,
+            "delivered": 3,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.0,
+            "reads_as": "clear_experiment_matrix delivers 100% of the time when drive:frugality"
+          },
+          {
+            "action": "clear_experiment_matrix",
+            "situation": "diagnosed:yes",
+            "attempts": 3,
+            "delivered": 3,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.0,
+            "reads_as": "clear_experiment_matrix delivers 100% of the time when diagnosed:yes"
+          },
+          {
+            "action": "clear_experiment_matrix",
+            "situation": "largest:memory",
+            "attempts": 3,
+            "delivered": 3,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.0,
+            "reads_as": "clear_experiment_matrix delivers 100% of the time when largest:memory"
+          },
+          {
+            "action": "clear_experiment_matrix",
+            "situation": "sufficient:no",
+            "attempts": 3,
+            "delivered": 3,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.0,
+            "reads_as": "clear_experiment_matrix delivers 100% of the time when sufficient:no"
+          },
+          {
+            "action": "clear_experiment_matrix",
+            "situation": "network:up",
+            "attempts": 3,
+            "delivered": 3,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.0,
+            "reads_as": "clear_experiment_matrix delivers 100% of the time when network:up"
+          },
+          {
+            "action": "clear_experiment_matrix",
+            "situation": "deficit:q2",
+            "attempts": 2,
+            "delivered": 2,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.0,
+            "reads_as": "clear_experiment_matrix delivers 100% of the time when deficit:q2"
+          },
+          {
+            "action": "rotate_ledger",
+            "situation": "stage:reduce",
+            "attempts": 3,
+            "delivered": 3,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.245,
+            "reads_as": "rotate_ledger delivers 100% of the time when stage:reduce"
+          },
+          {
+            "action": "rotate_ledger",
+            "situation": "drive:frugality",
+            "attempts": 3,
+            "delivered": 3,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.245,
+            "reads_as": "rotate_ledger delivers 100% of the time when drive:frugality"
+          },
+          {
+            "action": "rotate_ledger",
+            "situation": "deficit:q3",
+            "attempts": 3,
+            "delivered": 3,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.245,
+            "reads_as": "rotate_ledger delivers 100% of the time when deficit:q3"
+          },
+          {
+            "action": "rotate_ledger",
+            "situation": "diagnosed:yes",
+            "attempts": 3,
+            "delivered": 3,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.245,
+            "reads_as": "rotate_ledger delivers 100% of the time when diagnosed:yes"
+          },
+          {
+            "action": "rotate_ledger",
+            "situation": "largest:memory",
+            "attempts": 3,
+            "delivered": 3,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.245,
+            "reads_as": "rotate_ledger delivers 100% of the time when largest:memory"
+          },
+          {
+            "action": "rotate_ledger",
+            "situation": "sufficient:no",
+            "attempts": 3,
+            "delivered": 3,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.245,
+            "reads_as": "rotate_ledger delivers 100% of the time when sufficient:no"
+          },
+          {
+            "action": "rotate_ledger",
+            "situation": "network:up",
+            "attempts": 3,
+            "delivered": 3,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.245,
+            "reads_as": "rotate_ledger delivers 100% of the time when network:up"
+          }
+        ]
+      },
+      {
+        "cycles": 5,
+        "actions": [
+          "rotate_ledger",
+          "clear_experiment_matrix",
+          "clear_bytecode"
+        ],
+        "n_actions": 3,
+        "failures": 0,
+        "diagnostics": 1,
+        "bytes_freed": 209066,
+        "start_bytes": 622230,
+        "end_bytes": 503193,
+        "quota": 691602,
+        "needed": 95000,
+        "met": false,
+        "calibration": {
+          "clear_bytecode": 1.0,
+          "clear_experiment_matrix": 1.0,
+          "rotate_ledger": 1.736
+        },
+        "rotate_position": 1,
+        "acquired": [],
+        "relations": [
+          {
+            "action": "diagnose_footprint",
+            "situation": "stage:diagnose",
+            "attempts": 4,
+            "delivered": 0,
+            "delivery_rate": 0.0,
+            "mean_yield": 0.0,
+            "reads_as": "diagnose_footprint delivers 0% of the time when stage:diagnose"
+          },
+          {
+            "action": "diagnose_footprint",
+            "situation": "drive:frugality",
+            "attempts": 4,
+            "delivered": 0,
+            "delivery_rate": 0.0,
+            "mean_yield": 0.0,
+            "reads_as": "diagnose_footprint delivers 0% of the time when drive:frugality"
+          },
+          {
+            "action": "diagnose_footprint",
+            "situation": "deficit:q3",
+            "attempts": 4,
+            "delivered": 0,
+            "delivery_rate": 0.0,
+            "mean_yield": 0.0,
+            "reads_as": "diagnose_footprint delivers 0% of the time when deficit:q3"
+          },
+          {
+            "action": "diagnose_footprint",
+            "situation": "diagnosed:no",
+            "attempts": 4,
+            "delivered": 0,
+            "delivery_rate": 0.0,
+            "mean_yield": 0.0,
+            "reads_as": "diagnose_footprint delivers 0% of the time when diagnosed:no"
+          },
+          {
+            "action": "diagnose_footprint",
+            "situation": "network:up",
+            "attempts": 4,
+            "delivered": 0,
+            "delivery_rate": 0.0,
+            "mean_yield": 0.0,
+            "reads_as": "diagnose_footprint delivers 0% of the time when network:up"
+          },
+          {
+            "action": "clear_bytecode",
+            "situation": "stage:reduce",
+            "attempts": 4,
+            "delivered": 4,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.0,
+            "reads_as": "clear_bytecode delivers 100% of the time when stage:reduce"
+          },
+          {
+            "action": "clear_bytecode",
+            "situation": "drive:frugality",
+            "attempts": 4,
+            "delivered": 4,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.0,
+            "reads_as": "clear_bytecode delivers 100% of the time when drive:frugality"
+          },
+          {
+            "action": "clear_bytecode",
+            "situation": "diagnosed:yes",
+            "attempts": 4,
+            "delivered": 4,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.0,
+            "reads_as": "clear_bytecode delivers 100% of the time when diagnosed:yes"
+          },
+          {
+            "action": "clear_bytecode",
+            "situation": "largest:memory",
+            "attempts": 4,
+            "delivered": 4,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.0,
+            "reads_as": "clear_bytecode delivers 100% of the time when largest:memory"
+          },
+          {
+            "action": "clear_bytecode",
+            "situation": "sufficient:no",
+            "attempts": 4,
+            "delivered": 4,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.0,
+            "reads_as": "clear_bytecode delivers 100% of the time when sufficient:no"
+          },
+          {
+            "action": "clear_bytecode",
+            "situation": "network:up",
+            "attempts": 4,
+            "delivered": 4,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.0,
+            "reads_as": "clear_bytecode delivers 100% of the time when network:up"
+          },
+          {
+            "action": "clear_bytecode",
+            "situation": "deficit:q0",
+            "attempts": 3,
+            "delivered": 3,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.0,
+            "reads_as": "clear_bytecode delivers 100% of the time when deficit:q0"
+          },
+          {
+            "action": "clear_experiment_matrix",
+            "situation": "stage:reduce",
+            "attempts": 4,
+            "delivered": 4,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.0,
+            "reads_as": "clear_experiment_matrix delivers 100% of the time when stage:reduce"
+          },
+          {
+            "action": "clear_experiment_matrix",
+            "situation": "drive:frugality",
+            "attempts": 4,
+            "delivered": 4,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.0,
+            "reads_as": "clear_experiment_matrix delivers 100% of the time when drive:frugality"
+          },
+          {
+            "action": "clear_experiment_matrix",
+            "situation": "diagnosed:yes",
+            "attempts": 4,
+            "delivered": 4,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.0,
+            "reads_as": "clear_experiment_matrix delivers 100% of the time when diagnosed:yes"
+          },
+          {
+            "action": "clear_experiment_matrix",
+            "situation": "largest:memory",
+            "attempts": 4,
+            "delivered": 4,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.0,
+            "reads_as": "clear_experiment_matrix delivers 100% of the time when largest:memory"
+          },
+          {
+            "action": "clear_experiment_matrix",
+            "situation": "sufficient:no",
+            "attempts": 4,
+            "delivered": 4,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.0,
+            "reads_as": "clear_experiment_matrix delivers 100% of the time when sufficient:no"
+          },
+          {
+            "action": "clear_experiment_matrix",
+            "situation": "network:up",
+            "attempts": 4,
+            "delivered": 4,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.0,
+            "reads_as": "clear_experiment_matrix delivers 100% of the time when network:up"
+          },
+          {
+            "action": "clear_experiment_matrix",
+            "situation": "deficit:q2",
+            "attempts": 3,
+            "delivered": 3,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.0,
+            "reads_as": "clear_experiment_matrix delivers 100% of the time when deficit:q2"
+          },
+          {
+            "action": "rotate_ledger",
+            "situation": "stage:reduce",
+            "attempts": 4,
+            "delivered": 4,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.184,
+            "reads_as": "rotate_ledger delivers 100% of the time when stage:reduce"
+          },
+          {
+            "action": "rotate_ledger",
+            "situation": "drive:frugality",
+            "attempts": 4,
+            "delivered": 4,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.184,
+            "reads_as": "rotate_ledger delivers 100% of the time when drive:frugality"
+          },
+          {
+            "action": "rotate_ledger",
+            "situation": "deficit:q3",
+            "attempts": 4,
+            "delivered": 4,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.184,
+            "reads_as": "rotate_ledger delivers 100% of the time when deficit:q3"
+          },
+          {
+            "action": "rotate_ledger",
+            "situation": "diagnosed:yes",
+            "attempts": 4,
+            "delivered": 4,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.184,
+            "reads_as": "rotate_ledger delivers 100% of the time when diagnosed:yes"
+          },
+          {
+            "action": "rotate_ledger",
+            "situation": "largest:memory",
+            "attempts": 4,
+            "delivered": 4,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.184,
+            "reads_as": "rotate_ledger delivers 100% of the time when largest:memory"
+          },
+          {
+            "action": "rotate_ledger",
+            "situation": "sufficient:no",
+            "attempts": 4,
+            "delivered": 4,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.184,
+            "reads_as": "rotate_ledger delivers 100% of the time when sufficient:no"
+          },
+          {
+            "action": "rotate_ledger",
+            "situation": "network:up",
+            "attempts": 4,
+            "delivered": 4,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.184,
+            "reads_as": "rotate_ledger delivers 100% of the time when network:up"
+          }
+        ]
+      },
+      {
+        "cycles": 5,
+        "actions": [
+          "rotate_ledger",
+          "clear_experiment_matrix",
+          "clear_bytecode"
+        ],
+        "n_actions": 3,
+        "failures": 0,
+        "diagnostics": 1,
+        "bytes_freed": 209091,
+        "start_bytes": 622176,
+        "end_bytes": 503093,
+        "quota": 691527,
+        "needed": 95000,
+        "met": false,
+        "calibration": {
+          "clear_bytecode": 1.0,
+          "clear_experiment_matrix": 1.0,
+          "rotate_ledger": 1.7356
+        },
+        "rotate_position": 1,
+        "acquired": [],
+        "relations": [
+          {
+            "action": "diagnose_footprint",
+            "situation": "stage:diagnose",
+            "attempts": 5,
+            "delivered": 0,
+            "delivery_rate": 0.0,
+            "mean_yield": 0.0,
+            "reads_as": "diagnose_footprint delivers 0% of the time when stage:diagnose"
+          },
+          {
+            "action": "diagnose_footprint",
+            "situation": "drive:frugality",
+            "attempts": 5,
+            "delivered": 0,
+            "delivery_rate": 0.0,
+            "mean_yield": 0.0,
+            "reads_as": "diagnose_footprint delivers 0% of the time when drive:frugality"
+          },
+          {
+            "action": "diagnose_footprint",
+            "situation": "deficit:q3",
+            "attempts": 5,
+            "delivered": 0,
+            "delivery_rate": 0.0,
+            "mean_yield": 0.0,
+            "reads_as": "diagnose_footprint delivers 0% of the time when deficit:q3"
+          },
+          {
+            "action": "diagnose_footprint",
+            "situation": "diagnosed:no",
+            "attempts": 5,
+            "delivered": 0,
+            "delivery_rate": 0.0,
+            "mean_yield": 0.0,
+            "reads_as": "diagnose_footprint delivers 0% of the time when diagnosed:no"
+          },
+          {
+            "action": "diagnose_footprint",
+            "situation": "network:up",
+            "attempts": 5,
+            "delivered": 0,
+            "delivery_rate": 0.0,
+            "mean_yield": 0.0,
+            "reads_as": "diagnose_footprint delivers 0% of the time when network:up"
+          },
+          {
+            "action": "clear_bytecode",
+            "situation": "stage:reduce",
+            "attempts": 5,
+            "delivered": 5,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.0,
+            "reads_as": "clear_bytecode delivers 100% of the time when stage:reduce"
+          },
+          {
+            "action": "clear_bytecode",
+            "situation": "drive:frugality",
+            "attempts": 5,
+            "delivered": 5,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.0,
+            "reads_as": "clear_bytecode delivers 100% of the time when drive:frugality"
+          },
+          {
+            "action": "clear_bytecode",
+            "situation": "diagnosed:yes",
+            "attempts": 5,
+            "delivered": 5,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.0,
+            "reads_as": "clear_bytecode delivers 100% of the time when diagnosed:yes"
+          },
+          {
+            "action": "clear_bytecode",
+            "situation": "largest:memory",
+            "attempts": 5,
+            "delivered": 5,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.0,
+            "reads_as": "clear_bytecode delivers 100% of the time when largest:memory"
+          },
+          {
+            "action": "clear_bytecode",
+            "situation": "sufficient:no",
+            "attempts": 5,
+            "delivered": 5,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.0,
+            "reads_as": "clear_bytecode delivers 100% of the time when sufficient:no"
+          },
+          {
+            "action": "clear_bytecode",
+            "situation": "network:up",
+            "attempts": 5,
+            "delivered": 5,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.0,
+            "reads_as": "clear_bytecode delivers 100% of the time when network:up"
+          },
+          {
+            "action": "clear_bytecode",
+            "situation": "deficit:q0",
+            "attempts": 4,
+            "delivered": 4,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.0,
+            "reads_as": "clear_bytecode delivers 100% of the time when deficit:q0"
+          },
+          {
+            "action": "clear_experiment_matrix",
+            "situation": "stage:reduce",
+            "attempts": 5,
+            "delivered": 5,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.0,
+            "reads_as": "clear_experiment_matrix delivers 100% of the time when stage:reduce"
+          },
+          {
+            "action": "clear_experiment_matrix",
+            "situation": "drive:frugality",
+            "attempts": 5,
+            "delivered": 5,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.0,
+            "reads_as": "clear_experiment_matrix delivers 100% of the time when drive:frugality"
+          },
+          {
+            "action": "clear_experiment_matrix",
+            "situation": "diagnosed:yes",
+            "attempts": 5,
+            "delivered": 5,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.0,
+            "reads_as": "clear_experiment_matrix delivers 100% of the time when diagnosed:yes"
+          },
+          {
+            "action": "clear_experiment_matrix",
+            "situation": "largest:memory",
+            "attempts": 5,
+            "delivered": 5,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.0,
+            "reads_as": "clear_experiment_matrix delivers 100% of the time when largest:memory"
+          },
+          {
+            "action": "clear_experiment_matrix",
+            "situation": "sufficient:no",
+            "attempts": 5,
+            "delivered": 5,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.0,
+            "reads_as": "clear_experiment_matrix delivers 100% of the time when sufficient:no"
+          },
+          {
+            "action": "clear_experiment_matrix",
+            "situation": "network:up",
+            "attempts": 5,
+            "delivered": 5,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.0,
+            "reads_as": "clear_experiment_matrix delivers 100% of the time when network:up"
+          },
+          {
+            "action": "clear_experiment_matrix",
+            "situation": "deficit:q2",
+            "attempts": 4,
+            "delivered": 4,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.0,
+            "reads_as": "clear_experiment_matrix delivers 100% of the time when deficit:q2"
+          },
+          {
+            "action": "rotate_ledger",
+            "situation": "stage:reduce",
+            "attempts": 5,
+            "delivered": 5,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.147,
+            "reads_as": "rotate_ledger delivers 100% of the time when stage:reduce"
+          },
+          {
+            "action": "rotate_ledger",
+            "situation": "drive:frugality",
+            "attempts": 5,
+            "delivered": 5,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.147,
+            "reads_as": "rotate_ledger delivers 100% of the time when drive:frugality"
+          },
+          {
+            "action": "rotate_ledger",
+            "situation": "deficit:q3",
+            "attempts": 5,
+            "delivered": 5,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.147,
+            "reads_as": "rotate_ledger delivers 100% of the time when deficit:q3"
+          },
+          {
+            "action": "rotate_ledger",
+            "situation": "diagnosed:yes",
+            "attempts": 5,
+            "delivered": 5,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.147,
+            "reads_as": "rotate_ledger delivers 100% of the time when diagnosed:yes"
+          },
+          {
+            "action": "rotate_ledger",
+            "situation": "largest:memory",
+            "attempts": 5,
+            "delivered": 5,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.147,
+            "reads_as": "rotate_ledger delivers 100% of the time when largest:memory"
+          },
+          {
+            "action": "rotate_ledger",
+            "situation": "sufficient:no",
+            "attempts": 5,
+            "delivered": 5,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.147,
+            "reads_as": "rotate_ledger delivers 100% of the time when sufficient:no"
+          },
+          {
+            "action": "rotate_ledger",
+            "situation": "network:up",
+            "attempts": 5,
+            "delivered": 5,
+            "delivery_rate": 1.0,
+            "mean_yield": 1.147,
+            "reads_as": "rotate_ledger delivers 100% of the time when network:up"
+          }
+        ]
+      }
+    ]
+  }
+}

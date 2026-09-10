@@ -554,7 +554,8 @@ def cycle(org: Organism, quiet: bool = True) -> dict:
     # unknown, reducers once it is. The organism cannot skip its own decomposition.
     calibration = learning.load_calibration(store)
     cands = planner.evaluate(
-        planner.generate(org.action_ctx, obj, calibration, stage=obj.stage), obj, cfg)
+        planner.generate(org.action_ctx, obj, calibration, stage=obj.stage,
+                         store=store, view=org.view), obj, cfg)
     chosen = planner.select(cands)
     ledger.decision(
         f"action:{chosen.action if chosen else 'none'}",
@@ -591,6 +592,17 @@ def cycle(org: Organism, quiet: bool = True) -> dict:
     overhead = reported - measured           # what its own record-keeping cost it
 
     # --- LEARN -------------------------------------------------------------
+    # Conditional record first: what happened, in the situation it happened in.
+    # This is kept separate from the magnitude calibration below because they answer
+    # different questions - "how wrong is this action's estimate" versus "does this
+    # action deliver at all, here".
+    from ..learning import outcomes as outcomes_mod
+    _feats = outcomes_mod.context_features(org.view, obj, obj.stage)
+    _rel = outcomes_mod.record(store, chosen.action, _feats,
+                               chosen.predicted, reported, obj.stage, obj.drive,
+                               episode=obj.id, ledger=ledger)
+    rec["reliability_update"] = {**_rel, "context": _feats}
+
     # A diagnostic is not scored against a prediction: it was never predicting bytes.
     # Its result is knowledge, folded into the goal so the next stage can use it.
     if chosen.diagnostic:

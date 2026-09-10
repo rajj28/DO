@@ -12,6 +12,8 @@
     do kill / resume   engage or release the kill switch
     do reset           destroy runtime state (asks first)
     do experiment first-boot [--full]   the DO_FIRST_BOOT protocol
+    do experiment h4 [runs]             the H4 learning ablation
+    do experiment survival              the survival-loop protocol
 
 Global flags:
     --core reflex|llm        which cognition core verbalizes the utterance
@@ -287,6 +289,14 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     if cmd == "experiment":
+        which = rest[0] if rest else "first-boot"
+        if which in ("h4", "learning", "h4-learning"):
+            from .experiments.h4_learning import run as h4run
+            n = next((int(x) for x in rest if x.isdigit()), 5)
+            return h4run(config, runs=n)
+        if which in ("survival", "survival-loop"):
+            from .experiments.survival_loop import run as srun
+            return srun(config)
         from .experiments.first_boot import run
         return run(config, full="--full" in rest)
 

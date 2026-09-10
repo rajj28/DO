@@ -44,6 +44,8 @@ class Candidate:
     reversible: str
     cost_s: float
     diagnostic: bool = False
+    reliability: float = 0.7
+    reliability_basis: str = ""
     sufficiency: float = 0.0
     score: float = 0.0
     rejected: str | None = None
@@ -53,7 +55,7 @@ class Candidate:
 
 
 def generate(ctx, objective, calibration: dict[str, float],
-             stage: str | None = None) -> list[Candidate]:
+             stage: str | None = None, store=None, view=None) -> list[Candidate]:
     """Enumerate applicable actions, restricted to the goal's current stage.
 
     Stage filtering is what stops the loop short-circuiting its own decomposition. In
@@ -75,7 +77,15 @@ def generate(ctx, objective, calibration: dict[str, float],
         except Exception as e:
             raw, basis = 0, f"estimate failed: {type(e).__name__}: {e}"
         k = float(calibration.get(action.name, 1.0))
+        # Conditional reliability, learned from this action's own history in
+        # situations like this one. Prior 0.7 until there is evidence.
+        rel, rel_why = 0.7, "no experience yet"
+        if store is not None and view is not None:
+            from ..learning import outcomes as _out
+            feats = _out.context_features(view, objective, stage or "")
+            rel, rel_why = _out.reliability(store, action.name, feats)
         out.append(Candidate(
+            reliability=rel, reliability_basis=rel_why,
             diagnostic=action.diagnostic,
             action=action.name, description=action.description,
             component=action.component, predicted_raw=int(raw),
@@ -113,8 +123,14 @@ def evaluate(candidates: list[Candidate], objective, config) -> list[Candidate]:
             c.score = -1.0
             continue
 
-        gain = min(1.0, c.predicted / needed)
-        c.sufficiency = round(min(1.0, c.predicted / remaining) if remaining > 0 else 1.0, 4)
+        # Expected gain, not promised gain. An action that has historically
+        # under-delivered in situations like this one is discounted by exactly how
+        # often it under-delivered - which is the point at which outcome -> belief ->
+        # policy -> future decision is actually closed, rather than merely recorded.
+        gain = min(1.0, c.predicted / needed) * c.reliability
+        c.sufficiency = round(
+            (min(1.0, c.predicted / remaining) if remaining > 0 else 1.0)
+            * c.reliability, 4)
         rev = REVERSIBILITY_WEIGHT.get(c.reversible, 0.0)
         w = config.get("planning", {}) or {}
         c.score = round(
@@ -143,5 +159,6 @@ def summarize(candidates: list[Candidate], chosen: Candidate | None) -> str:
             parts.append(f"{mark}{c.action}=rejected({c.rejected})")
         else:
             parts.append(f"{mark}{c.action}=score {c.score} "
-                         f"predict {c.predicted}B (raw {c.predicted_raw} x k{c.calibration_k})")
+                         f"predict {c.predicted}B (raw {c.predicted_raw} "
+                         f"x k{c.calibration_k}) x rel{c.reliability}")
     return "; ".join(parts)
