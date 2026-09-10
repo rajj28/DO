@@ -324,7 +324,6 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     if cmd == "uninstall-service":
-        from .kernel import lifecycle
         from .kernel.types import EffectRequest
         org = lifecycle.boot(config, quiet=True)
         res = org.gate.request(EffectRequest(

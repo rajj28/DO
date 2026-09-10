@@ -164,7 +164,13 @@ def address(text: str, config) -> str:
     if not title or not text.strip():
         return text
     low = text.lstrip()
-    if low.lower().startswith(title.lower()):
+    # Skip if the title already appears in the opening clause, so a line the creator
+    # wrote with the title in it does not get a second one bolted on. Tokens are
+    # stripped of punctuation, so "Hello, Sir." counts as already-addressed.
+    import re as _re
+    opening = [w.strip(_re.escape(".,;:!?")) .lower()
+               for w in low[:40].split()][:5]
+    if title.lower() in opening:
         return text
     first = low.split(" ", 1)[0].strip(",.:")
     # Do not de-capitalise a pronoun, an acronym, or a dotted identifier - D.O.'s
