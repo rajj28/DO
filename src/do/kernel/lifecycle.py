@@ -26,6 +26,7 @@ from pathlib import Path
 from typing import Any, Callable
 
 from ..capabilities import seed_registry
+from ..capabilities import growth
 from ..capabilities.actions import ActionContext, applicable_actions, housekeeping_effector
 from ..cognition import attention, gaps as gapmod, objectives as objmod, planner, reflection
 from ..cognition.cores import ReflexCore, build_core
@@ -194,11 +195,28 @@ def boot(config, perturb: dict | None = None, quiet: bool = False,
 
     registry = seed_registry(view, ledger)
     view.capabilities = registry.as_list()
+
+    # Roster census. Every capability the creator enumerated is recorded as `seeded`,
+    # so anything that ever appears as `acquired` is unambiguously not something a
+    # human wrote into the registry.
+    growth.ensure_schema(store)
+    for cap in view.capabilities:
+        growth.register(store, cap["name"], "seeded", cap.get("description", ""),
+                        boot_index=ident.boot_index)
+    from ..capabilities.actions import REGISTRY as _ACTIONS
+    for a_name, a_obj in _ACTIONS.items():
+        growth.register(store, f"action:{a_name}", "seeded", a_obj.description,
+                        boot_index=ident.boot_index)
+    census = growth.census(store, ident.boot_index, ledger)
     mark("model_ms", t)
 
     if not quiet:
         usable = len(registry.usable())
         blocked = len(registry.blocked())
+        print(f"  Capability roster.         {census['total']} known "
+              f"({census['seeded']} seeded, {census['acquired']} acquired)"
+              + (f"  NEW: {', '.join(census['new_this_boot'][:3])}"
+                 if census["new_this_boot"] else ""))
         print(f"  Memory initialized.        {counts['episodic']} episodic, "
               f"{counts['semantic']} semantic, {counts['procedural']} procedural"
               + (f", {len(view.carried_gaps)} carried questions" if view.carried_gaps else ""))
@@ -213,7 +231,7 @@ def boot(config, perturb: dict | None = None, quiet: bool = False,
     view.drives = drives
     store.save_drives(drives)
 
-    found = _rank(gapmod.detect(view, error_map(drives)), view, store, config,
+    found = _rank(gapmod.detect(view, error_map(drives), _ns_to_drive(drives)), view, store, config,
                   _action_ctx())
     gap_stats = reflection.persist_gaps(store, found, ledger)
     mark("uncertainty_ms", t)
@@ -256,6 +274,13 @@ def boot(config, perturb: dict | None = None, quiet: bool = False,
     return org
 
 
+def _ns_to_drive(drives) -> dict[str, str]:
+    """observation namespace -> the drive that governs it."""
+    from ..cognition.objectives import namespace_of
+    return {namespace_of((d.spec or {}).get("metric_key", "")): d.name
+            for d in drives if (d.spec or {}).get("metric_key")}
+
+
 def _rank(found, view, store, config, ctx):
     """Score gaps with ability and history folded in.
 
@@ -268,10 +293,17 @@ def _rank(found, view, store, config, ctx):
     here rather than inside `detect()`: perception should not need to know what the
     organism is capable of.
     """
+    # Agency read from the registry: a gap is actionable iff some applicable action
+    # declares it moves a metric in the same observation namespace as the gap's
+    # subject. No subject string is named anywhere.
+    from ..cognition.objectives import namespace_of
     actionable: set[str] = set()
     try:
-        if applicable_actions(ctx):
-            actionable.add("resources.own.quota_used_ratio")
+        movable = {namespace_of(a.metric) for a, _ in applicable_actions(ctx)
+                   if getattr(a, "metric", None) and not a.diagnostic}
+        for g in found:
+            if namespace_of(g.subject) in movable:
+                actionable.add(g.subject)
     except Exception:
         pass
     found = gapmod.annotate_agency(found, actionable, config)
@@ -380,7 +412,7 @@ def tick(org: Organism, quiet: bool = False) -> dict:
     org.view.drives = org.drives
     org.store.save_drives(org.drives)
 
-    found = gapmod.score(gapmod.detect(org.view, error_map(org.drives)), org.config)
+    found = gapmod.score(gapmod.detect(org.view, error_map(org.drives), _ns_to_drive(org.drives)), org.config)
     org.gaps = found
     dom = dominant(org.drives)
 
@@ -458,7 +490,7 @@ def cycle(org: Organism, quiet: bool = True) -> dict:
     org.drives = compute_drives(org.view, cfg, ledger)
     org.view.drives = org.drives
     store.save_drives(org.drives)
-    found = _rank(gapmod.detect(org.view, error_map(org.drives)),
+    found = _rank(gapmod.detect(org.view, error_map(org.drives), _ns_to_drive(org.drives)),
                   org.view, store, cfg, org.action_ctx)
     org.gaps = found
     if not found:
@@ -483,7 +515,7 @@ def cycle(org: Organism, quiet: bool = True) -> dict:
     for g in found[:3]:
         if g.agency >= 1.0 or g.escalated:
             continue
-        esc = objmod.escalation_for(g, org.view)
+        esc = objmod.escalation_for(g, org.view, org.drives)
         store.mark_escalated(g.id)
         ledger.append(EventType.QUESTION, {**esc, "escalated_to": "creator",
                                            "cycle": c, "unactionable": True})
@@ -508,11 +540,21 @@ def cycle(org: Organism, quiet: bool = True) -> dict:
             "target": obj.target_value, "start": obj.start_value})
     org.objective = obj
     rec["objective"] = {"statement": obj.statement, "target": obj.target_value,
-                        "current": obj.current_value, "progress": round(obj.progress, 3)}
+                        "current": obj.current_value, "progress": round(obj.progress, 3),
+                        "drive": obj.drive, "stage": obj.stage,
+                        "subgoals": obj.subgoals}
+    ledger.decision(
+        f"stage:{obj.stage}",
+        "; ".join(f"{sg['stage']}={sg['status']}" for sg in obj.subgoals)
+        or "no decomposition",
+        confidence=0.7, alternatives=len(obj.subgoals))
 
     # --- CANDIDATES + EVALUATE --------------------------------------------
+    # Restricted to the stage the goal is in: diagnostics while the composition is
+    # unknown, reducers once it is. The organism cannot skip its own decomposition.
     calibration = learning.load_calibration(store)
-    cands = planner.evaluate(planner.generate(org.action_ctx, obj, calibration), obj, cfg)
+    cands = planner.evaluate(
+        planner.generate(org.action_ctx, obj, calibration, stage=obj.stage), obj, cfg)
     chosen = planner.select(cands)
     ledger.decision(
         f"action:{chosen.action if chosen else 'none'}",
@@ -549,16 +591,39 @@ def cycle(org: Organism, quiet: bool = True) -> dict:
     overhead = reported - measured           # what its own record-keeping cost it
 
     # --- LEARN -------------------------------------------------------------
-    outcome = learning.record_outcome(store, ledger, chosen.action,
-                                      chosen.predicted_raw, chosen.predicted,
-                                      reported, detail, cfg)
-    rec["outcome"] = {**outcome, "measured_footprint_delta": measured,
-                      "bookkeeping_overhead": overhead, "detail": detail}
+    # A diagnostic is not scored against a prediction: it was never predicting bytes.
+    # Its result is knowledge, folded into the goal so the next stage can use it.
+    if chosen.diagnostic:
+        diag = objmod.record_diagnosis(obj, detail)
+        rec["diagnosis"] = diag
+        ledger.append(EventType.BELIEF_UPDATE, {
+            "subject": f"{obj.metric_key}.composition",
+            "largest": diag.get("largest"),
+            "actionable": diag.get("actionable"),
+            "not_actionable": diag.get("not_actionable"),
+            "reducible_bytes": diag.get("reducible_bytes"),
+            "sufficient_to_meet_goal": diag.get("sufficient"),
+            "note": "composition established by investigation, not by sensing"})
+        store.believe(
+            subject=f"{obj.metric_key}.composition",
+            content=(f"largest contributor is {diag.get('largest')}; "
+                     f"{len(diag.get('actionable') or [])} of "
+                     f"{len(diag.get('components') or [])} components are reducible "
+                     f"by actions I have"),
+            source=f"cycle:{c}:diagnose_footprint",
+            epistemic=Epistemic.OBSERVED.value, confidence=0.9, importance=0.7,
+            value=diag)
+    else:
+        outcome = learning.record_outcome(store, ledger, chosen.action,
+                                          chosen.predicted_raw, chosen.predicted,
+                                          reported, detail, cfg)
+        rec["outcome"] = {**outcome, "measured_footprint_delta": measured,
+                          "bookkeeping_overhead": overhead, "detail": detail}
 
     # --- UPDATE MODEL ------------------------------------------------------
     obj.attempts += 1
     obj.actions_taken.append(chosen.action)
-    obj.refresh(float(after_total), c)
+    obj.advance(float(after_total), c)
     store.save_objective(obj)
     org.drives = compute_drives(org.view, cfg, ledger)
     org.view.drives = org.drives
@@ -570,6 +635,7 @@ def cycle(org: Organism, quiet: bool = True) -> dict:
         confidence=0.95, importance=0.6, value=after_total)
 
     rec["objective"].update({"current": obj.current_value, "status": obj.status,
+                             "stage": obj.stage, "subgoals": obj.subgoals,
                              "progress": round(obj.progress, 3)})
     if obj.status == objmod.MET:
         store.resolve_gap(focus.id, f"objective met by {', '.join(obj.actions_taken)}")
@@ -580,6 +646,12 @@ def cycle(org: Organism, quiet: bool = True) -> dict:
         # Authority earned by doing something verifiable, not by being told.
         org.view.memory_counts["_standing"] = min(
             1.0, float(org.view.memory_counts.get("_standing", 0.25)) + 0.05)
+        # Retain the composition that worked. The primitives were seeded; this
+        # sequence, its trigger and its name were not.
+        acquired = growth.acquire_from_objective(
+            store, obj, org.identity.boot_index, ledger)
+        if acquired:
+            rec["acquired_capability"] = acquired
         org.objective = None
 
     frug = next((d for d in org.drives if d.name == "frugality"), None)

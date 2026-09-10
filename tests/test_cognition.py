@@ -38,8 +38,8 @@ class TestGapGeneration(unittest.TestCase):
         self.assertEqual("my purpose", _phrase("self.purpose"))
 
     def test_drive_error_flows_into_gap_priority(self):
-        """The load-bearing link: a gap about a drive that is out of band must
-        outscore the same gap when that drive is satisfied."""
+        """The load-bearing link: a breached floor must produce a gap whose
+        instrumental value carries the live drive error."""
         with tempfile.TemporaryDirectory() as d:
             org = boot_in(Path(d) / "a", {"resources.disk.free_ratio": 0.002,
                                           "resources.disk.free_bytes": 400_000_000})
@@ -49,8 +49,30 @@ class TestGapGeneration(unittest.TestCase):
             self.assertIsNotNone(tight, "a breached floor must produce a gap")
             self.assertGreater(tight.instrumental, 0.3,
                                "instrumental value must carry live drive error")
-            self.assertEqual(org.gaps[0].subject, "resources.disk.free_ratio",
-                             "the breached resource must win attention")
+
+    def test_actionable_gap_outranks_unactionable_one(self):
+        """v0.2, and deliberate: agency scales instrumental value.
+
+        In v0.1 the host-disk gap won attention and held it forever, because nothing
+        could move it - that was the H3 falsification. Now a gap is worth attending to
+        in proportion to whether any registered action moves its metric, so an
+        actionable constraint outranks a larger unactionable one. This assertion is
+        the fix, pinned so it cannot regress silently.
+        """
+        with tempfile.TemporaryDirectory() as d:
+            org = boot_in(Path(d) / "agency", {"resources.disk.free_ratio": 0.002,
+                                               "resources.disk.free_bytes": 400_000_000})
+            by = {g.subject: g for g in org.gaps}
+            disk = by.get("resources.disk.free_ratio")
+            own = by.get("resources.own.quota_used_ratio")
+            org.close()
+            self.assertIsNotNone(disk)
+            if own is not None:
+                self.assertEqual(1.0, own.agency, "own footprint is actionable")
+                self.assertLess(disk.agency, 1.0,
+                                "no registered action moves host disk free space")
+                self.assertGreater(own.priority, disk.priority,
+                                   "attention must prefer what it can actually move")
 
     def test_no_gap_when_resource_is_abundant(self):
         with tempfile.TemporaryDirectory() as d:
@@ -72,11 +94,17 @@ class TestSpeechActSelection(unittest.TestCase):
                                             "resources.disk.free_bytes": 200 * 1024**3,
                                             "resources.ram.free_ratio": 0.9})
             act_a, act_b = a.plan.speech_act, b.plan.speech_act
-            focus_a, focus_b = a.plan.focus.subject, b.plan.focus.subject
+            drive_a = {d.name: d for d in a.drives}["continuity"]
+            drive_b = {d.name: d for d in b.drives}["continuity"]
             a.close(); b.close()
             self.assertEqual("FLAG", act_a)
-            self.assertNotEqual(focus_a, focus_b,
-                                "focus must move when the environment changes")
+            # Focus no longer moves between these two: both are dominated by the
+            # actionable own-footprint gap, which is the v0.2 agency fix working. What
+            # must still track the environment is the drive itself.
+            self.assertNotEqual(drive_a.value, drive_b.value,
+                                "the continuity drive must track measured storage")
+            self.assertLess(drive_a.value, drive_b.value,
+                            "less free space must mean lower continuity")
 
 
 class TestUtteranceIsStateDependent(unittest.TestCase):
@@ -100,6 +128,46 @@ class TestUtteranceIsStateDependent(unittest.TestCase):
             org.close()
             self.assertIn("self-model", text)
             self.assertRegex(text, r"\d", "the utterance must carry measured numbers")
+
+
+class TestEmergentGoals(unittest.TestCase):
+    """The critical test: a goal must be DERIVED from state, not supplied.
+
+    An earlier version of objectives.generate() matched on a hard-coded subject
+    string, which meant the experimenter wrote the goal and the organism appeared to
+    form it. These assertions make that impossible to reintroduce quietly.
+    """
+
+    def test_no_subject_strings_in_goal_formation(self):
+        src = (ROOT / "src" / "do" / "cognition" / "objectives.py").read_text(
+            encoding="utf-8")
+        body = src.split('"""', 2)[-1]          # skip the module docstring
+        for forbidden in ("resources.own.quota_used_ratio",
+                          "resources.disk.free_ratio"):
+            self.assertNotIn(f'== "{forbidden}"', body,
+                             f"goal formation must not branch on {forbidden!r}")
+
+    def test_goal_is_derived_from_drive_and_registry(self):
+        from do.cognition import objectives as objmod
+        with tempfile.TemporaryDirectory() as d:
+            org = boot_in(Path(d) / "g", {"resources.disk.free_ratio": 0.002,
+                                          "resources.disk.free_bytes": 400_000_000})
+            by = {g.subject: g for g in org.gaps}
+            disk = by.get("resources.disk.free_ratio")
+            own = by.get("resources.own.quota_used_ratio")
+            goal_disk = objmod.generate(disk, org.view, org.drives, 1, org.config)
+            goal_own = (objmod.generate(own, org.view, org.drives, 1, org.config)
+                        if own is not None else None)
+            org.close()
+            self.assertIsNone(goal_disk,
+                              "no action moves host disk, so it must not become a goal")
+            if own is not None:
+                self.assertIsNotNone(goal_own, "an actionable breach must become a goal")
+                self.assertEqual("resources.own.total_bytes", goal_own.metric_key)
+                self.assertEqual("frugality", goal_own.drive)
+                self.assertTrue(goal_own.subgoals, "a goal must be decomposed")
+                self.assertEqual("diagnose", goal_own.subgoals[0]["stage"],
+                                 "composition must be investigated before reducing")
 
 
 class TestPersistence(unittest.TestCase):

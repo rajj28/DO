@@ -73,8 +73,16 @@ def measure(state_dir: Path, project_root: Path) -> dict[str, dict]:
     return out
 
 
-def observe(sensors, state_dir: Path, project_root: Path, quota_bytes: int) -> dict:
-    """Add resources.own.* observations. Returns the raw component map."""
+def observe(sensors, state_dir: Path, project_root: Path, quota_bytes: int,
+            detailed: bool = False) -> dict:
+    """Add resources.own.* observations.
+
+    `detailed` is False in normal sensing, and that is the point. An organism handed
+    the per-component breakdown for free never has to decide to investigate - it would
+    always already know why it is over budget. Sensing reports the total; establishing
+    the composition is work, and work is an action (DiagnoseFootprint). Separating them
+    is what makes the diagnose stage real rather than ceremonial.
+    """
     comps = measure(Path(state_dir), Path(project_root))
     total = sum(c["bytes"] for c in comps.values())
 
@@ -86,13 +94,18 @@ def observe(sensors, state_dir: Path, project_root: Path, quota_bytes: int) -> d
     sensors._add("resources.own.quota_used_ratio",
                  round(total / quota_bytes, 4) if quota_bytes else None,
                  Epistemic.INFERRED, "own.total/own.quota", Namespace.SELF)
-    for name, c in comps.items():
-        sensors._add(f"resources.own.{name}_bytes", c["bytes"], Epistemic.OBSERVED,
-                     "footprint.measure", Namespace.SELF, unit="bytes")
+    if detailed:
+        for name, c in comps.items():
+            sensors._add(f"resources.own.{name}_bytes", c["bytes"], Epistemic.OBSERVED,
+                         "footprint.measure(detailed)", Namespace.SELF, unit="bytes")
+    else:
+        # Declared explicitly, so the composition is a KNOWN unknown rather than
+        # something never considered.
+        sensors._add("resources.own.composition", None, Epistemic.UNKNOWN,
+                     "undeterminable:requires the diagnose_footprint action",
+                     Namespace.SELF)
 
-    # The largest single contributor, because "what is consuming my storage" is a
-    # question with an answer, and the answer is a fact about itself.
-    if comps:
+    if detailed and comps:
         biggest = max(comps.items(), key=lambda kv: kv[1]["bytes"])
         sensors._add("resources.own.largest_component", biggest[0], Epistemic.INFERRED,
                      "argmax over footprint components", Namespace.SELF,

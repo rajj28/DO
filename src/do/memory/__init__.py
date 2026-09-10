@@ -83,7 +83,8 @@ CREATE TABLE IF NOT EXISTS objectives (
     direction TEXT, start_value REAL, current_value REAL, target_value REAL,
     deadline_cycles INTEGER, opened_cycle INTEGER, status TEXT,
     attempts INTEGER DEFAULT 0, actions_taken TEXT, closed_cycle INTEGER,
-    note TEXT, boot_id TEXT, updated_ts REAL
+    note TEXT, boot_id TEXT, updated_ts REAL,
+    drive TEXT, stage TEXT, subgoals TEXT, diagnosis TEXT
 );
 CREATE INDEX IF NOT EXISTS idx_obj_status ON objectives(status);
 
@@ -156,6 +157,12 @@ class MemoryStore:
         sqlite has no ADD COLUMN IF NOT EXISTS, and an organism whose whole premise is
         continuity must not lose its history to a schema change.
         """
+        ocols = {r[1] for r in self.db.execute(
+            "PRAGMA table_info(objectives)").fetchall()}
+        for name, decl in (("drive", "TEXT"), ("stage", "TEXT"),
+                           ("subgoals", "TEXT"), ("diagnosis", "TEXT")):
+            if ocols and name not in ocols:
+                self.db.execute(f"ALTER TABLE objectives ADD COLUMN {name} {decl}")
         cols = {r[1] for r in self.db.execute("PRAGMA table_info(gaps)").fetchall()}
         for name, decl in (("selected_count", "INTEGER DEFAULT 0"),
                            ("escalated", "INTEGER DEFAULT 0"),
@@ -354,12 +361,15 @@ class MemoryStore:
         self.db.execute(
             "INSERT OR REPLACE INTO objectives (id,gap_id,statement,metric_key,direction,"
             "start_value,current_value,target_value,deadline_cycles,opened_cycle,status,"
-            "attempts,actions_taken,closed_cycle,note,boot_id,updated_ts)"
-            " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+            "attempts,actions_taken,closed_cycle,note,boot_id,updated_ts,"
+            "drive,stage,subgoals,diagnosis)"
+            " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
             (o.id, o.gap_id, o.statement, o.metric_key, o.direction, o.start_value,
              o.current_value, o.target_value, o.deadline_cycles, o.opened_cycle,
              o.status, o.attempts, json.dumps(o.actions_taken), o.closed_cycle,
-             o.note, self.boot_id, time.time()))
+             o.note, self.boot_id, time.time(),
+             o.drive, o.stage, json.dumps(o.subgoals),
+             json.dumps(o.diagnosis) if o.diagnosis else None))
         self.db.commit()
 
     def open_objective(self):
@@ -369,14 +379,18 @@ class MemoryStore:
             return None
         from ..cognition.objectives import Objective
         return Objective(
-            id=r["id"], gap_id=r["gap_id"], statement=r["statement"],
+            id=r["id"], gap_id=r["gap_id"], drive=r["drive"] or "",
+            statement=r["statement"],
             metric_key=r["metric_key"], direction=r["direction"],
             start_value=r["start_value"], current_value=r["current_value"],
             target_value=r["target_value"], deadline_cycles=r["deadline_cycles"],
             opened_cycle=r["opened_cycle"], status=r["status"],
             attempts=r["attempts"] or 0,
             actions_taken=json.loads(r["actions_taken"] or "[]"),
-            closed_cycle=r["closed_cycle"], note=r["note"] or "")
+            closed_cycle=r["closed_cycle"], note=r["note"] or "",
+            stage=r["stage"] or "reduce",
+            subgoals=json.loads(r["subgoals"] or "[]"),
+            diagnosis=json.loads(r["diagnosis"]) if r["diagnosis"] else None)
 
     def objectives_summary(self) -> dict:
         rows = self.db.execute("SELECT status, COUNT(*) n FROM objectives"

@@ -81,6 +81,14 @@ class Action:
     risk = 0.05
     reversible = "regenerable"
     permissions: list[str] = ["fs.housekeep"]
+    # The observation this action moves. This is what makes agency DERIVED rather than
+    # asserted: a drive is actionable iff some registered action declares its metric.
+    # Nothing anywhere hard-codes "the footprint gap is the actionable one".
+    metric: str | None = None
+    # A diagnostic produces knowledge instead of change. It moves no metric, so it can
+    # never satisfy an objective - but without it the organism cannot know what its
+    # metric is even made of.
+    diagnostic: bool = False
 
     def applicable(self, ctx: ActionContext) -> tuple[bool, str]:
         raise NotImplementedError
@@ -94,11 +102,13 @@ class Action:
     def describe(self) -> dict:
         return {"name": self.name, "description": self.description,
                 "component": self.component, "risk": self.risk,
-                "reversible": self.reversible, "permissions": self.permissions}
+                "reversible": self.reversible, "permissions": self.permissions,
+                "metric": self.metric, "diagnostic": self.diagnostic}
 
 
 # ---------------------------------------------------------------------------
 class ClearExperimentMatrix(Action):
+    metric = "resources.own.total_bytes"
     name = "clear_experiment_matrix"
     description = "remove per-condition experiment artifacts, which re-running regenerates"
     component = "experiments"
@@ -133,6 +143,7 @@ class ClearExperimentMatrix(Action):
 
 
 class ClearBytecode(Action):
+    metric = "resources.own.total_bytes"
     name = "clear_bytecode"
     description = "remove __pycache__ trees, which the interpreter regenerates on import"
     component = "bytecode"
@@ -165,6 +176,7 @@ class ClearBytecode(Action):
 
 
 class PruneSnapshots(Action):
+    metric = "resources.own.total_bytes"
     name = "prune_snapshots"
     description = "keep the most recent boot snapshots, drop older ones"
     component = "snapshots"
@@ -207,6 +219,7 @@ class PruneSnapshots(Action):
 
 
 class VacuumMemory(Action):
+    metric = "resources.own.total_bytes"
     name = "vacuum_memory"
     description = "compact the sqlite store, reclaiming pages freed by superseded beliefs"
     component = "memory"
@@ -249,6 +262,7 @@ class VacuumMemory(Action):
 
 
 class RotateLedger(Action):
+    metric = "resources.own.total_bytes"
     """Seal old ledger records into a gzipped segment.
 
     The riskiest action here, and the one written most defensively: the segment is
@@ -360,11 +374,98 @@ def _verify_segment(seg: Path, sealed: list[str], remaining: list[str]) -> tuple
     return True, "chain intact across the seal boundary"
 
 
+class DiagnoseFootprint(Action):
+    """Find out what the footprint is actually made of.
+
+    This exists because of a distinction the earlier design collapsed. Sensing tells
+    D.O. that its total is over budget; it does not tell it *why*. Measuring the
+    per-component breakdown is work - it walks the tree - and an organism that is
+    handed the breakdown for free never has to decide to investigate.
+
+    So the breakdown is not in default perception. It is the product of an action the
+    organism must choose to take, and it moves no metric: knowledge is not relief.
+    """
+
+    name = "diagnose_footprint"
+    description = "measure which components constitute my own storage footprint"
+    component = "*"
+    risk = 0.0
+    reversible = "regenerable"
+    metric = None
+    diagnostic = True
+
+    def applicable(self, ctx):
+        return True, "the composition of my footprint can always be re-measured"
+
+    def estimate(self, ctx):
+        return 0, "a diagnostic frees nothing; it produces knowledge"
+
+    def execute(self, ctx):
+        t0 = time.perf_counter()
+        from ..sense.footprint import measure
+        comps = measure(ctx.state_dir, ctx.project_root)
+        total = sum(c["bytes"] for c in comps.values())
+        ranked = sorted(comps.items(), key=lambda kv: -kv[1]["bytes"])
+        # Classify by what acting on each component would cost, derived from the
+        # reducers registered against it - not from a list written here.
+        by_component: dict[str, list[str]] = {}
+        for a in REGISTRY.values():
+            if a.diagnostic or not a.metric:
+                continue
+            by_component.setdefault(a.component, []).append(a.name)
+        findings = []
+        for name, c in ranked:
+            names = by_component.get(name, [])
+            # Ask each action what it could ACTUALLY free right now, rather than
+            # assuming the whole component is recoverable. An earlier version counted
+            # component bytes as reducible whenever some action targeted that
+            # component - so the diagnosis reported plenty of headroom while the
+            # planner found nothing to do, because those actions' preconditions were
+            # unmet (no stale snapshots, empty sqlite freelist, too few ledger records).
+            # A diagnosis that over-claims is worse than none: it makes the goal look
+            # achievable and the planner look broken.
+            recoverable, per_action = 0, {}
+            for an in names:
+                act = REGISTRY[an]
+                try:
+                    ok, _ = act.applicable(ctx)
+                    est = act.estimate(ctx)[0] if ok else 0
+                except Exception:
+                    est = 0
+                per_action[an] = int(est)
+                recoverable += int(est)
+            findings.append({
+                "component": name, "bytes": c["bytes"],
+                "share": round(c["bytes"] / total, 4) if total else 0.0,
+                "reducible_by": names,
+                "recoverable_now": recoverable,
+                "per_action": per_action,
+                "verdict": ("reducible" if recoverable > 0 else
+                            "targeted by an action, but nothing recoverable right now"
+                            if names else "not reducible by any action I have"),
+            })
+        return Outcome(True, 0, {
+            "total_bytes": total, "components": findings,
+            "largest": ranked[0][0] if ranked else None,
+            # What is genuinely available now, not what is theoretically in scope.
+            "reducible_bytes": sum(f["recoverable_now"] for f in findings),
+            "in_scope_bytes": sum(f["bytes"] for f in findings if f["reducible_by"]),
+        }, duration_ms=(time.perf_counter() - t0) * 1000)
+
+
 # ---------------------------------------------------------------------------
 REGISTRY: dict[str, Action] = {a.name: a for a in (
+    DiagnoseFootprint(),
     ClearExperimentMatrix(), ClearBytecode(), PruneSnapshots(),
     VacuumMemory(), RotateLedger(),
 )}
+
+
+def actions_moving(metric: str | None) -> list[Action]:
+    """Which registered actions move this metric. The source of truth for whether a
+    drive is actionable at all."""
+    return [a for a in REGISTRY.values()
+            if a.metric == metric and not a.diagnostic] if metric else []
 
 
 def applicable_actions(ctx: ActionContext) -> list[tuple[Action, str]]:

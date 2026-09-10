@@ -106,7 +106,8 @@ class Gap:
             f"{sorted((self.evidence or {}).items())}".encode()).hexdigest()[:12]
 
 
-def detect(view, drive_errors: dict[str, float]) -> list[Gap]:
+def detect(view, drive_errors: dict[str, float],
+           ns_to_drive: dict[str, str] | None = None) -> list[Gap]:
     """Five detectors, each grounded in something actually measured."""
     gaps: list[Gap] = []
     n_slots = max(1, len(REQUIRED_SLOTS))
@@ -114,6 +115,19 @@ def detect(view, drive_errors: dict[str, float]) -> list[Gap]:
     def inst(kind: str) -> float:
         """Instrumental value = the live error of the drive this gap bears on."""
         return round(min(1.0, drive_errors.get(KIND_TO_DRIVE.get(kind, ""), 0.0)), 4)
+
+    def inst_for(key: str, kind: str) -> float:
+        """Same, but for metric-bearing gaps, resolved by observation namespace.
+
+        A resource gap must draw its urgency from the drive that governs ITS metric.
+        Falling back to the gap kind would give every resource threshold the host
+        disk's error, regardless of what it actually measures.
+        """
+        ns = ".".join((key or "").split(".")[:2])
+        name = (ns_to_drive or {}).get(ns)
+        if name and name in drive_errors:
+            return round(min(1.0, drive_errors[name]), 4)
+        return inst(kind)
 
     # 1. Unfilled self-model slots ------------------------------------------
     _, unfilled = view.filled_slots()
@@ -174,7 +188,7 @@ def detect(view, drive_errors: dict[str, float]) -> list[Gap]:
                           if own else
                           ["measure again", "ask the user", "reduce own footprint"]),
             info_gain=0.55,
-            instrumental=inst("RESOURCE_THRESHOLD"),
+            instrumental=inst_for(key, "RESOURCE_THRESHOLD"),
             tractability=0.8 if own else 0.5,
             cost=0.1, risk=0.05,
             # Agency is set properly by `annotate_agency` once the planner has said

@@ -238,6 +238,26 @@ def main(argv: list[str] | None = None) -> int:
         org.close()
         return 0
 
+    if cmd == "capabilities":
+        from .capabilities import growth
+        org = lifecycle.boot(config, quiet=True)
+        hist = growth.history(org.store)
+        print()
+        print("  capability growth across boots")
+        print("  boot   total  seeded  acquired   new this boot")
+        for h in hist:
+            new = ", ".join(json.loads(h["new_this_boot"] or "[]")[:4]) or "-"
+            print(f"  {h['boot_index']:>4}   {h['total']:>5}  {h['seeded']:>6}  "
+                  f"{h['acquired']:>8}   {new[:56]}")
+        acq = [r for r in growth.roster(org.store) if r["origin"] == "acquired"]
+        print()
+        print(f"  acquired (not enumerated by the creator): "
+              f"{len(acq) or 'NONE — nothing has been acquired'}")
+        for r in acq:
+            print(f"     {r['name']}  (first seen boot #{r['first_seen_index']})")
+        org.close()
+        return 0
+
     if cmd == "verify":
         ok, note = verify_chain(config.path("observability.ledger_file"))
         print(f"  ledger: {'INTACT' if ok else 'COMPROMISED'} - {note}")

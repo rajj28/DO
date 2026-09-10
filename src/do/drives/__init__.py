@@ -29,6 +29,26 @@ class Drive:
     deadband: float
     weight: float
     basis: str            # what measurement produced `value` - never left blank
+    # How this drive's value is computed from a measurable quantity. Present only for
+    # drives grounded in a metric that could, in principle, be moved. This is what lets
+    # a goal be DERIVED - invert the set point to get the metric value that satisfies
+    # the drive - instead of being pattern-matched from a hand-written subject string.
+    # Whether it can ACTUALLY be moved is a separate question, answered by the action
+    # registry, not asserted here.
+    spec: dict | None = None
+
+    def satisfying_metric_value(self, budget: float) -> float | None:
+        """The metric value at which this drive returns to its band.
+
+        `fraction_of_budget`: value = 1 - metric/budget, so the drive is satisfied
+        once metric <= (1 - (target - deadband)) * budget.
+        """
+        if not self.spec or not budget:
+            return None
+        if self.spec.get("form") == "fraction_of_budget":
+            satisfying = self.target - self.deadband
+            return max(0.0, (1.0 - satisfying) * float(budget))
+        return None
 
     @property
     def error(self) -> float:
@@ -45,7 +65,8 @@ class Drive:
         return self.error <= 0.0
 
     def to_dict(self) -> dict:
-        return {"name": self.name, "value": round(self.value, 4), "target": self.target,
+        return {"name": self.name, "metric": (self.spec or {}).get("metric_key"),
+                "value": round(self.value, 4), "target": self.target,
                 "deadband": self.deadband, "weight": self.weight,
                 "error": self.error, "weighted_error": self.weighted_error,
                 "satisfied": self.satisfied, "basis": self.basis}
@@ -91,7 +112,12 @@ def compute(view, config, ledger=None) -> list[Drive]:
     persisted = 1.0 if view.memory_counts.get("boots", 0) > 0 else 0.6
     s = spec("continuity")
     drives.append(Drive("continuity", round(headroom * persisted, 4), s["target"],
-                        s["deadband"], s["weight"], basis=basis))
+                        s["deadband"], s["weight"], basis=basis,
+                        spec={"metric_key": "resources.disk.free_bytes",
+                              "budget_key": "resources.disk.total_bytes",
+                              "form": "fraction_of_budget",
+                              "direction": "increase",
+                              "diagnostic": None}))
 
     # frugality: own footprint against its own allocation. Distinct from continuity
     # on purpose: continuity measures the host volume, which D.O. cannot affect, while
@@ -107,7 +133,14 @@ def compute(view, config, ledger=None) -> list[Drive]:
                    f"of quota {view.val('resources.own.quota_bytes')} "
                    f"({float(used):.1%} consumed)")
     drives.append(Drive("frugality", f_val, s["target"], s["deadband"], s["weight"],
-                        basis=f_basis))
+                        basis=f_basis,
+                        spec={"metric_key": "resources.own.total_bytes",
+                              "budget_key": "resources.own.quota_bytes",
+                              "form": "fraction_of_budget",
+                              "direction": "decrease",
+                              # What would explain this metric if it goes out of band.
+                              # D.O. does not start knowing its own composition.
+                              "diagnostic": "diagnose_footprint"}))
 
     # capability: usable / declared
     caps = view.capabilities or []

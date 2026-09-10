@@ -43,6 +43,7 @@ class Candidate:
     risk: float
     reversible: str
     cost_s: float
+    diagnostic: bool = False
     sufficiency: float = 0.0
     score: float = 0.0
     rejected: str | None = None
@@ -51,18 +52,31 @@ class Candidate:
         return asdict(self)
 
 
-def generate(ctx, objective, calibration: dict[str, float]) -> list[Candidate]:
-    """Enumerate every action whose preconditions currently hold."""
+def generate(ctx, objective, calibration: dict[str, float],
+             stage: str | None = None) -> list[Candidate]:
+    """Enumerate applicable actions, restricted to the goal's current stage.
+
+    Stage filtering is what stops the loop short-circuiting its own decomposition. In
+    DIAGNOSE only diagnostics are offered, so D.O. cannot start deleting things before
+    it knows what they are. In REDUCE only actions moving this objective's metric are
+    offered, so a diagnostic cannot be mistaken for progress.
+    """
     from ..capabilities.actions import applicable_actions
 
     out: list[Candidate] = []
     for action, why in applicable_actions(ctx):
+        if stage == "diagnose" and not action.diagnostic:
+            continue
+        if stage == "reduce" and (action.diagnostic
+                                  or action.metric != objective.metric_key):
+            continue
         try:
             raw, basis = action.estimate(ctx)
         except Exception as e:
             raw, basis = 0, f"estimate failed: {type(e).__name__}: {e}"
         k = float(calibration.get(action.name, 1.0))
         out.append(Candidate(
+            diagnostic=action.diagnostic,
             action=action.name, description=action.description,
             component=action.component, predicted_raw=int(raw),
             calibration_k=round(k, 4), predicted=int(raw * k), basis=basis,
@@ -72,6 +86,10 @@ def generate(ctx, objective, calibration: dict[str, float]) -> list[Candidate]:
     return out
 
 
+def w_rev(c: "Candidate") -> float:
+    return REVERSIBILITY_WEIGHT.get(c.reversible, 0.0)
+
+
 def evaluate(candidates: list[Candidate], objective, config) -> list[Candidate]:
     """Score and rank. Returns the list sorted best-first, with rejections marked."""
     needed = max(1.0, objective.start_value - objective.target_value
@@ -79,6 +97,13 @@ def evaluate(candidates: list[Candidate], objective, config) -> list[Candidate]:
     remaining = max(0.0, objective.current_value - objective.target_value)
 
     for c in candidates:
+        # A diagnostic frees nothing by design. Scoring it on predicted gain would
+        # reject it every time, so knowledge is scored on being what this stage needs.
+        if c.diagnostic:
+            c.predicted = max(c.predicted, 1)
+            c.sufficiency = 0.0
+            c.score = round(1.0 + w_rev(c) - 0.7 * c.risk, 4)
+            continue
         if c.predicted <= 0:
             c.rejected = "predicted gain is zero or negative"
             c.score = -1.0
