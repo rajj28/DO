@@ -94,6 +94,13 @@ DEFAULTS: dict[str, Any] = {
         "max_ticks": 1000,
         "max_wall_seconds": 3600,
     },
+    # The creator relationship. The title is relationship data, not a text template:
+    # change it here and D.O. addresses the creator differently everywhere.
+    "creator": {"title": "Sir", "name": None,
+                "channel": "text", "present": True},
+    "comms": {"voice": {"provider": "system", "voice_id": None, "model": None,
+                        "rate": 0,
+                        "speak_utterances": True}},
     "observability": {
         "ledger_file": "var/ledger.jsonl",
         "print_events": False,

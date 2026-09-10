@@ -241,6 +241,24 @@ def main(argv: list[str] | None = None) -> int:
         org.close()
         return 0
 
+    if cmd == "say":
+        from .comms import build_voice, address, play_audio
+        org = lifecycle.boot(config, quiet=True, approver=cli_approver)
+        text = " ".join(rest) or (org.utterance.text if org.utterance else "")
+        spoken_text = address(text, config)
+        voice = build_voice(config)
+        print()
+        print(f"  D.O.: {spoken_text}")
+        print()
+        s = voice.speak(spoken_text, org.gate, config)
+        if s.ok:
+            ok, how = play_audio(s.file)
+            print(f"  [voice {voice.name}: {s.seconds}s, {how}]")
+        else:
+            print(f"  [not spoken: {s.reason}{' - ' + s.error if s.error else ''}]")
+        org.close("say")
+        return 0
+
     if cmd == "capabilities":
         from .capabilities import growth
         org = lifecycle.boot(config, quiet=True)

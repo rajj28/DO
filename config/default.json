@@ -79,7 +79,11 @@
   },
   "comms": {
     "voice": {
-      "provider": "null"
+      "provider": "system",
+      "voice_id": null,
+      "model": null,
+      "rate": 0,
+      "speak_utterances": true
     }
   },
   "observability": {
@@ -98,5 +102,11 @@
   },
   "learning": {
     "alpha": 0.4
+  },
+  "creator": {
+    "title": "Sir",
+    "name": null,
+    "channel": "text",
+    "present": true
   }
 }

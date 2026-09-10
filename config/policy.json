@@ -90,10 +90,16 @@
       "note": "arbitrary subprocess execution is disabled in v1; there is no autonomous path to code execution"
     },
     {
+      "kind": "tts.local",
+      "target": "os:*",
+      "verdict": "allow",
+      "note": "the host's own synthesiser: no account, no cost, and nothing leaves the machine"
+    },
+    {
       "kind": "tts.speak",
       "target": "*",
-      "verdict": "require_approval",
-      "note": "speaking is an outward-facing side effect and costs provider credit"
+      "verdict": "allow",
+      "note": "speaking to the creator on their own machine, with a metered budget; the text is one cognition already produced and this cannot change it"
     },
     {
       "kind": "human.ask",

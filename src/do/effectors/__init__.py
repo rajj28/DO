@@ -14,6 +14,7 @@ from __future__ import annotations
 import fnmatch
 import json
 import socket
+import subprocess
 import time
 import urllib.error
 import urllib.request
@@ -119,6 +120,7 @@ class Gate:
             "fs.read": self._fs_read,
             "fs.write": self._fs_write,
             "tts.speak": self._tts,
+            "tts.local": self._tts_local,
             "human.ask": self._human_ask,
             **self.extra,
         }.get(req.kind)
@@ -188,6 +190,46 @@ class Gate:
                     f"{_http_error(e)} | request_bytes={len(payload)} "
                     f"| attempts={attempt}") from None
 
+    def _tts_local(self, req: EffectRequest):
+        """Speak using the operating system's own synthesiser. Costs nothing, sends
+        nothing off the host, and needs no account.
+
+        The text is written to a file and read back by the synthesiser rather than
+        interpolated into the command line. D.O. generates the text it speaks, so
+        splicing it into a shell string would let an utterance containing a quote or a
+        semicolon execute something - and the whole point of this gate is that there
+        is exactly one place where that could ever happen.
+        """
+        if not req.target.startswith("os:"):
+            raise NotImplementedError(f"unknown local tts target {req.target!r}")
+        import platform
+        if platform.system() != "Windows":
+            raise NotImplementedError("local synthesis is implemented for Windows only")
+
+        text = str(req.payload.get("text", ""))
+        out = self.sandbox / "voice"
+        out.mkdir(parents=True, exist_ok=True)
+        stamp = int(time.time() * 1000)
+        txt, wav = out / f"say-{stamp}.txt", out / f"say-{stamp}.wav"
+        txt.write_text(text, encoding="utf-8")
+
+        rate = int(req.payload.get("rate", 0))          # -10..10
+        script = (
+            "Add-Type -AssemblyName System.Speech; "
+            f"$t = Get-Content -Raw -Encoding UTF8 '{txt}'; "
+            "$s = New-Object System.Speech.Synthesis.SpeechSynthesizer; "
+            f"$s.Rate = {rate}; "
+            f"$s.SetOutputToWaveFile('{wav}'); "
+            "$s.Speak($t); $s.Dispose()")
+        r = subprocess.run(
+            ["powershell", "-NoProfile", "-NonInteractive", "-Command", script],
+            capture_output=True, text=True,
+            timeout=float(req.payload.get("timeout", 60)))
+        if r.returncode != 0 or not wav.exists():
+            raise RuntimeError(f"local synthesis failed: {(r.stderr or '').strip()[:200]}")
+        return {"file": str(wav), "bytes": wav.stat().st_size,
+                "engine": "windows-sapi", "chars": len(text), "cost": 0}
+
     def _resolve_sandboxed(self, target: str) -> Path:
         rel = target.split("sandbox:", 1)[-1].lstrip("/\\")
         p = (self.sandbox / rel).resolve()
@@ -206,7 +248,39 @@ class Gate:
         return {"written": str(p), "bytes": p.stat().st_size}
 
     def _tts(self, req: EffectRequest):
-        raise NotImplementedError("no TTS provider configured (see comms/voice.py)")
+        """Synthesise speech. The audio is written into the sandbox and only its
+        metadata is returned, so the ledger records that D.O. spoke and what it said
+        without carrying a megabyte of PCM in every event.
+
+        Requests raw PCM rather than MP3 so playback needs no decoder: `wave` and
+        `winsound` are both standard library, and the seed stays dependency-free.
+        """
+        body = json.dumps(req.payload.get("body", {})).encode("utf-8")
+        r = urllib.request.Request(
+            req.target, data=body,
+            headers={"Content-Type": "application/json",
+                     "Accept": "audio/pcm", "User-Agent": USER_AGENT,
+                     **req.payload.get("headers", {})})
+        try:
+            with urllib.request.urlopen(
+                    r, timeout=float(req.payload.get("timeout", 60))) as resp:
+                pcm = resp.read()
+        except urllib.error.HTTPError as e:
+            raise RuntimeError(_http_error(e)) from None
+
+        import wave
+        rate = int(req.payload.get("sample_rate", 24000))
+        out = self.sandbox / "voice"
+        out.mkdir(parents=True, exist_ok=True)
+        path = out / f"say-{int(time.time() * 1000)}.wav"
+        with wave.open(str(path), "wb") as w:
+            w.setnchannels(1)
+            w.setsampwidth(2)          # 16-bit
+            w.setframerate(rate)
+            w.writeframes(pcm)
+        return {"file": str(path), "pcm_bytes": len(pcm), "sample_rate": rate,
+                "seconds": round(len(pcm) / (2 * rate), 2),
+                "chars": len(req.payload.get("body", {}).get("text", ""))}
 
     def _human_ask(self, req: EffectRequest):
         return {"queued": True, "question": req.payload.get("question", "")}

@@ -65,46 +65,5 @@ class TextIO:
         return line
 
 
-class VoiceInterface(Protocol):
-    name: str
-
-    def speak(self, text: str, gate) -> dict: ...
-
-
-class NullVoice:
-    """The default. Says explicitly that nothing was spoken, rather than pretending."""
-
-    name = "null"
-
-    def speak(self, text: str, gate) -> dict:
-        return {"spoken": False, "reason": "no voice provider configured",
-                "chars": len(text)}
-
-
-class ElevenLabsVoice:
-    """TTS adapter. Requires ELEVENLABS_API_KEY in the environment and an approved
-    `tts.speak` effect; both are checked at call time, not at construction."""
-
-    name = "elevenlabs"
-    ENDPOINT = "https://api.elevenlabs.io/v1/text-to-speech"
-
-    def __init__(self, voice_id: str = "21m00Tcm4TlvDq8ikWAM",
-                 model: str = "eleven_turbo_v2_5"):
-        self.voice_id = voice_id
-        self.model = model
-
-    def speak(self, text: str, gate) -> dict:
-        key = os.environ.get("ELEVENLABS_API_KEY")
-        if not key:
-            return {"spoken": False, "reason": "ELEVENLABS_API_KEY not set"}
-        res = gate.request(EffectRequest(
-            kind="tts.speak", target=f"{self.ENDPOINT}/{self.voice_id}",
-            justification="render an utterance already produced by cognition as audio",
-            payload={"headers": {"xi-api-key": key},
-                     "body": {"text": text, "model_id": self.model}}))
-        return {"spoken": res.ok, "reason": res.reason, "error": res.error}
-
-
-def build_voice(config) -> VoiceInterface:
-    return {"elevenlabs": ElevenLabsVoice}.get(
-        config.get("comms.voice.provider", "null"), NullVoice)()
+from .voice import (VoiceInterface, NullVoice, ElevenLabsVoice, SystemVoice, Spoken,  # noqa: E402
+                    address, build as build_voice, play as play_audio)

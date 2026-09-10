@@ -1,10 +1,14 @@
 #!/usr/bin/env bash
 # Refuse to commit anything that looks like a live credential.
+# Match VALUES, never header or variable NAMES: an early version listed
+# 'xi-api-key' and blocked its own commit, because naming a header in source is
+# normal and safe. A guard with false positives gets bypassed, which is worse
+# than not having one.
 # This exists because a real key reached .env.example - a file deliberately NOT
 # gitignored, so the next `git add -A` would have published it. Vigilance is not a
 # control; a hook that fails the commit is.
 set -u
-PATTERN='gsk_[A-Za-z0-9]{20,}|sk-[A-Za-z0-9]{20,}|AIza[A-Za-z0-9_-]{30,}|xox[baprs]-[A-Za-z0-9-]{10,}|-----BEGIN [A-Z ]*PRIVATE KEY-----'
+PATTERN='gsk_[A-Za-z0-9]{20,}|sk[-_][A-Za-z0-9]{20,}|AIza[A-Za-z0-9_-]{30,}|xox[baprs]-[A-Za-z0-9-]{10,}|-----BEGIN [A-Z ]*PRIVATE KEY-----'
 if git diff --cached -U0 | grep -aEq "^\+.*($PATTERN)"; then
   echo "pre-commit: BLOCKED - staged changes contain a credential-shaped value." >&2
   echo "  files:" >&2
