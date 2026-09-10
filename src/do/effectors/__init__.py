@@ -122,6 +122,7 @@ class Gate:
             "tts.speak": self._tts,
             "tts.local": self._tts_local,
             "os.task": self._os_task,
+            "web.investigate": self._web_investigate,
             "human.ask": self._human_ask,
             **self.extra,
         }.get(req.kind)
@@ -205,6 +206,32 @@ class Gate:
                            timeout=float(req.payload.get("timeout", 30)))
         return {"returncode": r.returncode, "stdout": r.stdout[-500:],
                 "stderr": r.stderr[-500:]}
+
+    def _web_investigate(self, req: EffectRequest):
+        """Look up a term against a keyless public summary endpoint. Read-only; the
+        term is the target. Returns a provenance record. A 404 is information (no such
+        article), not a failure. urllib lives here inside the gate by design."""
+        term = req.target
+        raw = term.split(":", 1)[0] if ":" in term else term
+        safe = "".join(ch if ch.isalnum() or ch in "-_." else "%%%02X" % ord(ch)
+                       for ch in raw)
+        url = ("https://en.wikipedia.org/api/rest_v1/page/summary/" + safe)
+        r = urllib.request.Request(url, headers={"User-Agent": USER_AGENT,
+                                                 "Accept": "application/json"})
+        try:
+            with urllib.request.urlopen(r, timeout=float(
+                    req.payload.get("timeout", 15))) as resp:
+                d = json.loads(resp.read(80000).decode("utf-8", "replace"))
+        except urllib.error.HTTPError as e:
+            return {"term": term, "found": False, "reason": f"HTTP {e.code}", "url": url}
+        except Exception as e:
+            return {"term": term, "found": False,
+                    "reason": f"{type(e).__name__}", "url": url}
+        if d.get("type") == "standard" and d.get("extract"):
+            return {"term": term, "found": True, "title": d.get("title"),
+                    "extract": d["extract"][:500], "url": url}
+        return {"term": term, "found": False,
+                "reason": d.get("type", "no summary"), "url": url}
 
     def _tts_local(self, req: EffectRequest):
         """Speak using the operating system's own synthesiser. Costs nothing, sends

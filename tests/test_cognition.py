@@ -236,3 +236,35 @@ class TestMetabolism(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestCuriosityActionable(unittest.TestCase):
+    """Curiosity is a real drive his cycle can choose, not just a harness trigger.
+
+    With survival relieved (storage healthy) and referents undescribed, comprehension
+    should be able to become an actionable objective served by investigate_referent -
+    and investigate_referent must be the action the registry says moves its metric.
+    """
+
+    def test_investigate_moves_comprehension_metric(self):
+        from do.capabilities.actions import actions_moving
+        names = [a.name for a in actions_moving("self.referents.described")]
+        self.assertIn("investigate_referent", names,
+                      "comprehension's metric must be moved by an action, or "
+                      "curiosity can never become a goal")
+
+    def test_comprehension_goal_forms_when_survival_relieved(self):
+        from do.cognition import objectives as objmod
+        with tempfile.TemporaryDirectory() as d:
+            org = boot_in(Path(d) / "c", {
+                "resources.disk.free_ratio": 0.6,
+                "resources.disk.free_bytes": 140 * 1024**3,
+                "resources.own.total_bytes": 50_000})
+            # a referent gap should bind to comprehension and, because an action moves
+            # its metric, become a goal rather than a mere escalation
+            ref = next((g for g in org.gaps if g.kind == "UNDESCRIBED_REFERENT"), None)
+            goal = objmod.generate(ref, org.view, org.drives, 0, org.config) if ref else None
+            org.close()
+            self.assertIsNotNone(ref, "there should be undescribed referents to be curious about")
+            self.assertIsNotNone(goal, "an undescribed referent must be able to become a goal")
+            self.assertEqual("self.referents.described", goal.metric_key)

@@ -140,7 +140,7 @@ def boot(config, perturb: dict | None = None, quiet: bool = False,
 
     def _action_ctx():
         return ActionContext(state_dir=state_dir, project_root=workspace,
-                             config=config, db=store.db)
+                             config=config, db=store.db, gate=gate)
 
     gate.extra["fs.housekeep"] = housekeeping_effector(_action_ctx)
 
@@ -201,6 +201,7 @@ def boot(config, perturb: dict | None = None, quiet: bool = False,
 
     registry = seed_registry(view, ledger)
     view.capabilities = registry.as_list()
+    _refresh_referents(view)
 
     # Roster census. Every capability the creator enumerated is recorded as `seeded`,
     # so anything that ever appears as `acquired` is unambiguously not something a
@@ -336,16 +337,25 @@ def _rank(found, view, store, config, ctx):
     here rather than inside `detect()`: perception should not need to know what the
     organism is capable of.
     """
-    # Agency read from the registry: a gap is actionable iff some applicable action
-    # declares it moves a metric in the same observation namespace as the gap's
-    # subject. No subject string is named anywhere.
-    from ..cognition.objectives import namespace_of
+    # Agency read from the registry: a gap is actionable iff the drive it binds to has
+    # a metric that some applicable action moves. This is the general rule - a gap can
+    # be served either directly (its subject shares the metric's namespace, e.g. a
+    # resource gap) or through its drive (a referent gap binds to comprehension, whose
+    # metric `self.referents.described` is moved by investigate_referent even though
+    # the gap's subject is a bare name). No subject string is named anywhere.
+    from ..cognition.objectives import namespace_of, drive_for
     actionable: set[str] = set()
     try:
-        movable = {namespace_of(a.metric) for a, _ in applicable_actions(ctx)
+        movable = {a.metric for a, _ in applicable_actions(ctx)
                    if getattr(a, "metric", None) and not a.diagnostic}
+        movable_ns = {namespace_of(m) for m in movable}
+        drives = view.drives or []
         for g in found:
-            if namespace_of(g.subject) in movable:
+            if namespace_of(g.subject) in movable_ns:
+                actionable.add(g.subject)
+                continue
+            d = drive_for(g, drives)
+            if d and (d.spec or {}).get("metric_key") in movable:
                 actionable.add(g.subject)
     except Exception:
         pass
@@ -527,6 +537,8 @@ def cycle(org: Organism, quiet: bool = True,
                                              or cfg.root), quota)
         for o in s.obs:
             org.view.observations[o.key] = o
+        _mark_described(org.view, store)
+        _refresh_referents(org.view)
 
     # --- OBSERVE -----------------------------------------------------------
     observe()
@@ -785,6 +797,21 @@ def _standing(ident, gate, store) -> tuple[float, str]:
     return val, (f"base grant 0.20 + {ident.boot_index - 1} prior boot(s) + "
                  f"{resolved} question(s) the creator answered - "
                  f"{len(gate.denials)} refused action(s)")
+
+
+def _refresh_referents(view) -> None:
+    """Expose the described/total referent counts as observations, so the
+    comprehension drive's goal machinery can read them like any other metric. Called
+    at boot and after an investigation, so a described referent shows up immediately."""
+    from ..kernel.types import Observation, Epistemic, Namespace
+    total = len(view.referents)
+    described = sum(1 for r in view.referents if r.get("described"))
+    for key, val, why in [("self.referents.total", total, "count of visible referents"),
+                          ("self.referents.described", described,
+                           "referents I hold a real description of")]:
+        view.observations[key] = Observation(
+            key=key, value=val, epistemic=Epistemic.OBSERVED, source="referent census",
+            namespace=Namespace.SELF, note=why)
 
 
 def _mark_described(view: StateView, store) -> None:

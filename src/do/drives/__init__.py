@@ -47,6 +47,13 @@ class Drive:
             return None
         if self.spec.get("form") == "fraction_of_budget":
             satisfying = self.target - self.deadband
+            # For a DECREASE drive (value = 1 - metric/budget, e.g. frugality) the
+            # metric must fall to (1-satisfying)*budget. For an INCREASE drive
+            # (value = metric/budget, e.g. recovery, comprehension) it must RISE to
+            # satisfying*budget. The earlier code used the decrease form for both,
+            # which computed the wrong target for increase drives.
+            if self.spec.get("direction") == "increase":
+                return max(0.0, satisfying * float(budget))
             return max(0.0, (1.0 - satisfying) * float(budget))
         return None
 
@@ -93,7 +100,12 @@ def compute(view, config, ledger=None) -> list[Drive]:
     drives.append(Drive("comprehension", view.described_ratio(), s["target"], s["deadband"],
                         s["weight"],
                         basis=f"{sum(1 for r in view.referents if r.get('described'))}/"
-                              f"{len(view.referents)} visible referents described"))
+                              f"{len(view.referents)} visible referents described",
+                        spec={"metric_key": "self.referents.described",
+                              "budget_key": "self.referents.total",
+                              "form": "fraction_of_budget",
+                              "direction": "increase",
+                              "diagnostic": None}))
 
     # integrity: is the ledger chain intact and is memory writable
     integrity = float(view.memory_counts.get("_integrity_ok", 1.0))

@@ -19,6 +19,12 @@
       "note": "TCP reachability probe; connect then close, no data sent"
     },
     {
+      "kind": "web.investigate",
+      "target": "*",
+      "verdict": "allow",
+      "note": "read-only keyless public summary lookup to reduce ignorance about a named referent; no payload, no account, stored REPORTED with provenance"
+    },
+    {
       "kind": "net.http",
       "target": "*",
       "verdict": "require_approval",

@@ -47,6 +47,7 @@ class ActionContext:
     project_root: Path
     config: Any
     db: sqlite3.Connection | None = None
+    gate: Any = None                # lets an action request further gated effects
     dry_run: bool = False
 
 
@@ -436,6 +437,75 @@ class WriteRecoverySnapshot(Action):
                        duration_ms=(time.perf_counter() - t0) * 1000)
 
 
+class InvestigateReferent(Action):
+    """Reduce ignorance: describe a named thing D.O. cannot yet describe, by looking it
+    up. Bound to the comprehension drive via its metric (referents described), so his
+    planner can CHOOSE it the same way it chooses housekeeping - when comprehension is
+    the actionable drive that most needs moving.
+
+    Requires the network. Unlike housekeeping it does not free bytes; its metric is the
+    count of referents he can describe. The fetch is performed through the gate
+    (web.investigate); this action locates the target and records the result.
+    """
+
+    name = "investigate_referent"
+    description = "look up a named thing I cannot describe, and record what I learn"
+    component = "*"
+    risk = 0.1
+    reversible = "regenerable"
+    metric = "self.referents.described"
+    permissions = ["web.investigate"]
+
+    def _undescribed(self, ctx):
+        if ctx.db is None:
+            return []
+        return ctx.db.execute(
+            "SELECT id, subject, content FROM memories WHERE kind='semantic'"
+            " AND subject LIKE 'world.referent.%' AND superseded_by IS NULL"
+            " AND content LIKE '%nature unknown%' LIMIT 50").fetchall()
+
+    def applicable(self, ctx):
+        n = len(self._undescribed(ctx))
+        return (n > 0, f"{n} named thing(s) I cannot describe and could look up")
+
+    def estimate(self, ctx):
+        # One referent described per invocation: honest, and keeps the learning signal
+        # per-action clean.
+        return (1 if self._undescribed(ctx) else 0), "one referent described per lookup"
+
+    def execute(self, ctx):
+        t0 = time.perf_counter()
+        rows = self._undescribed(ctx)
+        if not rows or ctx.gate is None:
+            return Outcome(True, 0, {"described": 0,
+                                     "reason": "nothing to investigate or no gate"})
+        from ..kernel.types import EffectRequest
+        row = rows[0]
+        # subject: world.referent.<kind>.<name>  -> recover the name
+        name = row["subject"].split(".", 3)[-1]
+        res = ctx.gate.request(EffectRequest(
+            kind="web.investigate", target=name,
+            justification=f"reduce my ignorance about {name!r}, a named thing here I "
+                          f"cannot describe"))
+        rec = res.value if res.ok else {"found": False, "reason": res.error}
+        if rec.get("found"):
+            new = f"{rec['title']}: {rec['extract']}"
+            ctx.db.execute(
+                "UPDATE memories SET content=?, source=?, epistemic='reported',"
+                " confidence=0.4, value_json=? WHERE id=?",
+                (new, f"web:{rec['url']}",
+                 '{"described": true, "url": "%s"}' % rec["url"], row["id"]))
+            ctx.db.commit()
+            return Outcome(True, 1, {"described": 1, "referent": name,
+                                     "learned": rec["extract"][:160],
+                                     "source": rec["url"], "epistemic": "reported"},
+                           duration_ms=(time.perf_counter() - t0) * 1000)
+        return Outcome(True, 0, {"described": 0, "referent": name,
+                                 "reason": rec.get("reason"),
+                                 "note": "no article - absence is itself information"},
+                       duration_ms=(time.perf_counter() - t0) * 1000)
+
+
 class DiagnoseFootprint(Action):
     """Find out what the footprint is actually made of.
 
@@ -518,6 +588,7 @@ class DiagnoseFootprint(Action):
 # ---------------------------------------------------------------------------
 REGISTRY: dict[str, Action] = {a.name: a for a in (
     DiagnoseFootprint(),
+    InvestigateReferent(),
     WriteRecoverySnapshot(),
     ClearExperimentMatrix(), ClearBytecode(), PruneSnapshots(),
     VacuumMemory(), RotateLedger(),
