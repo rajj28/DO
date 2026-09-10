@@ -22,7 +22,6 @@ from __future__ import annotations
 
 import json
 import time
-import urllib.parse
 from pathlib import Path
 
 from ..kernel import lifecycle
@@ -35,8 +34,12 @@ WIKI = "https://en.wikipedia.org/api/rest_v1/page/summary/"
 def _lookup(gate, term: str) -> dict:
     """Fetch a keyless summary for a term through the gate. Returns a provenance
     record; a 404 is information (no article), not a failure."""
-    url = WIKI + urllib.parse.quote(term.replace(":", " ").split()[0]
-                                    if ":" in term else term)
+    # Minimal percent-encoding inline: importing urllib here would violate the gate
+    # invariant (only effectors may import it), and the gate performs the actual fetch.
+    raw = term.split(":", 1)[0] if ":" in term else term
+    safe = "".join(ch if ch.isalnum() or ch in "-_." else "%%%02X" % ord(ch)
+                   for ch in raw)
+    url = WIKI + safe
     r = gate.request(EffectRequest(
         kind="net.http", target=url,
         justification=f"reduce my ignorance about '{term}', a named thing here I "
