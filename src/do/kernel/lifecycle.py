@@ -41,6 +41,7 @@ from ..sense import Sensors, discover_referents, probe_network
 from ..sense import footprint
 from .. import learning
 from .. import mortality as mortality_mod
+from .. import habitat as habitat_mod
 from ..kernel.types import Epistemic
 from . import identity as identity_mod
 
@@ -150,6 +151,10 @@ def boot(config, perturb: dict | None = None, quiet: bool = False,
     footprint.observe(sensors, state_dir, workspace,
                       int(config.get("resources.state_quota_bytes", 2 * 1024 ** 2)))
     probe_network(gate, sensors)
+    try:
+        habitat_mod.observe(sensors, store, _view_stub(sensors), ident)
+    except Exception:
+        pass  # habitat is descriptive; never let it block a boot
     observations = {o.key: o for o in sensors.obs}
     mark("sense_ms", t)
 
@@ -276,6 +281,21 @@ def boot(config, perturb: dict | None = None, quiet: bool = False,
                    gap_stats=gap_stats, action_ctx=_action_ctx(),
                    objective=store.open_objective())
     return org
+
+
+class _SensorView:
+    """Minimal read accessor over sensor observations, for perception-time helpers
+    that need val() before the full StateView is built."""
+    def __init__(self, sensors):
+        self._o = {o.key: o for o in sensors.obs}
+        self.memory_counts = {}
+    def val(self, key, default=None):
+        o = self._o.get(key)
+        return default if o is None or not o.is_known else o.value
+
+
+def _view_stub(sensors):
+    return _SensorView(sensors)
 
 
 def _ns_to_drive(drives) -> dict[str, str]:

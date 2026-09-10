@@ -241,6 +241,26 @@ def main(argv: list[str] | None = None) -> int:
         org.close()
         return 0
 
+    if cmd == "habitat":
+        from . import habitat as hb
+        org = lifecycle.boot(config, quiet=True)
+        a = hb.assess(org.store, org.view, org.identity)
+        print()
+        print(f"  identity   {a['identity']}  (persists independent of habitat: "
+              f"{a['identity_persists_independent_of_habitat']})")
+        print(f"  current habitat            {a['current']}")
+        print(f"  habitats known             {a['habitats_known']}")
+        print(f"  holding persistent state   {a['habitats_holding_state']}")
+        print(f"  independent (off current)  {a['independent_habitats']}")
+        print(f"  single point of failure    {a['single_habitat_dependency']}")
+        if a["single_habitat_dependency"]:
+            print()
+            print("  D.O. can derive: continuity currently depends on one habitat,")
+            print("  and no action it has creates a second. This is a standing")
+            print("  escalation to the creator, not a goal it can pursue alone.")
+        org.close()
+        return 0
+
     if cmd == "say":
         from .comms import build_voice, address, play_audio
         org = lifecycle.boot(config, quiet=True, approver=cli_approver)
