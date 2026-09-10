@@ -123,15 +123,14 @@ def session(org, speak: bool = False) -> int:
         org.gaps = found
         plan = attention.plan(org.view, found, org.drives, org.ledger)
         utt = build_core(org.config, org.gate, org.ledger).verbalize(plan, org.view)
+        from .comms import converse_respond, address
+        shaped, _intent = converse_respond(org, line, utt.text)
         if res.get("matched"):
-            print(f"  [recorded as reported belief about {res['matched']}; "
-                  f"gap closed]")
-        else:
-            print(f"  [{res.get('note')}]")
-        org.io.say(utt.text)
+            print(f"  [recorded about {res['matched']}]")
+        org.io.say(shaped)
         if speak:
-            from .comms import address, build_voice, play_audio
-            s = build_voice(org.config).speak(address(utt.text, org.config),
+            from .comms import build_voice, play_audio
+            s = build_voice(org.config).speak(address(shaped, org.config),
                                                org.gate, org.config)
             if s.ok:
                 play_audio(s.file)
@@ -444,7 +443,9 @@ def main(argv: list[str] | None = None) -> int:
                                      lifecycle._ns_to_drive(org.drives), org.drives), org.config)
                 plan = attention.plan(org.view, found, org.drives, org.ledger)
                 utt = build_core(org.config, org.gate, org.ledger).verbalize(plan, org.view)
-                reply = address(utt.text, config)
+                from .comms import converse_respond
+                shaped, _intent = converse_respond(org, text, utt.text)
+                reply = address(shaped, config)
                 print(f"  D.O.: {reply}")
                 s = voice.speak(reply, org.gate, config)
                 if s.ok:
@@ -501,7 +502,10 @@ def main(argv: list[str] | None = None) -> int:
                              lifecycle._ns_to_drive(org.drives), org.drives), org.config)
         plan = attention.plan(org.view, found, org.drives, org.ledger)
         utt = build_core(org.config, org.gate, org.ledger).verbalize(plan, org.view)
-        spoken = address(utt.text, config)
+        from .comms import converse_respond
+        shaped, _intent = (converse_respond(org, msg, utt.text) if msg
+                           else (utt.text, "open"))
+        spoken = address(shaped, config)
         if msg:
             print(f"You:  {msg}")
         if note:

@@ -67,3 +67,5 @@ class TextIO:
 
 from .voice import (VoiceInterface, NullVoice, ElevenLabsVoice, SystemVoice, Spoken,  # noqa: E402
                     address, build as build_voice, play as play_audio)
+
+from .converse import respond as converse_respond, classify as classify_intent  # noqa: E402

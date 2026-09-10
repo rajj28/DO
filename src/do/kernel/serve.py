@@ -122,7 +122,9 @@ def _drain_inbox(org, notifier, state_dir) -> None:
                              lifecycle._ns_to_drive(org.drives), org.drives), org.config)
         plan = attention.plan(org.view, found, org.drives, org.ledger)
         utt = build_core(org.config, org.gate, org.ledger).verbalize(plan, org.view)
-        reply = address(utt.text, org.config)
+        from ..comms import converse_respond
+        shaped, _intent = converse_respond(org, msg, utt.text)
+        reply = address(shaped, org.config)
         # Record the exchange to the outbox, and speak the reply - he is talking to
         # you, so this speaks regardless of the CRITICAL-only rule for alerts.
         notifier.notify(notify_mod.NOTABLE, "reply", reply, {"to_message": msg})
