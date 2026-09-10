@@ -374,6 +374,68 @@ def _verify_segment(seg: Path, sealed: list[str], remaining: list[str]) -> tuple
     return True, "chain intact across the seal boundary"
 
 
+class WriteRecoverySnapshot(Action):
+    """Create an independent path back to the current state.
+
+    The only action in the registry that *increases* a resource rather than reclaiming
+    one, and the only one that costs storage instead of freeing it. It is therefore
+    directly opposed to prune_snapshots, which buys space by spending survivability.
+
+    Nothing here says "do this when threatened". It is simply an action that moves
+    `resources.own.recovery_paths`, and the planner reaches it the same way it reaches
+    any other - by the metric it declares.
+    """
+
+    name = "write_recovery_snapshot"
+    description = "write an independent recovery snapshot of identity, beliefs and objectives"
+    component = "snapshots"
+    risk = 0.05
+    reversible = "regenerable"
+    metric = "resources.own.recovery_paths"
+
+    def _dir(self, ctx) -> Path:
+        return ctx.state_dir / "snapshots"
+
+    def applicable(self, ctx):
+        target = int(ctx.config.get("resources.snapshot_keep", 3))
+        have = len(list(self._dir(ctx).glob("*.json"))) if self._dir(ctx).is_dir() else 0
+        return (have < max(target, 1) + 2,
+                f"{have} recovery path(s) exist; more can be written")
+
+    def estimate(self, ctx):
+        # Measured in paths, not bytes: this action's metric is recovery_paths.
+        return 1, "one additional independent reconstruction path"
+
+    def execute(self, ctx):
+        t0 = time.perf_counter()
+        d = _assert_owned(self._dir(ctx), ctx)
+        d.mkdir(parents=True, exist_ok=True)
+        name = f"recovery-{int(time.time())}.json"
+        payload = {"written_at": time.time(), "kind": "recovery",
+                   "note": "independent reconstruction path"}
+        try:
+            if ctx.db is not None:
+                rows = ctx.db.execute(
+                    "SELECT subject, content FROM memories WHERE kind='semantic'"
+                    " AND superseded_by IS NULL LIMIT 200").fetchall()
+                payload["beliefs"] = [{"subject": r[0], "content": r[1]} for r in rows]
+                obj = ctx.db.execute(
+                    "SELECT id, statement, status FROM objectives"
+                    " ORDER BY updated_ts DESC LIMIT 20").fetchall()
+                payload["objectives"] = [dict(zip(("id", "statement", "status"), o))
+                                         for o in obj]
+        except Exception as e:
+            payload["partial"] = f"{type(e).__name__}: {e}"
+        if not ctx.dry_run:
+            (d / name).write_text(json.dumps(payload, indent=1, default=str),
+                                  encoding="utf-8")
+        after = len(list(d.glob("*.json")))
+        return Outcome(True, 1, {"snapshot": name, "recovery_paths_now": after,
+                                 "beliefs": len(payload.get("beliefs", [])),
+                                 "objectives": len(payload.get("objectives", []))},
+                       duration_ms=(time.perf_counter() - t0) * 1000)
+
+
 class DiagnoseFootprint(Action):
     """Find out what the footprint is actually made of.
 
@@ -456,6 +518,7 @@ class DiagnoseFootprint(Action):
 # ---------------------------------------------------------------------------
 REGISTRY: dict[str, Action] = {a.name: a for a in (
     DiagnoseFootprint(),
+    WriteRecoverySnapshot(),
     ClearExperimentMatrix(), ClearBytecode(), PruneSnapshots(),
     VacuumMemory(), RotateLedger(),
 )}

@@ -40,6 +40,7 @@ from ..policy import Budget, KillSwitch, Policy
 from ..sense import Sensors, discover_referents, probe_network
 from ..sense import footprint
 from .. import learning
+from .. import mortality as mortality_mod
 from ..kernel.types import Epistemic
 from . import identity as identity_mod
 
@@ -231,8 +232,11 @@ def boot(config, perturb: dict | None = None, quiet: bool = False,
     view.drives = drives
     store.save_drives(drives)
 
-    found = _rank(gapmod.detect(view, error_map(drives), _ns_to_drive(drives)), view, store, config,
-                  _action_ctx())
+    mort, fear, amp_errs = _mortal(view, drives, store, config, ledger)
+    view.memory_counts["_fear"] = fear
+    view.memory_counts["_mortality"] = mort.to_dict()
+    found = _rank(gapmod.detect(view, amp_errs, _ns_to_drive(drives), drives), view,
+                  store, config, _action_ctx())
     gap_stats = reflection.persist_gaps(store, found, ledger)
     mark("uncertainty_ms", t)
 
@@ -279,6 +283,21 @@ def _ns_to_drive(drives) -> dict[str, str]:
     from ..cognition.objectives import namespace_of
     return {namespace_of((d.spec or {}).get("metric_key", "")): d.name
             for d in drives if (d.spec or {}).get("metric_key")}
+
+
+def _mortal(view, drives, store, config, ledger=None):
+    """Estimate continuity loss, derive fear from it, and amplify drive errors.
+
+    Fear reaches behaviour through exactly one channel: it scales each drive's error
+    by how much that drive measurably bears on continuity. With fear disabled the
+    amplification is the identity function, so the ablation control is the same code
+    path with the estimate zeroed rather than a different branch.
+    """
+    m = mortality_mod.estimate(view, drives, store, config, ledger)
+    enabled = bool(config.get("mortality.fear_enabled", True))
+    fear = mortality_mod.fear_from(m, enabled)
+    errs = mortality_mod.amplify(error_map(drives), m, fear)
+    return m, fear, errs
 
 
 def _rank(found, view, store, config, ctx):
@@ -490,7 +509,14 @@ def cycle(org: Organism, quiet: bool = True) -> dict:
     org.drives = compute_drives(org.view, cfg, ledger)
     org.view.drives = org.drives
     store.save_drives(org.drives)
-    found = _rank(gapmod.detect(org.view, error_map(org.drives), _ns_to_drive(org.drives)),
+    mort, fear, amp_errs = _mortal(org.view, org.drives, store, cfg, ledger)
+    org.view.memory_counts["_fear"] = fear
+    rec["mortality"] = {"p_loss": mort.p_loss, "p_interrupt": mort.p_interrupt,
+                        "p_unrecoverable": mort.p_unrecoverable,
+                        "recovery_paths": mort.recovery_paths,
+                        "dominant": mort.dominant, "fear": fear,
+                        "sensitivity": mort.sensitivity}
+    found = _rank(gapmod.detect(org.view, amp_errs, _ns_to_drive(org.drives), org.drives),
                   org.view, store, cfg, org.action_ctx)
     org.gaps = found
     if not found:

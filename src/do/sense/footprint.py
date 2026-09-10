@@ -91,6 +91,17 @@ def observe(sensors, state_dir: Path, project_root: Path, quota_bytes: int,
     sensors._add("resources.own.quota_bytes", quota_bytes, Epistemic.REPORTED,
                  "config:resources.state_quota_bytes", Namespace.SELF, unit="bytes",
                  note="an allocation, not a measurement: a number a human chose")
+    # Recovery paths are a resource like any other: measurable, and something an
+    # action can change in either direction. prune_snapshots destroys them;
+    # write_recovery_snapshot creates them. That tension is real, not staged.
+    snaps = list((Path(state_dir) / "snapshots").glob("*.json"))
+    sensors._add("resources.own.snapshot_count", len(snaps), Epistemic.OBSERVED,
+                 "filesystem:snapshots", Namespace.SELF, unit="paths")
+    sensors._add("resources.own.recovery_paths", len(snaps), Epistemic.INFERRED,
+                 "count of independent reconstructions available", Namespace.SELF,
+                 note="no off-host copy exists; snapshots are the only path")
+    sensors._add("resources.own.snapshot_target", 3, Epistemic.REPORTED,
+                 "config:resources.recovery_paths_target", Namespace.SELF)
     sensors._add("resources.own.quota_used_ratio",
                  round(total / quota_bytes, 4) if quota_bytes else None,
                  Epistemic.INFERRED, "own.total/own.quota", Namespace.SELF)

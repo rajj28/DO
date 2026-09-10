@@ -142,6 +142,26 @@ def compute(view, config, ledger=None) -> list[Drive]:
                               # D.O. does not start knowing its own composition.
                               "diagnostic": "diagnose_footprint"}))
 
+    # recovery: how many independent ways this state could be reconstructed. Deliberately
+    # in tension with frugality - snapshots cost storage, and pruning them buys space by
+    # spending survivability. Which one wins is exactly what the fear ablation measures.
+    paths = view.val("resources.own.recovery_paths")
+    target_paths = float(view.val("resources.own.snapshot_target") or 3)
+    s = spec("recovery")
+    if paths is None:
+        r_val, r_basis = 0.5, "resources.own.recovery_paths not measured"
+    else:
+        r_val = min(1.0, float(paths) / max(1.0, target_paths))
+        r_basis = (f"{int(paths)} of {int(target_paths)} recovery path(s); "
+                   f"no off-host copy")
+    drives.append(Drive("recovery", r_val, s["target"], s["deadband"], s["weight"],
+                        basis=r_basis,
+                        spec={"metric_key": "resources.own.recovery_paths",
+                              "budget_key": "resources.own.snapshot_target",
+                              "form": "fraction_of_budget",
+                              "direction": "increase",
+                              "diagnostic": None}))
+
     # capability: usable / declared
     caps = view.capabilities or []
     usable = sum(1 for c in caps if c.get("status") == "available")

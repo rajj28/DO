@@ -107,7 +107,7 @@ class Gap:
 
 
 def detect(view, drive_errors: dict[str, float],
-           ns_to_drive: dict[str, str] | None = None) -> list[Gap]:
+           ns_to_drive: dict[str, str] | None = None, drives=None) -> list[Gap]:
     """Five detectors, each grounded in something actually measured."""
     gaps: list[Gap] = []
     n_slots = max(1, len(REQUIRED_SLOTS))
@@ -195,6 +195,46 @@ def detect(view, drive_errors: dict[str, float],
             # which actions actually apply. This is only the default.
             agency=1.0 if own else 0.25,
             evidence={"value": val, "limit": limit, "bound": bound},
+        ))
+
+    # 2b. Any other drive that names a measurable metric and is out of band.
+    # The list above is legacy phrasing for three familiar ratios; this pass is the
+    # general rule, and it is why a drive added later becomes visible to attention
+    # without anyone editing a list. `recovery` was invisible until this existed:
+    # the drive was out of band, the action to fix it was registered, and no gap was
+    # ever generated - so the fear ablation measured a mechanism that could not fire.
+    covered = {g.subject for g in gaps}
+    for d in (drives or []):
+        spec = getattr(d, "spec", None) or {}
+        metric = spec.get("metric_key")
+        if not metric or d.satisfied or metric in covered:
+            continue
+        ns_here = ".".join(metric.split(".")[:2])
+        if any(k.startswith(ns_here) and k in covered for k in covered):
+            # A ratio gap in the same namespace already represents this drive.
+            if ns_to_drive and ns_to_drive.get(ns_here) == d.name:
+                continue
+        val = view.val(metric)
+        if val is None:
+            continue
+        direction = spec.get("direction", "decrease")
+        gaps.append(Gap(
+            id=_gid("RESOURCE_THRESHOLD", metric), kind="RESOURCE_THRESHOLD",
+            about=Namespace.SELF.value if metric.startswith("resources.own")
+            else Namespace.RESOURCES.value,
+            subject=metric,
+            statement=(f"{metric}={val} leaves drive '{d.name}' at {d.value:.3f} "
+                       f"against a target of {d.target:.2f}; "
+                       f"{'too little' if direction == 'increase' else 'too much'}"),
+            question=f"Can I {'increase' if direction == 'increase' else 'reduce'} "
+                     f"{_phrase(metric)}?",
+            why_it_matters=f"drive '{d.name}' is outside its band: {d.basis}",
+            reducible_by=["act on the metric directly", "measure again"],
+            info_gain=0.5,
+            instrumental=round(min(1.0, drive_errors.get(d.name, 0.0)), 4),
+            tractability=0.8, cost=0.1, risk=0.05,
+            evidence={"value": val, "drive": d.name, "drive_value": round(d.value, 4),
+                      "target": d.target},
         ))
 
     # 3. Capabilities present but not affordable -----------------------------

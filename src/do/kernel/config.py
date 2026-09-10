@@ -56,6 +56,7 @@ DEFAULTS: dict[str, Any] = {
         "integrity":     {"target": 1.00, "deadband": 0.00, "weight": 1.5},
         "continuity":    {"target": 1.00, "deadband": 0.15, "weight": 1.3},
         "frugality":     {"target": 0.50, "deadband": 0.20, "weight": 1.2},
+        "recovery":      {"target": 1.00, "deadband": 0.20, "weight": 1.2},
         "capability":    {"target": 0.80, "deadband": 0.15, "weight": 0.9},
         "standing":      {"target": 0.50, "deadband": 0.20, "weight": 1.1},
     },
@@ -76,6 +77,9 @@ DEFAULTS: dict[str, Any] = {
     "planning": {"w_gain": 1.0, "w_sufficiency": 0.5, "w_reversible": 0.4,
                  "w_risk": 0.7, "w_cost": 0.2},
     "objectives": {"deadline_cycles": 6},
+    # Fear is defined as the mortality estimate; the only knob is the horizon it is
+    # assessed over, and whether the signal reaches behaviour at all (for ablation).
+    "mortality": {"horizon_ops": 20.0, "fear_enabled": True},
     "learning": {"alpha": 0.4},
     # Effect kinds the creator has pre-granted for a run. Empty by default: an
     # unattended run denies anything needing approval rather than allowing it.

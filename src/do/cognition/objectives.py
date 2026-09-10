@@ -134,6 +134,12 @@ def drive_for(gap, drives):
     continuity share `resources.disk`. That is a structural fact about the observation
     tree, not a hand-written pairing, so it keeps working as drives are added.
     """
+    # Exact metric first. Two drives can share a namespace - frugality and recovery
+    # both live in `resources.own` - so namespace alone is ambiguous once more than
+    # one drive measures the same family.
+    for d in drives:
+        if (d.spec or {}).get("metric_key") == gap.subject:
+            return d
     ns = namespace_of(gap.subject)
     for d in drives:
         mk = (d.spec or {}).get("metric_key")

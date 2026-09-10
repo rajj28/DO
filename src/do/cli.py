@@ -13,6 +13,7 @@
     do reset           destroy runtime state (asks first)
     do experiment first-boot [--full]   the DO_FIRST_BOOT protocol
     do experiment h4 [runs]             the H4 learning ablation
+    do experiment fear                  the fear/mortality ablation
     do experiment survival              the survival-loop protocol
 
 Global flags:
@@ -294,6 +295,9 @@ def main(argv: list[str] | None = None) -> int:
             from .experiments.h4_learning import run as h4run
             n = next((int(x) for x in rest if x.isdigit()), 5)
             return h4run(config, runs=n)
+        if which in ("fear", "fear-ablation", "mortality"):
+            from .experiments.fear_ablation import run as frun
+            return frun(config)
         if which in ("survival", "survival-loop"):
             from .experiments.survival_loop import run as srun
             return srun(config)
