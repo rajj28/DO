@@ -84,6 +84,17 @@
       "note": "there is no general delete effect; removal happens only inside declared housekeeping actions"
     },
     {
+      "kind": "os.task",
+      "target": "schtasks*",
+      "verdict": "allow",
+      "note": "register/query/remove the D.O. logon task; argv is allowlisted to schtasks and passed as a list, never a shell string"
+    },
+    {
+      "kind": "os.task",
+      "target": "*",
+      "verdict": "deny"
+    },
+    {
       "kind": "proc.exec",
       "target": "*",
       "verdict": "deny",

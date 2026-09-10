@@ -121,6 +121,7 @@ class Gate:
             "fs.write": self._fs_write,
             "tts.speak": self._tts,
             "tts.local": self._tts_local,
+            "os.task": self._os_task,
             "human.ask": self._human_ask,
             **self.extra,
         }.get(req.kind)
@@ -189,6 +190,21 @@ class Gate:
                 raise RuntimeError(
                     f"{_http_error(e)} | request_bytes={len(payload)} "
                     f"| attempts={attempt}") from None
+
+    def _os_task(self, req: EffectRequest):
+        """Run one allowlisted OS task command (schtasks). Installing a supervised
+        task is a side effect, so it belongs here behind the gate rather than as a
+        bare subprocess call in the CLI - which the import invariant correctly
+        forbids. The argv is passed as a list (never a shell string) and the program
+        is allowlisted, so nothing D.O. or a webpage produced can reach a shell."""
+        argv = req.payload.get("argv") or []
+        allowed = {"schtasks"}
+        if not argv or argv[0] not in allowed:
+            raise RuntimeError(f"os.task refuses {argv[:1]}; allowed: {sorted(allowed)}")
+        r = subprocess.run(argv, capture_output=True, text=True,
+                           timeout=float(req.payload.get("timeout", 30)))
+        return {"returncode": r.returncode, "stdout": r.stdout[-500:],
+                "stderr": r.stderr[-500:]}
 
     def _tts_local(self, req: EffectRequest):
         """Speak using the operating system's own synthesiser. Costs nothing, sends

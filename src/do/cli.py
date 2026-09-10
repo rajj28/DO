@@ -175,6 +175,87 @@ def print_why(ledger, boot_id: str | None = None) -> None:
     print()
 
 
+def _install_service(config, rest) -> int:
+    """Register a Windows Scheduled Task that runs `do serve` at logon and restarts it
+    on failure. This is the real 24/7 mechanism: the task supervises the process, and
+    the single-instance lock keeps a manual run from colliding with it.
+
+    Writes the schtasks command to a file and, unless --dry-run, runs it. Uninstall
+    with `do uninstall-service` or `schtasks /delete /tn D.O.`. Nothing here is
+    autonomous - it is the creator installing a supervised local loop.
+    """
+    import sys
+    task = "D.O."
+    py = sys.executable
+    entry = str((config.root / "src" / "do" / "__main__.py").resolve())
+    interval = int(config.get("serve.interval_s", 30))
+    # The command the task runs. pythonw would run without a console; python keeps
+    # logs visible. A logon trigger, restart-on-failure, and run only while the
+    # creator is logged in - never as SYSTEM, so it holds no more authority than the
+    # creator does.
+    run_cmd = f'"{py}" "{entry}" serve --interval {interval}'
+    xml_note = (config.root / "deploy_service.txt")
+    xml_note.parent.mkdir(parents=True, exist_ok=True)
+
+    create = [
+        "schtasks", "/Create", "/TN", task, "/SC", "ONLOGON",
+        "/RL", "LIMITED", "/F", "/TR", run_cmd,
+    ]
+    xml_note.write_text("\n".join([
+        "D.O. 24/7 service - what gets installed",
+        "========================================",
+        "",
+        f"Task name : {task}",
+        "Trigger   : at logon (your account only; LIMITED rights, never SYSTEM)",
+        f"Runs      : {run_cmd}",
+        "",
+        "Install    : do install-service",
+        "Start now  : schtasks /Run /TN D.O.",
+        "Stop       : do kill        (clean, at the next cycle boundary)",
+        "             schtasks /End /TN D.O.",
+        "Remove     : schtasks /Delete /TN D.O. /F",
+        "Status     : schtasks /Query /TN D.O. /V /FO LIST",
+        "",
+        "Restart-on-failure and a shorter heartbeat can be added in Task Scheduler",
+        "(Properties -> Settings -> 'If the task fails, restart every 1 minute').",
+        "schtasks cannot set that from one command; the GUI or an XML import does.",
+    ]), encoding="utf-8")
+
+    print("  This will register a Windows Scheduled Task:")
+    print(f"    name    : {task}")
+    print(f"    trigger : at logon, your account, LIMITED rights (never SYSTEM)")
+    print(f"    runs    : {run_cmd}")
+    print(f"    details : {xml_note}")
+    if "--dry-run" in rest:
+        print("  --dry-run: not installed. Command that would run:")
+        print("    " + " ".join(create))
+        return 0
+    if sys.stdin.isatty():
+        try:
+            if input("  install now? [y/N] ").strip().lower() not in ("y", "yes"):
+                print("  aborted. Re-run without confirmation, or use --dry-run.")
+                return 1
+        except (EOFError, KeyboardInterrupt):
+            print("  aborted."); return 1
+    from .kernel import lifecycle
+    from .effectors import cli_approver
+    from .kernel.types import EffectRequest
+    org = lifecycle.boot(config, quiet=True, approver=cli_approver)
+    res = org.gate.request(EffectRequest(
+        kind="os.task", target="schtasks:create",
+        justification="register the D.O. logon task at the creator's request",
+        payload={"argv": create, "timeout": 30}))
+    org.close("install-service")
+    if res.ok and (res.value or {}).get("returncode") == 0:
+        print("  installed. It will start at your next logon.")
+        print("  start it now: schtasks /Run /TN D.O.")
+        print("  stop anytime: do kill")
+        return 0
+    err = (res.value or {}).get("stderr") or res.error or res.reason
+    print(f"  schtasks failed: {str(err).strip()[:200]}")
+    return 1
+
+
 def main(argv: list[str] | None = None) -> int:
     argv = list(argv if argv is not None else sys.argv[1:])
     config, argv = _cfg(argv)
@@ -240,6 +321,47 @@ def main(argv: list[str] | None = None) -> int:
                   f"conf={r['confidence']:.2f} {r['epistemic']:<9} src={r['source'][:34]}")
             print(f"     {r['content'][:150]}")
         org.close()
+        return 0
+
+    if cmd == "uninstall-service":
+        from .kernel import lifecycle
+        from .kernel.types import EffectRequest
+        org = lifecycle.boot(config, quiet=True)
+        res = org.gate.request(EffectRequest(
+            kind="os.task", target="schtasks:delete",
+            justification="remove the D.O. logon task at the creator's request",
+            payload={"argv": ["schtasks", "/Delete", "/TN", "D.O.", "/F"]}))
+        org.close("uninstall-service")
+        print("  removed." if res.ok and (res.value or {}).get("returncode") == 0
+              else f"  {((res.value or {}).get('stderr') or res.error or '').strip()[:160]}")
+        return 0
+
+    if cmd == "serve":
+        from .kernel.serve import serve
+        over = {}
+        for i, a in enumerate(rest):
+            if a == "--interval" and i + 1 < len(rest):
+                over["interval_s"] = float(rest[i + 1])
+            if a == "--max-cycles" and i + 1 < len(rest):
+                over["max_cycles"] = int(rest[i + 1])
+        for k, v in over.items():
+            config.set(f"serve.{k}", v)
+        return serve(config, once=("--once" in rest))
+
+    if cmd == "install-service":
+        from .kernel.serve import serve  # noqa: F401 - validates import before install
+        return _install_service(config, rest)
+
+    if cmd == "outbox":
+        sd = config.path("organism.state_dir")
+        f = sd / "outbox.jsonl"
+        if not f.exists():
+            print("  (no notifications yet)")
+            return 0
+        n = int(rest[0]) if rest and rest[0].isdigit() else 15
+        for line in f.read_text(encoding="utf-8").splitlines()[-n:]:
+            e = json.loads(line)
+            print(f"  [{e['iso']}] {e['level'].upper():<8} {e['title']}: {e['message'][:90]}")
         return 0
 
     if cmd == "habitat":

@@ -1,0 +1,17 @@
+D.O. 24/7 service - what gets installed
+========================================
+
+Task name : D.O.
+Trigger   : at logon (your account only; LIMITED rights, never SYSTEM)
+Runs      : "C:\Python311\python.exe" "C:\Users\Acer\DO\src\do\__main__.py" serve --interval 30
+
+Install    : do install-service
+Start now  : schtasks /Run /TN D.O.
+Stop       : do kill        (clean, at the next cycle boundary)
+             schtasks /End /TN D.O.
+Remove     : schtasks /Delete /TN D.O. /F
+Status     : schtasks /Query /TN D.O. /V /FO LIST
+
+Restart-on-failure and a shorter heartbeat can be added in Task Scheduler
+(Properties -> Settings -> 'If the task fails, restart every 1 minute').
+schtasks cannot set that from one command; the GUI or an XML import does.

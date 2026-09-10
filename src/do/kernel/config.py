@@ -81,6 +81,12 @@ DEFAULTS: dict[str, Any] = {
     "planning": {"w_gain": 1.0, "w_sufficiency": 0.5, "w_reversible": 0.4,
                  "w_risk": 0.7, "w_cost": 0.2},
     "objectives": {"deadline_cycles": 6},
+    # The always-on loop. interval_s paces cycles; a single run is bounded by
+    # max_cycles and max_seconds so a supervised task can never spin unbounded.
+    "serve": {"interval_s": 30, "max_cycles": 0, "max_seconds": 0,
+              "min_disk_free_ratio": 0.005, "backoff_s": 300,
+              "voice_min_level": "critical",
+              "fear_warning": 0.4, "fear_critical": 0.7, "drive_warning": 0.9},
     # Fear is defined as the mortality estimate; the only knob is the horizon it is
     # assessed over, and whether the signal reaches behaviour at all (for ablation).
     "mortality": {"horizon_ops": 20.0, "fear_enabled": True},
