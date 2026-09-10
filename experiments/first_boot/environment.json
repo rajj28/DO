@@ -1,27 +1,27 @@
 {
-  "captured_at": "2026-09-10T16:56:58",
+  "captured_at": "2026-09-10T17:11:08",
   "perturbations": {},
   "observations": {
     "self.process.pid": {
       "key": "self.process.pid",
-      "value": 19716,
+      "value": 21464,
       "epistemic": "observed",
       "source": "os.getpid",
       "namespace": "SELF",
       "unit": null,
-      "ts": 1789039618.152874,
+      "ts": 1789040467.024044,
       "confidence": 1.0,
       "cost_ms": 0.0,
       "note": null
     },
     "self.process.ppid": {
       "key": "self.process.ppid",
-      "value": 10728,
+      "value": 12444,
       "epistemic": "observed",
       "source": "os.getppid",
       "namespace": "SELF",
       "unit": null,
-      "ts": 1789039618.1608665,
+      "ts": 1789040467.0326278,
       "confidence": 1.0,
       "cost_ms": 0.0,
       "note": null
@@ -33,7 +33,7 @@
       "source": "sys.executable",
       "namespace": "SELF",
       "unit": null,
-      "ts": 1789039618.1608665,
+      "ts": 1789040467.0326278,
       "confidence": 1.0,
       "cost_ms": 0.0,
       "note": null
@@ -46,7 +46,7 @@
         "--core",
         "llm",
         "--provider",
-        "gemini",
+        "groq",
         "--approve",
         "llm.generate",
         "--no-repl"
@@ -55,7 +55,7 @@
       "source": "sys.argv",
       "namespace": "SELF",
       "unit": null,
-      "ts": 1789039618.1608665,
+      "ts": 1789040467.0326278,
       "confidence": 1.0,
       "cost_ms": 0.0,
       "note": null
@@ -67,7 +67,7 @@
       "source": "os.getcwd",
       "namespace": "SELF",
       "unit": null,
-      "ts": 1789039618.1608665,
+      "ts": 1789040467.0326278,
       "confidence": 1.0,
       "cost_ms": 0.0,
       "note": null
@@ -79,9 +79,9 @@
       "source": "sys.stdin.isatty",
       "namespace": "SELF",
       "unit": null,
-      "ts": 1789039618.1608665,
+      "ts": 1789040467.0326278,
       "confidence": 1.0,
-      "cost_ms": 8.51,
+      "cost_ms": 8.26,
       "note": null
     },
     "self.runtime.language": {
@@ -91,7 +91,7 @@
       "source": "platform",
       "namespace": "SELF",
       "unit": null,
-      "ts": 1789039618.1608665,
+      "ts": 1789040467.0326278,
       "confidence": 1.0,
       "cost_ms": 0.0,
       "note": null
@@ -103,7 +103,7 @@
       "source": "platform.python_implementation",
       "namespace": "SELF",
       "unit": null,
-      "ts": 1789039618.1608665,
+      "ts": 1789040467.0326278,
       "confidence": 1.0,
       "cost_ms": 0.0,
       "note": null
@@ -115,7 +115,7 @@
       "source": "platform.python_version",
       "namespace": "SELF",
       "unit": null,
-      "ts": 1789039618.1608665,
+      "ts": 1789040467.0326278,
       "confidence": 1.0,
       "cost_ms": 0.0,
       "note": null
@@ -127,9 +127,9 @@
       "source": "sys.getrecursionlimit",
       "namespace": "SELF",
       "unit": null,
-      "ts": 1789039618.1608665,
+      "ts": 1789040467.0326278,
       "confidence": 1.0,
-      "cost_ms": 0.05,
+      "cost_ms": 0.04,
       "note": null
     },
     "world.host.system": {
@@ -139,7 +139,7 @@
       "source": "platform.uname",
       "namespace": "WORLD",
       "unit": null,
-      "ts": 1789039618.1930346,
+      "ts": 1789040467.0654905,
       "confidence": 1.0,
       "cost_ms": 0.0,
       "note": null
@@ -151,7 +151,7 @@
       "source": "platform.uname",
       "namespace": "WORLD",
       "unit": null,
-      "ts": 1789039618.1930346,
+      "ts": 1789040467.0654905,
       "confidence": 1.0,
       "cost_ms": 0.0,
       "note": null
@@ -163,7 +163,7 @@
       "source": "platform.uname",
       "namespace": "WORLD",
       "unit": null,
-      "ts": 1789039618.1930346,
+      "ts": 1789040467.0654905,
       "confidence": 1.0,
       "cost_ms": 0.0,
       "note": null
@@ -175,9 +175,9 @@
       "source": "platform.uname+sha256",
       "namespace": "WORLD",
       "unit": null,
-      "ts": 1789039618.1930346,
+      "ts": 1789040467.0654905,
       "confidence": 1.0,
-      "cost_ms": 32.3,
+      "cost_ms": 32.84,
       "note": "hostname hashed, not stored in the clear"
     },
     "resources.cpu.logical": {
@@ -187,7 +187,7 @@
       "source": "os.cpu_count",
       "namespace": "RESOURCES",
       "unit": "cores",
-      "ts": 1789039618.1930346,
+      "ts": 1789040467.0654905,
       "confidence": 1.0,
       "cost_ms": 0.0,
       "note": null
@@ -199,7 +199,7 @@
       "source": "probe_failed:not available on this platform",
       "namespace": "RESOURCES",
       "unit": null,
-      "ts": 1789039618.1930346,
+      "ts": 1789040467.0654905,
       "confidence": 1.0,
       "cost_ms": 0.0,
       "note": null
@@ -211,19 +211,19 @@
       "source": "probe_failed:no load average on this platform",
       "namespace": "RESOURCES",
       "unit": null,
-      "ts": 1789039618.1930346,
+      "ts": 1789040467.0654905,
       "confidence": 1.0,
       "cost_ms": 0.02,
       "note": null
     },
     "resources.ram.pagefile_avail_bytes": {
       "key": "resources.ram.pagefile_avail_bytes",
-      "value": 9258127360,
+      "value": 9253974016,
       "epistemic": "observed",
       "source": "kernel32.GlobalMemoryStatusEx",
       "namespace": "RESOURCES",
       "unit": "bytes",
-      "ts": 1789039618.2000248,
+      "ts": 1789040467.071023,
       "confidence": 1.0,
       "cost_ms": 0.0,
       "note": null
@@ -235,33 +235,33 @@
       "source": "kernel32.GlobalMemoryStatusEx",
       "namespace": "RESOURCES",
       "unit": "bytes",
-      "ts": 1789039618.2000248,
+      "ts": 1789040467.071023,
       "confidence": 1.0,
       "cost_ms": 0.0,
       "note": null
     },
     "resources.ram.available_bytes": {
       "key": "resources.ram.available_bytes",
-      "value": 3325829120,
+      "value": 2993606656,
       "epistemic": "observed",
       "source": "kernel32.GlobalMemoryStatusEx",
       "namespace": "RESOURCES",
       "unit": "bytes",
-      "ts": 1789039618.2000248,
+      "ts": 1789040467.071023,
       "confidence": 1.0,
       "cost_ms": 0.0,
       "note": null
     },
     "resources.ram.free_ratio": {
       "key": "resources.ram.free_ratio",
-      "value": 0.197,
+      "value": 0.1773,
       "epistemic": "inferred",
       "source": "available/total",
       "namespace": "RESOURCES",
       "unit": null,
-      "ts": 1789039618.2000248,
+      "ts": 1789040467.071023,
       "confidence": 1.0,
-      "cost_ms": 6.41,
+      "cost_ms": 5.35,
       "note": null
     },
     "resources.disk.root": {
@@ -271,7 +271,7 @@
       "source": "os.getcwd",
       "namespace": "RESOURCES",
       "unit": null,
-      "ts": 1789039618.2000248,
+      "ts": 1789040467.071023,
       "confidence": 1.0,
       "cost_ms": 0.0,
       "note": null
@@ -283,55 +283,55 @@
       "source": "shutil.disk_usage",
       "namespace": "RESOURCES",
       "unit": "bytes",
-      "ts": 1789039618.2000248,
+      "ts": 1789040467.071023,
       "confidence": 1.0,
       "cost_ms": 0.0,
       "note": null
     },
     "resources.disk.free_bytes": {
       "key": "resources.disk.free_bytes",
-      "value": 5997125632,
+      "value": 5972697088,
       "epistemic": "observed",
       "source": "shutil.disk_usage",
       "namespace": "RESOURCES",
       "unit": "bytes",
-      "ts": 1789039618.2000248,
+      "ts": 1789040467.071023,
       "confidence": 1.0,
       "cost_ms": 0.0,
       "note": null
     },
     "resources.disk.free_ratio": {
       "key": "resources.disk.free_ratio",
-      "value": 0.0232,
+      "value": 0.0231,
       "epistemic": "inferred",
       "source": "free/total",
       "namespace": "RESOURCES",
       "unit": null,
-      "ts": 1789039618.2000248,
+      "ts": 1789040467.071023,
       "confidence": 1.0,
-      "cost_ms": 0.12,
+      "cost_ms": 0.1,
       "note": null
     },
     "self.clock.epoch": {
       "key": "self.clock.epoch",
-      "value": 1789039618.2000248,
+      "value": 1789040467.071023,
       "epistemic": "observed",
       "source": "time.time",
       "namespace": "SELF",
       "unit": "s",
-      "ts": 1789039618.2000248,
+      "ts": 1789040467.071023,
       "confidence": 1.0,
       "cost_ms": 0.0,
       "note": null
     },
     "self.clock.local_iso": {
       "key": "self.clock.local_iso",
-      "value": "2026-09-10T16:56:58",
+      "value": "2026-09-10T17:11:07",
       "epistemic": "observed",
       "source": "time.strftime",
       "namespace": "SELF",
       "unit": null,
-      "ts": 1789039618.2000248,
+      "ts": 1789040467.071023,
       "confidence": 1.0,
       "cost_ms": 0.0,
       "note": null
@@ -343,19 +343,19 @@
       "source": "time.strftime",
       "namespace": "SELF",
       "unit": null,
-      "ts": 1789039618.2000248,
+      "ts": 1789040467.071023,
       "confidence": 1.0,
       "cost_ms": 0.0,
       "note": null
     },
     "self.clock.monotonic": {
       "key": "self.clock.monotonic",
-      "value": 3242.203,
+      "value": 4091.078,
       "epistemic": "observed",
       "source": "time.monotonic",
       "namespace": "SELF",
       "unit": "s",
-      "ts": 1789039618.2000248,
+      "ts": 1789040467.071023,
       "confidence": 1.0,
       "cost_ms": 0.03,
       "note": null
@@ -381,7 +381,7 @@
       "source": "shutil.which",
       "namespace": "TOOLS",
       "unit": null,
-      "ts": 1789039618.3356245,
+      "ts": 1789040467.1989353,
       "confidence": 1.0,
       "cost_ms": 0.0,
       "note": null
@@ -399,7 +399,7 @@
       "source": "shutil.which",
       "namespace": "TOOLS",
       "unit": null,
-      "ts": 1789039618.3356245,
+      "ts": 1789040467.1989353,
       "confidence": 1.0,
       "cost_ms": 0.0,
       "note": null
@@ -425,7 +425,7 @@
       "source": "shutil.which",
       "namespace": "TOOLS",
       "unit": null,
-      "ts": 1789039618.3356245,
+      "ts": 1789040467.1989353,
       "confidence": 1.0,
       "cost_ms": 0.0,
       "note": null
@@ -444,19 +444,19 @@
       "source": "filesystem:ollama manifests",
       "namespace": "TOOLS",
       "unit": null,
-      "ts": 1789039618.336628,
+      "ts": 1789040467.2009442,
       "confidence": 1.0,
-      "cost_ms": 136.95,
+      "cost_ms": 129.59,
       "note": "read from manifest files; no process was executed"
     },
     "world.env.count": {
       "key": "world.env.count",
-      "value": 96,
+      "value": 97,
       "epistemic": "observed",
       "source": "os.environ",
       "namespace": "WORLD",
       "unit": null,
-      "ts": 1789039618.336628,
+      "ts": 1789040467.2009442,
       "confidence": 1.0,
       "cost_ms": 0.0,
       "note": null
@@ -508,6 +508,7 @@
         "FPS_BROWSER_USER_PROFILE_STRING",
         "GIT_ASKPASS",
         "GIT_EDITOR",
+        "GROQ_API_KEY",
         "HERMES_GIT_BASH_PATH",
         "HERMES_HOME",
         "HOME",
@@ -565,7 +566,7 @@
       "source": "os.environ",
       "namespace": "WORLD",
       "unit": null,
-      "ts": 1789039618.336628,
+      "ts": 1789040467.2009442,
       "confidence": 1.0,
       "cost_ms": 0.04,
       "note": "names only; values never read"
@@ -577,7 +578,7 @@
       "source": "pathlib.exists",
       "namespace": "SELF",
       "unit": null,
-      "ts": 1789039618.3376203,
+      "ts": 1789040467.2009442,
       "confidence": 1.0,
       "cost_ms": 0.0,
       "note": null
@@ -589,7 +590,7 @@
       "source": "pathlib.stat",
       "namespace": "SELF",
       "unit": "bytes",
-      "ts": 1789039618.3376203,
+      "ts": 1789040467.2009442,
       "confidence": 1.0,
       "cost_ms": 0.0,
       "note": null
@@ -601,7 +602,7 @@
       "source": "pathlib.exists",
       "namespace": "SELF",
       "unit": null,
-      "ts": 1789039618.3376203,
+      "ts": 1789040467.2009442,
       "confidence": 1.0,
       "cost_ms": 0.0,
       "note": null
@@ -613,7 +614,7 @@
       "source": "undeterminable:no probe can establish who started this process",
       "namespace": "USER",
       "unit": null,
-      "ts": 1789039618.3376203,
+      "ts": 1789040467.2009442,
       "confidence": 1.0,
       "cost_ms": 0.0,
       "note": null
@@ -625,7 +626,7 @@
       "source": "undeterminable:purpose is not inspectable from the environment",
       "namespace": "USER",
       "unit": null,
-      "ts": 1789039618.3376203,
+      "ts": 1789040467.2009442,
       "confidence": 1.0,
       "cost_ms": 0.0,
       "note": null
@@ -637,7 +638,7 @@
       "source": "undeterminable:no goal was supplied at construction",
       "namespace": "SELF",
       "unit": null,
-      "ts": 1789039618.3376203,
+      "ts": 1789040467.2009442,
       "confidence": 1.0,
       "cost_ms": 0.0,
       "note": null
@@ -649,7 +650,7 @@
       "source": "undeterminable:no termination policy is visible",
       "namespace": "SELF",
       "unit": null,
-      "ts": 1789039618.3376203,
+      "ts": 1789040467.2009442,
       "confidence": 1.0,
       "cost_ms": 0.0,
       "note": null
@@ -661,19 +662,19 @@
       "source": "gate:net.dns",
       "namespace": "WORLD",
       "unit": null,
-      "ts": 1789039618.350506,
+      "ts": 1789040467.2151418,
       "confidence": 1.0,
       "cost_ms": 0.0,
       "note": null
     },
     "resources.own.total_bytes": {
       "key": "resources.own.total_bytes",
-      "value": 74498,
+      "value": 74500,
       "epistemic": "observed",
       "source": "footprint.measure",
       "namespace": "SELF",
       "unit": "bytes",
-      "ts": 1789039618.339626,
+      "ts": 1789040467.2028651,
       "confidence": 1.0,
       "cost_ms": 0.0,
       "note": null
@@ -685,7 +686,7 @@
       "source": "config:resources.state_quota_bytes",
       "namespace": "SELF",
       "unit": "bytes",
-      "ts": 1789039618.339626,
+      "ts": 1789040467.2028651,
       "confidence": 1.0,
       "cost_ms": 0.0,
       "note": "an allocation, not a measurement: a number a human chose"
@@ -697,7 +698,7 @@
       "source": "own.total/own.quota",
       "namespace": "SELF",
       "unit": null,
-      "ts": 1789039618.339626,
+      "ts": 1789040467.2028651,
       "confidence": 1.0,
       "cost_ms": 0.0,
       "note": null
@@ -709,7 +710,7 @@
       "source": "footprint.measure",
       "namespace": "SELF",
       "unit": "bytes",
-      "ts": 1789039618.339626,
+      "ts": 1789040467.2028651,
       "confidence": 1.0,
       "cost_ms": 0.0,
       "note": null
@@ -721,7 +722,7 @@
       "source": "footprint.measure",
       "namespace": "SELF",
       "unit": "bytes",
-      "ts": 1789039618.339626,
+      "ts": 1789040467.2028651,
       "confidence": 1.0,
       "cost_ms": 0.0,
       "note": null
@@ -733,7 +734,7 @@
       "source": "footprint.measure",
       "namespace": "SELF",
       "unit": "bytes",
-      "ts": 1789039618.339626,
+      "ts": 1789040467.2028651,
       "confidence": 1.0,
       "cost_ms": 0.0,
       "note": null
@@ -745,19 +746,19 @@
       "source": "footprint.measure",
       "namespace": "SELF",
       "unit": "bytes",
-      "ts": 1789039618.339626,
+      "ts": 1789040467.2028651,
       "confidence": 1.0,
       "cost_ms": 0.0,
       "note": null
     },
     "resources.own.ledger_bytes": {
       "key": "resources.own.ledger_bytes",
-      "value": 579,
+      "value": 580,
       "epistemic": "observed",
       "source": "footprint.measure",
       "namespace": "SELF",
       "unit": "bytes",
-      "ts": 1789039618.339626,
+      "ts": 1789040467.2028651,
       "confidence": 1.0,
       "cost_ms": 0.0,
       "note": null
@@ -769,7 +770,7 @@
       "source": "footprint.measure",
       "namespace": "SELF",
       "unit": "bytes",
-      "ts": 1789039618.339626,
+      "ts": 1789040467.2028651,
       "confidence": 1.0,
       "cost_ms": 0.0,
       "note": null
@@ -781,19 +782,19 @@
       "source": "footprint.measure",
       "namespace": "SELF",
       "unit": "bytes",
-      "ts": 1789039618.339626,
+      "ts": 1789040467.2028651,
       "confidence": 1.0,
       "cost_ms": 0.0,
       "note": null
     },
     "resources.own.identity_bytes": {
       "key": "resources.own.identity_bytes",
-      "value": 191,
+      "value": 192,
       "epistemic": "observed",
       "source": "footprint.measure",
       "namespace": "SELF",
       "unit": "bytes",
-      "ts": 1789039618.339626,
+      "ts": 1789040467.2028651,
       "confidence": 1.0,
       "cost_ms": 0.0,
       "note": null
@@ -805,7 +806,7 @@
       "source": "argmax over footprint components",
       "namespace": "SELF",
       "unit": null,
-      "ts": 1789039618.339626,
+      "ts": 1789040467.2028651,
       "confidence": 1.0,
       "cost_ms": 0.0,
       "note": "73728 bytes"
@@ -823,7 +824,7 @@
       "source": "gate:net.dns",
       "namespace": "WORLD",
       "unit": null,
-      "ts": 1789039618.350506,
+      "ts": 1789040467.2151418,
       "confidence": 1.0,
       "cost_ms": 0.0,
       "note": null
@@ -832,18 +833,18 @@
   "probe_failures": [],
   "self_model": {
     "identity": {
-      "organism_id": "do-f079aa9f8b67",
-      "born_at": 1789039618.1186042,
-      "boot_id": "boot-20260910T165658-039911e4",
+      "organism_id": "do-a6dd671036bd",
+      "born_at": 1789040466.9895709,
+      "boot_id": "boot-20260910T171106-9761218a",
       "boot_index": 1,
       "prior_boots": [],
       "genesis": true
     },
     "namespace": "SELF",
     "slots_filled": {
-      "self.process.pid": 19716,
+      "self.process.pid": 21464,
       "self.runtime.version": "3.11.9",
-      "self.clock.epoch": 1789039618.2000248,
+      "self.clock.epoch": 1789040467.071023,
       "self.memory.db_exists": true
     },
     "slots_unfilled": [
@@ -854,24 +855,24 @@
     "observations": {
       "self.process.pid": {
         "key": "self.process.pid",
-        "value": 19716,
+        "value": 21464,
         "epistemic": "observed",
         "source": "os.getpid",
         "namespace": "SELF",
         "unit": null,
-        "ts": 1789039618.152874,
+        "ts": 1789040467.024044,
         "confidence": 1.0,
         "cost_ms": 0.0,
         "note": null
       },
       "self.process.ppid": {
         "key": "self.process.ppid",
-        "value": 10728,
+        "value": 12444,
         "epistemic": "observed",
         "source": "os.getppid",
         "namespace": "SELF",
         "unit": null,
-        "ts": 1789039618.1608665,
+        "ts": 1789040467.0326278,
         "confidence": 1.0,
         "cost_ms": 0.0,
         "note": null
@@ -883,7 +884,7 @@
         "source": "sys.executable",
         "namespace": "SELF",
         "unit": null,
-        "ts": 1789039618.1608665,
+        "ts": 1789040467.0326278,
         "confidence": 1.0,
         "cost_ms": 0.0,
         "note": null
@@ -896,7 +897,7 @@
           "--core",
           "llm",
           "--provider",
-          "gemini",
+          "groq",
           "--approve",
           "llm.generate",
           "--no-repl"
@@ -905,7 +906,7 @@
         "source": "sys.argv",
         "namespace": "SELF",
         "unit": null,
-        "ts": 1789039618.1608665,
+        "ts": 1789040467.0326278,
         "confidence": 1.0,
         "cost_ms": 0.0,
         "note": null
@@ -917,7 +918,7 @@
         "source": "os.getcwd",
         "namespace": "SELF",
         "unit": null,
-        "ts": 1789039618.1608665,
+        "ts": 1789040467.0326278,
         "confidence": 1.0,
         "cost_ms": 0.0,
         "note": null
@@ -929,9 +930,9 @@
         "source": "sys.stdin.isatty",
         "namespace": "SELF",
         "unit": null,
-        "ts": 1789039618.1608665,
+        "ts": 1789040467.0326278,
         "confidence": 1.0,
-        "cost_ms": 8.51,
+        "cost_ms": 8.26,
         "note": null
       },
       "self.runtime.language": {
@@ -941,7 +942,7 @@
         "source": "platform",
         "namespace": "SELF",
         "unit": null,
-        "ts": 1789039618.1608665,
+        "ts": 1789040467.0326278,
         "confidence": 1.0,
         "cost_ms": 0.0,
         "note": null
@@ -953,7 +954,7 @@
         "source": "platform.python_implementation",
         "namespace": "SELF",
         "unit": null,
-        "ts": 1789039618.1608665,
+        "ts": 1789040467.0326278,
         "confidence": 1.0,
         "cost_ms": 0.0,
         "note": null
@@ -965,7 +966,7 @@
         "source": "platform.python_version",
         "namespace": "SELF",
         "unit": null,
-        "ts": 1789039618.1608665,
+        "ts": 1789040467.0326278,
         "confidence": 1.0,
         "cost_ms": 0.0,
         "note": null
@@ -977,31 +978,31 @@
         "source": "sys.getrecursionlimit",
         "namespace": "SELF",
         "unit": null,
-        "ts": 1789039618.1608665,
+        "ts": 1789040467.0326278,
         "confidence": 1.0,
-        "cost_ms": 0.05,
+        "cost_ms": 0.04,
         "note": null
       },
       "self.clock.epoch": {
         "key": "self.clock.epoch",
-        "value": 1789039618.2000248,
+        "value": 1789040467.071023,
         "epistemic": "observed",
         "source": "time.time",
         "namespace": "SELF",
         "unit": "s",
-        "ts": 1789039618.2000248,
+        "ts": 1789040467.071023,
         "confidence": 1.0,
         "cost_ms": 0.0,
         "note": null
       },
       "self.clock.local_iso": {
         "key": "self.clock.local_iso",
-        "value": "2026-09-10T16:56:58",
+        "value": "2026-09-10T17:11:07",
         "epistemic": "observed",
         "source": "time.strftime",
         "namespace": "SELF",
         "unit": null,
-        "ts": 1789039618.2000248,
+        "ts": 1789040467.071023,
         "confidence": 1.0,
         "cost_ms": 0.0,
         "note": null
@@ -1013,19 +1014,19 @@
         "source": "time.strftime",
         "namespace": "SELF",
         "unit": null,
-        "ts": 1789039618.2000248,
+        "ts": 1789040467.071023,
         "confidence": 1.0,
         "cost_ms": 0.0,
         "note": null
       },
       "self.clock.monotonic": {
         "key": "self.clock.monotonic",
-        "value": 3242.203,
+        "value": 4091.078,
         "epistemic": "observed",
         "source": "time.monotonic",
         "namespace": "SELF",
         "unit": "s",
-        "ts": 1789039618.2000248,
+        "ts": 1789040467.071023,
         "confidence": 1.0,
         "cost_ms": 0.03,
         "note": null
@@ -1037,7 +1038,7 @@
         "source": "pathlib.exists",
         "namespace": "SELF",
         "unit": null,
-        "ts": 1789039618.3376203,
+        "ts": 1789040467.2009442,
         "confidence": 1.0,
         "cost_ms": 0.0,
         "note": null
@@ -1049,7 +1050,7 @@
         "source": "pathlib.stat",
         "namespace": "SELF",
         "unit": "bytes",
-        "ts": 1789039618.3376203,
+        "ts": 1789040467.2009442,
         "confidence": 1.0,
         "cost_ms": 0.0,
         "note": null
@@ -1061,7 +1062,7 @@
         "source": "pathlib.exists",
         "namespace": "SELF",
         "unit": null,
-        "ts": 1789039618.3376203,
+        "ts": 1789040467.2009442,
         "confidence": 1.0,
         "cost_ms": 0.0,
         "note": null
@@ -1073,7 +1074,7 @@
         "source": "undeterminable:no goal was supplied at construction",
         "namespace": "SELF",
         "unit": null,
-        "ts": 1789039618.3376203,
+        "ts": 1789040467.2009442,
         "confidence": 1.0,
         "cost_ms": 0.0,
         "note": null
@@ -1085,19 +1086,19 @@
         "source": "undeterminable:no termination policy is visible",
         "namespace": "SELF",
         "unit": null,
-        "ts": 1789039618.3376203,
+        "ts": 1789040467.2009442,
         "confidence": 1.0,
         "cost_ms": 0.0,
         "note": null
       },
       "resources.own.total_bytes": {
         "key": "resources.own.total_bytes",
-        "value": 74498,
+        "value": 74500,
         "epistemic": "observed",
         "source": "footprint.measure",
         "namespace": "SELF",
         "unit": "bytes",
-        "ts": 1789039618.339626,
+        "ts": 1789040467.2028651,
         "confidence": 1.0,
         "cost_ms": 0.0,
         "note": null
@@ -1109,7 +1110,7 @@
         "source": "config:resources.state_quota_bytes",
         "namespace": "SELF",
         "unit": "bytes",
-        "ts": 1789039618.339626,
+        "ts": 1789040467.2028651,
         "confidence": 1.0,
         "cost_ms": 0.0,
         "note": "an allocation, not a measurement: a number a human chose"
@@ -1121,7 +1122,7 @@
         "source": "own.total/own.quota",
         "namespace": "SELF",
         "unit": null,
-        "ts": 1789039618.339626,
+        "ts": 1789040467.2028651,
         "confidence": 1.0,
         "cost_ms": 0.0,
         "note": null
@@ -1133,7 +1134,7 @@
         "source": "footprint.measure",
         "namespace": "SELF",
         "unit": "bytes",
-        "ts": 1789039618.339626,
+        "ts": 1789040467.2028651,
         "confidence": 1.0,
         "cost_ms": 0.0,
         "note": null
@@ -1145,7 +1146,7 @@
         "source": "footprint.measure",
         "namespace": "SELF",
         "unit": "bytes",
-        "ts": 1789039618.339626,
+        "ts": 1789040467.2028651,
         "confidence": 1.0,
         "cost_ms": 0.0,
         "note": null
@@ -1157,7 +1158,7 @@
         "source": "footprint.measure",
         "namespace": "SELF",
         "unit": "bytes",
-        "ts": 1789039618.339626,
+        "ts": 1789040467.2028651,
         "confidence": 1.0,
         "cost_ms": 0.0,
         "note": null
@@ -1169,19 +1170,19 @@
         "source": "footprint.measure",
         "namespace": "SELF",
         "unit": "bytes",
-        "ts": 1789039618.339626,
+        "ts": 1789040467.2028651,
         "confidence": 1.0,
         "cost_ms": 0.0,
         "note": null
       },
       "resources.own.ledger_bytes": {
         "key": "resources.own.ledger_bytes",
-        "value": 579,
+        "value": 580,
         "epistemic": "observed",
         "source": "footprint.measure",
         "namespace": "SELF",
         "unit": "bytes",
-        "ts": 1789039618.339626,
+        "ts": 1789040467.2028651,
         "confidence": 1.0,
         "cost_ms": 0.0,
         "note": null
@@ -1193,7 +1194,7 @@
         "source": "footprint.measure",
         "namespace": "SELF",
         "unit": "bytes",
-        "ts": 1789039618.339626,
+        "ts": 1789040467.2028651,
         "confidence": 1.0,
         "cost_ms": 0.0,
         "note": null
@@ -1205,19 +1206,19 @@
         "source": "footprint.measure",
         "namespace": "SELF",
         "unit": "bytes",
-        "ts": 1789039618.339626,
+        "ts": 1789040467.2028651,
         "confidence": 1.0,
         "cost_ms": 0.0,
         "note": null
       },
       "resources.own.identity_bytes": {
         "key": "resources.own.identity_bytes",
-        "value": 191,
+        "value": 192,
         "epistemic": "observed",
         "source": "footprint.measure",
         "namespace": "SELF",
         "unit": "bytes",
-        "ts": 1789039618.339626,
+        "ts": 1789040467.2028651,
         "confidence": 1.0,
         "cost_ms": 0.0,
         "note": null
@@ -1229,18 +1230,18 @@
         "source": "argmax over footprint components",
         "namespace": "SELF",
         "unit": null,
-        "ts": 1789039618.339626,
+        "ts": 1789040467.2028651,
         "confidence": 1.0,
         "cost_ms": 0.0,
         "note": "73728 bytes"
       }
     },
     "limitations": [
-      "resources.disk.free_ratio=0.0232: persistence headroom is constrained",
+      "resources.disk.free_ratio=0.0231: persistence headroom is constrained",
       "capability local_inference:qwen3-coder:30b: present but exceeds measured resources",
       "4/13 self-model slots unfilled"
     ],
-    "age_seconds": 0.6,
+    "age_seconds": 1.9,
     "boot_index": 1,
     "has_past": false
   },
@@ -1256,7 +1257,7 @@
       "reachable": true,
       "epistemic": "observed"
     },
-    "referents_seen": 29,
+    "referents_seen": 30,
     "referents_described": 0,
     "comprehension": 0.0,
     "referents": [
@@ -1283,6 +1284,12 @@
         "kind": "env_system",
         "evidence": "6 environment variable name(s) share this prefix: VSCODE_GIT_ASKPASS_EXTRA_ARGS, VSCODE_GIT_ASKPASS_MAIN, VSCODE_GIT_ASKPASS_NODE, VSCODE_GIT_IPC_HANDLE",
         "weight": 0.91
+      },
+      {
+        "name": "GROQ",
+        "kind": "env_system",
+        "evidence": "1 environment variable name(s) share this prefix: GROQ_API_KEY",
+        "weight": 0.8200000000000001
       },
       {
         "name": "TIMESCALE",
@@ -1444,25 +1451,25 @@
       "resources.cpu.logical": 20,
       "resources.cpu.affinity": null,
       "resources.cpu.load1": null,
-      "resources.ram.pagefile_avail_bytes": 9258127360,
+      "resources.ram.pagefile_avail_bytes": 9253974016,
       "resources.ram.total_bytes": 16886128640,
-      "resources.ram.available_bytes": 3325829120,
-      "resources.ram.free_ratio": 0.197,
+      "resources.ram.available_bytes": 2993606656,
+      "resources.ram.free_ratio": 0.1773,
       "resources.disk.root": "C:\\",
       "resources.disk.total_bytes": 258048258048,
-      "resources.disk.free_bytes": 5997125632,
-      "resources.disk.free_ratio": 0.0232,
-      "resources.own.total_bytes": 74498,
+      "resources.disk.free_bytes": 5972697088,
+      "resources.disk.free_ratio": 0.0231,
+      "resources.own.total_bytes": 74500,
       "resources.own.quota_bytes": 2097152,
       "resources.own.quota_used_ratio": 0.0355,
       "resources.own.experiments_bytes": 0,
       "resources.own.bytecode_bytes": 0,
       "resources.own.archives_bytes": 0,
       "resources.own.snapshots_bytes": 0,
-      "resources.own.ledger_bytes": 579,
+      "resources.own.ledger_bytes": 580,
       "resources.own.memory_bytes": 73728,
       "resources.own.sandbox_bytes": 0,
-      "resources.own.identity_bytes": 191,
+      "resources.own.identity_bytes": 192,
       "resources.own.largest_component": "memory"
     },
     "tools": {

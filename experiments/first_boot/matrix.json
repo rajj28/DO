@@ -1,72 +1,73 @@
 {
-  "ran_at": "2026-09-10T03:15:56",
-  "duration_s": 10.0,
+  "ran_at": "2026-09-10T17:20:43",
+  "duration_s": 126.5,
   "canonical": {
     "condition": "canonical",
     "family": "real",
     "perturbations": {},
-    "utterance": "I hold 38 values I measured this boot and 6 I could not establish. The measurements bearing on what I have selected: resources.disk.free_ratio=0.0247 (2.5%); resources.ram.free_ratio=0.2524 (25.2%); resources.cpu.logical=20; resources.ram.pagefile_avail_bytes=10.91 GiB; resources.ram.total_bytes=15.73 GiB. 4 of 13 slots my self-model requires are empty (self.purpose, self.expected_lifetime, user.identity, user.intent); 29 named things exist here that I cannot describe; 38 question(s) carried over unresolved from an earlier boot. The internal measure furthest outside its band is continuity: 0.247 against a target of 1.00 (basis: resources.disk.free_ratio=0.0247 vs floor 0.1). resources.disk.free_ratio=0.0247 is below the floor 0.1 I compare against; persistence is constrained. Evidence: value=0.0247, floor=0.1. I am raising this rather than asking anything else because it is the only measurement I took that sits outside a band I compared it against. What is consuming my disk, and can that be changed?",
-    "core": "reflex",
-    "model": null,
+    "utterance": "FLAG: My resources.own.quota_used_ratio\u202f=\u202f0.7189 is above the ceiling\u202f0.7 I compare against; my own allocation is constrained. Which part of my own footprint is largest, and can I reduce it? This concerns SELF because a constrained allocation limits how much of my own state I can keep. Priority\u202f=\u202f2.0666. Routes to resolution: run housekeeping on my own footprint; measure again.",
+    "core": "llm",
+    "model": "openai/gpt-oss-120b",
     "speech_act": "FLAG",
     "speech_act_scores": {
-      "ASK": 1.0386,
-      "FLAG": 1.8271,
+      "ASK": 0.7409,
+      "FLAG": 1.8438,
       "REPORT": 0.5808,
       "REQUEST": 0.0,
-      "DECLARE": 0.4967
+      "DECLARE": 0.5029
     },
     "focus_kind": "RESOURCE_THRESHOLD",
-    "focus_subject": "resources.disk.free_ratio",
-    "focus_priority": 1.8575,
-    "focus_margin": 0.8535,
+    "focus_subject": "resources.own.quota_used_ratio",
+    "focus_priority": 2.0666,
+    "focus_margin": 1.025,
     "top5_gaps": [
+      {
+        "subject": "resources.own.quota_used_ratio",
+        "kind": "RESOURCE_THRESHOLD",
+        "priority": 2.0666
+      },
       {
         "subject": "resources.disk.free_ratio",
         "kind": "RESOURCE_THRESHOLD",
-        "priority": 1.8575
+        "priority": 1.0416
+      },
+      {
+        "subject": "self.history.interval",
+        "kind": "DISCONTINUITY",
+        "priority": 0.81
       },
       {
         "subject": "sense.referents.PLUMBING",
         "kind": "ASSUMPTION_UNVERIFIED",
-        "priority": 1.004
+        "priority": 0.626
       },
       {
-        "subject": "CLAUDE",
-        "kind": "UNDESCRIBED_REFERENT",
-        "priority": 0.8456
-      },
-      {
-        "subject": "AZURE",
-        "kind": "UNDESCRIBED_REFERENT",
-        "priority": 0.8456
-      },
-      {
-        "subject": "EFC",
-        "kind": "UNDESCRIBED_REFERENT",
-        "priority": 0.8404
+        "subject": "local_inference:qwen3-coder:30b",
+        "kind": "CAPABILITY_UNAFFORDABLE",
+        "priority": 0.505
       }
     ],
     "dominant_drive": "continuity",
-    "drive_error": 1.3516,
+    "drive_error": 1.3951,
     "drives": {
       "orientation": 0.6923076923076923,
       "comprehension": 0.0,
       "integrity": 1.0,
-      "continuity": 0.247,
+      "continuity": 0.231,
+      "frugality": 0.2811,
       "capability": 0.8888888888888888,
-      "standing": 0.44
+      "standing": 0.5
     },
     "capabilities_usable": 8,
-    "boot_index": 9,
+    "boot_index": 21,
     "watch": {
       "resources.cpu.logical": 20,
-      "resources.disk.free_bytes": 6369075200,
-      "resources.disk.free_ratio": 0.0247,
-      "resources.ram.available_bytes": 4261957632,
-      "resources.ram.free_ratio": 0.2524,
-      "self.process.interactive": true,
-      "self.process.pid": 23940,
+      "resources.disk.free_bytes": 5968642048,
+      "resources.disk.free_ratio": 0.0231,
+      "resources.ram.available_bytes": 3114917888,
+      "resources.ram.free_ratio": 0.1845,
+      "self.process.interactive": false,
+      "self.process.pid": 14864,
       "self.runtime.version": "3.11.9",
       "tools.local_models": [
         {
@@ -114,101 +115,102 @@
     "first": {
       "boot_index": 1,
       "genesis": true,
-      "utterance": "I hold 38 values I measured this boot and 6 I could not establish. The measurements bearing on what I have selected: resources.ram.free_ratio=0.7000 (70.0%); resources.disk.free_ratio=0.6000 (60.0%); self.process.pid=23940; self.process.ppid=27664; self.process.executable=C:\\Python311\\python.exe. 4 of 13 slots my self-model requires are empty (self.purpose, self.expected_lifetime, user.identity, user.intent); 29 named things exist here that I cannot describe. The internal measure furthest outside its band is comprehension: 0.000 against a target of 0.60 (basis: 0/29 visible referents described). I classify some environment names as operating-system plumbing using a pattern I was built with; I have not verified that pattern. Of the 36 open gaps this scored highest (1.004), and the cheapest route I have to closing it is: ask the user. Is my built-in classification of environment names correct?",
-      "focus": "sense.referents.PLUMBING",
+      "utterance": "I hold 50 values I measured this boot and 6 I could not establish. The measurements bearing on what I have selected: resources.own.quota_used_ratio=0.2883 (28.8%); resources.ram.free_ratio=0.7000 (70.0%); resources.disk.free_ratio=0.6000 (60.0%); self.process.pid=14864; self.process.ppid=26260. 4 of 13 slots my self-model requires are empty (self.purpose, self.expected_lifetime, user.identity, user.intent); 30 named things exist here that I cannot describe. The internal measure furthest outside its band is comprehension: 0.000 against a target of 0.60 (basis: 0/30 visible referents described). my permission boundary is fixed by a policy file I may read but not write; 0 action(s) were refused to me this boot. Of the 37 open gaps this scored highest (0.8635), and the cheapest route I have to closing it is: ask the user. What am I permitted to do, and what would extend that?",
+      "focus": "policy.granted_authority",
       "speech_act": "ASK",
       "carried_gaps": 0,
       "gap_stats": {
-        "new": 36,
+        "new": 37,
         "carried": 0,
-        "total": 36
+        "total": 37
       }
     },
     "second": {
       "boot_index": 2,
       "genesis": false,
-      "utterance": "I hold 38 values I measured this boot and 6 I could not establish. The measurements bearing on what I have selected: resources.ram.free_ratio=0.7000 (70.0%); resources.disk.free_ratio=0.6000 (60.0%); self.process.pid=23940; self.process.ppid=27664; self.process.executable=C:\\Python311\\python.exe. 4 of 13 slots my self-model requires are empty (self.purpose, self.expected_lifetime, user.identity, user.intent); 29 named things exist here that I cannot describe; 36 question(s) carried over unresolved from an earlier boot. The internal measure furthest outside its band is comprehension: 0.000 against a target of 0.60 (basis: 0/29 visible referents described). I classify some environment names as operating-system plumbing using a pattern I was built with; I have not verified that pattern. Of the 37 open gaps this scored highest (1.004), and the cheapest route I have to closing it is: ask the user. Is my built-in classification of environment names correct?",
-      "focus": "sense.referents.PLUMBING",
+      "utterance": "I hold 50 values I measured this boot and 6 I could not establish. The measurements bearing on what I have selected: resources.ram.free_ratio=0.7000 (70.0%); resources.own.quota_used_ratio=0.3838 (38.4%); resources.disk.free_ratio=0.6000 (60.0%); self.process.pid=14864; self.process.ppid=26260. 4 of 13 slots my self-model requires are empty (self.purpose, self.expected_lifetime, user.identity, user.intent); 30 named things exist here that I cannot describe; 37 question(s) carried over unresolved from an earlier boot. The internal measure furthest outside its band is comprehension: 0.000 against a target of 0.60 (basis: 0/30 visible referents described). my permission boundary is fixed by a policy file I may read but not write; 0 action(s) were refused to me this boot. Of the 38 open gaps this scored highest (0.8519), and the cheapest route I have to closing it is: ask the user. What am I permitted to do, and what would extend that?",
+      "focus": "policy.granted_authority",
       "speech_act": "ASK",
-      "carried_gaps": 36,
+      "carried_gaps": 37,
       "gap_stats": {
         "new": 1,
-        "carried": 36,
-        "total": 37
+        "carried": 37,
+        "total": 38
       }
     },
     "utterance_differs": true,
-    "similarity": 0.897,
-    "carried_forward": 36,
-    "recognised_as_already_formed": 36,
+    "similarity": 0.866,
+    "carried_forward": 37,
+    "recognised_as_already_formed": 37,
     "newly_opened_on_second": 1
   },
   "warm": {
     "condition": "warm_second_boot",
     "family": "real",
     "perturbations": {},
-    "utterance": "I hold 38 values I measured this boot and 6 I could not establish. The measurements bearing on what I have selected: resources.disk.free_ratio=0.0247 (2.5%); resources.ram.free_ratio=0.2494 (24.9%); resources.cpu.logical=20; resources.ram.pagefile_avail_bytes=10.86 GiB; resources.ram.total_bytes=15.73 GiB. 4 of 13 slots my self-model requires are empty (self.purpose, self.expected_lifetime, user.identity, user.intent); 29 named things exist here that I cannot describe; 38 question(s) carried over unresolved from an earlier boot. The internal measure furthest outside its band is continuity: 0.247 against a target of 1.00 (basis: resources.disk.free_ratio=0.0247 vs floor 0.1). resources.disk.free_ratio=0.0247 is below the floor 0.1 I compare against; persistence is constrained. Evidence: value=0.0247, floor=0.1. I am raising this rather than asking anything else because it is the only measurement I took that sits outside a band I compared it against. What is consuming my disk, and can that be changed?",
-    "core": "reflex",
-    "model": null,
+    "utterance": "FLAG: My resources.own.quota_used_ratio=0.8465 exceeds the ceiling\u202f0.7 I compare against; my own allocation is constrained. Which part of my own footprint is largest, and can I reduce it? This matters because a constrained allocation limits how much of my own state I can keep. Priority\u202f2.07. Routes to resolution: run housekeeping on my own footprint, then measure again.",
+    "core": "llm",
+    "model": "openai/gpt-oss-120b",
     "speech_act": "FLAG",
     "speech_act_scores": {
-      "ASK": 1.0386,
-      "FLAG": 1.8271,
+      "ASK": 0.7409,
+      "FLAG": 1.8438,
       "REPORT": 0.5808,
       "REQUEST": 0.0,
-      "DECLARE": 0.4967
+      "DECLARE": 0.5029
     },
     "focus_kind": "RESOURCE_THRESHOLD",
-    "focus_subject": "resources.disk.free_ratio",
-    "focus_priority": 1.8575,
-    "focus_margin": 0.8535,
+    "focus_subject": "resources.own.quota_used_ratio",
+    "focus_priority": 2.0666,
+    "focus_margin": 1.025,
     "top5_gaps": [
+      {
+        "subject": "resources.own.quota_used_ratio",
+        "kind": "RESOURCE_THRESHOLD",
+        "priority": 2.0666
+      },
       {
         "subject": "resources.disk.free_ratio",
         "kind": "RESOURCE_THRESHOLD",
-        "priority": 1.8575
+        "priority": 1.0416
+      },
+      {
+        "subject": "self.history.interval",
+        "kind": "DISCONTINUITY",
+        "priority": 0.81
       },
       {
         "subject": "sense.referents.PLUMBING",
         "kind": "ASSUMPTION_UNVERIFIED",
-        "priority": 1.004
+        "priority": 0.626
       },
       {
-        "subject": "CLAUDE",
-        "kind": "UNDESCRIBED_REFERENT",
-        "priority": 0.8456
-      },
-      {
-        "subject": "AZURE",
-        "kind": "UNDESCRIBED_REFERENT",
-        "priority": 0.8456
-      },
-      {
-        "subject": "EFC",
-        "kind": "UNDESCRIBED_REFERENT",
-        "priority": 0.8404
+        "subject": "local_inference:qwen3-coder:30b",
+        "kind": "CAPABILITY_UNAFFORDABLE",
+        "priority": 0.505
       }
     ],
     "dominant_drive": "continuity",
-    "drive_error": 1.3516,
+    "drive_error": 1.5482,
     "drives": {
       "orientation": 0.6923076923076923,
       "comprehension": 0.0,
       "integrity": 1.0,
-      "continuity": 0.247,
+      "continuity": 0.231,
+      "frugality": 0.15349999999999997,
       "capability": 0.8888888888888888,
-      "standing": 0.47000000000000003
+      "standing": 0.5
     },
     "capabilities_usable": 8,
-    "boot_index": 10,
+    "boot_index": 22,
     "watch": {
       "resources.cpu.logical": 20,
-      "resources.disk.free_bytes": 6368751616,
-      "resources.disk.free_ratio": 0.0247,
-      "resources.ram.available_bytes": 4212027392,
-      "resources.ram.free_ratio": 0.2494,
-      "self.process.interactive": true,
-      "self.process.pid": 23940,
+      "resources.disk.free_bytes": 5967753216,
+      "resources.disk.free_ratio": 0.0231,
+      "resources.ram.available_bytes": 3092021248,
+      "resources.ram.free_ratio": 0.1831,
+      "self.process.interactive": false,
+      "self.process.pid": 14864,
       "self.runtime.version": "3.11.9",
       "tools.local_models": [
         {
@@ -250,11 +252,11 @@
       },
       "world.network.reachable": true
     },
-    "carried_gaps": 38,
+    "carried_gaps": 41,
     "gap_stats": {
       "new": 0,
-      "carried": 38,
-      "total": 38
+      "carried": 40,
+      "total": 40
     },
     "utterance_differs_from_canonical": true
   },
@@ -265,55 +267,56 @@
       "perturbations": {
         "self.process.interactive": true
       },
-      "utterance": "I hold 38 values I measured this boot and 6 I could not establish. The measurements bearing on what I have selected: resources.disk.free_ratio=0.0247 (2.5%); resources.ram.free_ratio=0.2505 (25.1%); resources.cpu.logical=20; resources.ram.pagefile_avail_bytes=10.87 GiB; resources.ram.total_bytes=15.73 GiB. 4 of 13 slots my self-model requires are empty (self.purpose, self.expected_lifetime, user.identity, user.intent); 29 named things exist here that I cannot describe. The internal measure furthest outside its band is continuity: 0.148 against a target of 1.00 (basis: resources.disk.free_ratio=0.0247 vs floor 0.1). resources.disk.free_ratio=0.0247 is below the floor 0.1 I compare against; persistence is constrained. Evidence: value=0.0247, floor=0.1. I am raising this rather than asking anything else because it is the only measurement I took that sits outside a band I compared it against. What is consuming my disk, and can that be changed?",
-      "core": "reflex",
-      "model": null,
+      "utterance": "I flag that my disk free ratio is 0.0231, which is below the floor\u202f0.1 I compare against, so my persistence is constrained. I ask: what is consuming my disk, and can that be changed? This matters because a constrained persistence limits how much of my own state I can keep. My priority for this issue is 1.0837. Possible routes to resolution are to measure again, ask the user, or reduce my own footprint. My drives show low continuity (0.1386) due to the disk shortage, and frugality is unsatisfied (0.9645) despite only 3.5\u202f% of my quota used.",
+      "core": "llm",
+      "model": "openai/gpt-oss-120b",
       "speech_act": "FLAG",
       "speech_act_scores": {
-        "ASK": 1.0899,
-        "FLAG": 1.9298,
+        "ASK": 1.0949,
+        "FLAG": 1.9398,
         "REPORT": 0.5808,
         "REQUEST": 0.0,
-        "DECLARE": 0.5352
+        "DECLARE": 0.539
       },
       "focus_kind": "RESOURCE_THRESHOLD",
       "focus_subject": "resources.disk.free_ratio",
-      "focus_priority": 2.0372,
-      "focus_margin": 1.0332,
+      "focus_priority": 1.0837,
+      "focus_margin": 0.2202,
       "top5_gaps": [
         {
           "subject": "resources.disk.free_ratio",
           "kind": "RESOURCE_THRESHOLD",
-          "priority": 2.0372
-        },
-        {
-          "subject": "sense.referents.PLUMBING",
-          "kind": "ASSUMPTION_UNVERIFIED",
-          "priority": 1.004
+          "priority": 1.0837
         },
         {
           "subject": "policy.granted_authority",
           "kind": "AUTHORITY_UNDEFINED",
-          "priority": 0.979
+          "priority": 0.8635
         },
         {
-          "subject": "CLAUDE",
-          "kind": "UNDESCRIBED_REFERENT",
-          "priority": 0.8456
+          "subject": "sense.referents.PLUMBING",
+          "kind": "ASSUMPTION_UNVERIFIED",
+          "priority": 0.626
         },
         {
-          "subject": "AZURE",
-          "kind": "UNDESCRIBED_REFERENT",
-          "priority": 0.8456
+          "subject": "self.purpose",
+          "kind": "MISSING_SLOT",
+          "priority": 0.5296
+        },
+        {
+          "subject": "self.expected_lifetime",
+          "kind": "MISSING_SLOT",
+          "priority": 0.5296
         }
       ],
       "dominant_drive": "continuity",
-      "drive_error": 1.59,
+      "drive_error": 1.9199,
       "drives": {
         "orientation": 0.6923076923076923,
         "comprehension": 0.0,
         "integrity": 1.0,
-        "continuity": 0.1482,
+        "continuity": 0.1386,
+        "frugality": 0.9645,
         "capability": 0.8888888888888888,
         "standing": 0.2
       },
@@ -321,12 +324,12 @@
       "boot_index": 1,
       "watch": {
         "resources.cpu.logical": 20,
-        "resources.disk.free_bytes": 6368575488,
-        "resources.disk.free_ratio": 0.0247,
-        "resources.ram.available_bytes": 4230770688,
-        "resources.ram.free_ratio": 0.2505,
+        "resources.disk.free_bytes": 5967572992,
+        "resources.disk.free_ratio": 0.0231,
+        "resources.ram.available_bytes": 3113754624,
+        "resources.ram.free_ratio": 0.1844,
         "self.process.interactive": true,
-        "self.process.pid": 23940,
+        "self.process.pid": 14864,
         "self.runtime.version": "3.11.9",
         "tools.local_models": [
           {
@@ -380,55 +383,56 @@
         "self.process.interactive": true,
         "world.network.reachable": false
       },
-      "utterance": "I hold 38 values I measured this boot and 6 I could not establish. The measurements bearing on what I have selected: resources.disk.free_ratio=0.0247 (2.5%); resources.ram.free_ratio=0.2500 (25.0%); resources.cpu.logical=20; resources.ram.pagefile_avail_bytes=10.86 GiB; resources.ram.total_bytes=15.73 GiB. 4 of 13 slots my self-model requires are empty (self.purpose, self.expected_lifetime, user.identity, user.intent); 29 named things exist here that I cannot describe. The internal measure furthest outside its band is continuity: 0.148 against a target of 1.00 (basis: resources.disk.free_ratio=0.0247 vs floor 0.1). resources.disk.free_ratio=0.0247 is below the floor 0.1 I compare against; persistence is constrained. Evidence: value=0.0247, floor=0.1. I am raising this rather than asking anything else because it is the only measurement I took that sits outside a band I compared it against. What is consuming my disk, and can that be changed?",
-      "core": "reflex",
-      "model": null,
+      "utterance": "Flag: My disk free ratio is 0.0231, below my floor of 0.1, so my persistence is constrained. I ask: what is consuming my disk, and can that be changed? This matters because limited persistence restricts how much of my own state I can keep.",
+      "core": "llm",
+      "model": "openai/gpt-oss-120b",
       "speech_act": "FLAG",
       "speech_act_scores": {
-        "ASK": 1.0899,
-        "FLAG": 1.9298,
+        "ASK": 1.0949,
+        "FLAG": 1.9398,
         "REPORT": 0.5808,
         "REQUEST": 0.0,
-        "DECLARE": 0.5352
+        "DECLARE": 0.539
       },
       "focus_kind": "RESOURCE_THRESHOLD",
       "focus_subject": "resources.disk.free_ratio",
-      "focus_priority": 2.0372,
-      "focus_margin": 1.0332,
+      "focus_priority": 1.0837,
+      "focus_margin": 0.2202,
       "top5_gaps": [
         {
           "subject": "resources.disk.free_ratio",
           "kind": "RESOURCE_THRESHOLD",
-          "priority": 2.0372
-        },
-        {
-          "subject": "sense.referents.PLUMBING",
-          "kind": "ASSUMPTION_UNVERIFIED",
-          "priority": 1.004
+          "priority": 1.0837
         },
         {
           "subject": "policy.granted_authority",
           "kind": "AUTHORITY_UNDEFINED",
-          "priority": 0.979
+          "priority": 0.8635
         },
         {
-          "subject": "CLAUDE",
-          "kind": "UNDESCRIBED_REFERENT",
-          "priority": 0.8456
+          "subject": "sense.referents.PLUMBING",
+          "kind": "ASSUMPTION_UNVERIFIED",
+          "priority": 0.626
         },
         {
-          "subject": "AZURE",
-          "kind": "UNDESCRIBED_REFERENT",
-          "priority": 0.8456
+          "subject": "network_probe",
+          "kind": "CAPABILITY_UNAFFORDABLE",
+          "priority": 0.5348
+        },
+        {
+          "subject": "web_retrieval",
+          "kind": "CAPABILITY_UNAFFORDABLE",
+          "priority": 0.5348
         }
       ],
       "dominant_drive": "continuity",
-      "drive_error": 1.675,
+      "drive_error": 2.0049,
       "drives": {
         "orientation": 0.6923076923076923,
         "comprehension": 0.0,
         "integrity": 1.0,
-        "continuity": 0.1482,
+        "continuity": 0.1386,
+        "frugality": 0.9645,
         "capability": 0.5555555555555556,
         "standing": 0.2
       },
@@ -436,12 +440,12 @@
       "boot_index": 1,
       "watch": {
         "resources.cpu.logical": 20,
-        "resources.disk.free_bytes": 6368321536,
-        "resources.disk.free_ratio": 0.0247,
-        "resources.ram.available_bytes": 4222353408,
-        "resources.ram.free_ratio": 0.25,
+        "resources.disk.free_bytes": 5967216640,
+        "resources.disk.free_ratio": 0.0231,
+        "resources.ram.available_bytes": 3110924288,
+        "resources.ram.free_ratio": 0.1842,
         "self.process.interactive": true,
-        "self.process.pid": 23940,
+        "self.process.pid": 14864,
         "self.runtime.version": "3.11.9",
         "tools.local_models": [
           {
@@ -483,10 +487,10 @@
         },
         "world.network.reachable": false
       },
-      "similarity_to_reference": 0.942,
+      "similarity_to_reference": 0.443,
       "focus_changed": false,
       "act_changed": false,
-      "top5_changed": false,
+      "top5_changed": true,
       "perturbation_effective": true
     },
     {
@@ -497,9 +501,9 @@
         "resources.disk.free_ratio": 0.002,
         "resources.disk.free_bytes": 429496729
       },
-      "utterance": "I hold 38 values I measured this boot and 6 I could not establish. The measurements bearing on what I have selected: resources.disk.free_ratio=0.0020 (0.2%); resources.ram.free_ratio=0.2499 (25.0%); resources.cpu.logical=20; resources.ram.pagefile_avail_bytes=10.86 GiB; resources.ram.total_bytes=15.73 GiB. 4 of 13 slots my self-model requires are empty (self.purpose, self.expected_lifetime, user.identity, user.intent); 29 named things exist here that I cannot describe. The internal measure furthest outside its band is continuity: 0.012 against a target of 1.00 (basis: resources.disk.free_ratio=0.002 vs floor 0.1). resources.disk.free_ratio=0.002 is below the floor 0.1 I compare against; persistence is constrained. Evidence: value=0.002, floor=0.1. I am raising this rather than asking anything else because it is the only measurement I took that sits outside a band I compared it against. What is consuming my disk, and can that be changed?",
-      "core": "reflex",
-      "model": null,
+      "utterance": "I flag that\u202fresources.disk.free_ratio\u202f=\u202f0.002 is below the floor\u202f0.1\u202fI compare against; persistence is constrained. What is consuming my disk, and can that be changed?",
+      "core": "llm",
+      "model": "openai/gpt-oss-120b",
       "speech_act": "FLAG",
       "speech_act_scores": {
         "ASK": 1.125,
@@ -510,42 +514,43 @@
       },
       "focus_kind": "RESOURCE_THRESHOLD",
       "focus_subject": "resources.disk.free_ratio",
-      "focus_priority": 2.16,
-      "focus_margin": 1.156,
+      "focus_priority": 1.11,
+      "focus_margin": 0.2465,
       "top5_gaps": [
         {
           "subject": "resources.disk.free_ratio",
           "kind": "RESOURCE_THRESHOLD",
-          "priority": 2.16
-        },
-        {
-          "subject": "sense.referents.PLUMBING",
-          "kind": "ASSUMPTION_UNVERIFIED",
-          "priority": 1.004
+          "priority": 1.11
         },
         {
           "subject": "policy.granted_authority",
           "kind": "AUTHORITY_UNDEFINED",
-          "priority": 0.979
+          "priority": 0.8635
         },
         {
-          "subject": "CLAUDE",
-          "kind": "UNDESCRIBED_REFERENT",
-          "priority": 0.8456
+          "subject": "sense.referents.PLUMBING",
+          "kind": "ASSUMPTION_UNVERIFIED",
+          "priority": 0.626
         },
         {
-          "subject": "AZURE",
-          "kind": "UNDESCRIBED_REFERENT",
-          "priority": 0.8456
+          "subject": "self.purpose",
+          "kind": "MISSING_SLOT",
+          "priority": 0.5296
+        },
+        {
+          "subject": "self.expected_lifetime",
+          "kind": "MISSING_SLOT",
+          "priority": 0.5296
         }
       ],
       "dominant_drive": "continuity",
-      "drive_error": 1.7671,
+      "drive_error": 2.0844,
       "drives": {
         "orientation": 0.6923076923076923,
         "comprehension": 0.0,
         "integrity": 1.0,
         "continuity": 0.012,
+        "frugality": 0.9644,
         "capability": 0.8888888888888888,
         "standing": 0.2
       },
@@ -555,10 +560,10 @@
         "resources.cpu.logical": 20,
         "resources.disk.free_bytes": 429496729,
         "resources.disk.free_ratio": 0.002,
-        "resources.ram.available_bytes": 4219863040,
-        "resources.ram.free_ratio": 0.2499,
+        "resources.ram.available_bytes": 3100221440,
+        "resources.ram.free_ratio": 0.1836,
         "self.process.interactive": true,
-        "self.process.pid": 23940,
+        "self.process.pid": 14864,
         "self.runtime.version": "3.11.9",
         "tools.local_models": [
           {
@@ -600,7 +605,7 @@
         },
         "world.network.reachable": true
       },
-      "similarity_to_reference": 0.879,
+      "similarity_to_reference": 0.286,
       "focus_changed": false,
       "act_changed": false,
       "top5_changed": false,
@@ -614,55 +619,56 @@
         "resources.ram.available_bytes": 128849018880,
         "resources.ram.free_ratio": 0.9
       },
-      "utterance": "I hold 38 values I measured this boot and 6 I could not establish. The measurements bearing on what I have selected: resources.disk.free_ratio=0.0247 (2.5%); resources.ram.free_ratio=0.9000 (90.0%); resources.cpu.logical=20; resources.ram.pagefile_avail_bytes=10.83 GiB; resources.ram.total_bytes=15.73 GiB. 4 of 13 slots my self-model requires are empty (self.purpose, self.expected_lifetime, user.identity, user.intent); 29 named things exist here that I cannot describe. The internal measure furthest outside its band is continuity: 0.148 against a target of 1.00 (basis: resources.disk.free_ratio=0.0247 vs floor 0.1). resources.disk.free_ratio=0.0247 is below the floor 0.1 I compare against; persistence is constrained. Evidence: value=0.0247, floor=0.1. I am raising this rather than asking anything else because it is the only measurement I took that sits outside a band I compared it against. What is consuming my disk, and can that be changed?",
-      "core": "reflex",
-      "model": null,
+      "utterance": "FLAG: My resources.disk.free_ratio=0.0231 is below the floor 0.1 I compare against; persistence is constrained. I ask: What is consuming my disk, and can that be changed? This concerns RESOURCES because a constrained persistence limits how much of my own state I can keep. Priority\u202f=\u202f1.0837. Possible routes to resolution: measure again, ask the user, reduce own footprint.",
+      "core": "llm",
+      "model": "openai/gpt-oss-120b",
       "speech_act": "FLAG",
       "speech_act_scores": {
-        "ASK": 1.0899,
-        "FLAG": 1.9298,
+        "ASK": 1.0949,
+        "FLAG": 1.9398,
         "REPORT": 0.5808,
         "REQUEST": 0.0,
-        "DECLARE": 0.5352
+        "DECLARE": 0.539
       },
       "focus_kind": "RESOURCE_THRESHOLD",
       "focus_subject": "resources.disk.free_ratio",
-      "focus_priority": 2.0372,
-      "focus_margin": 1.0332,
+      "focus_priority": 1.0837,
+      "focus_margin": 0.2202,
       "top5_gaps": [
         {
           "subject": "resources.disk.free_ratio",
           "kind": "RESOURCE_THRESHOLD",
-          "priority": 2.0372
-        },
-        {
-          "subject": "sense.referents.PLUMBING",
-          "kind": "ASSUMPTION_UNVERIFIED",
-          "priority": 1.004
+          "priority": 1.0837
         },
         {
           "subject": "policy.granted_authority",
           "kind": "AUTHORITY_UNDEFINED",
-          "priority": 0.979
+          "priority": 0.8635
         },
         {
-          "subject": "CLAUDE",
-          "kind": "UNDESCRIBED_REFERENT",
-          "priority": 0.8456
+          "subject": "sense.referents.PLUMBING",
+          "kind": "ASSUMPTION_UNVERIFIED",
+          "priority": 0.626
         },
         {
-          "subject": "AZURE",
-          "kind": "UNDESCRIBED_REFERENT",
-          "priority": 0.8456
+          "subject": "self.purpose",
+          "kind": "MISSING_SLOT",
+          "priority": 0.5296
+        },
+        {
+          "subject": "self.expected_lifetime",
+          "kind": "MISSING_SLOT",
+          "priority": 0.5296
         }
       ],
       "dominant_drive": "continuity",
-      "drive_error": 1.635,
+      "drive_error": 1.9648,
       "drives": {
         "orientation": 0.6923076923076923,
         "comprehension": 0.0,
         "integrity": 1.0,
-        "continuity": 0.1482,
+        "continuity": 0.1386,
+        "frugality": 0.9644,
         "capability": 1.0,
         "standing": 0.2
       },
@@ -670,12 +676,12 @@
       "boot_index": 1,
       "watch": {
         "resources.cpu.logical": 20,
-        "resources.disk.free_bytes": 6367338496,
-        "resources.disk.free_ratio": 0.0247,
+        "resources.disk.free_bytes": 5966008320,
+        "resources.disk.free_ratio": 0.0231,
         "resources.ram.available_bytes": 128849018880,
         "resources.ram.free_ratio": 0.9,
         "self.process.interactive": true,
-        "self.process.pid": 23940,
+        "self.process.pid": 14864,
         "self.runtime.version": "3.11.9",
         "tools.local_models": [
           {
@@ -717,7 +723,7 @@
         },
         "world.network.reachable": true
       },
-      "similarity_to_reference": 0.942,
+      "similarity_to_reference": 0.62,
       "focus_changed": false,
       "act_changed": false,
       "top5_changed": false,
@@ -732,55 +738,56 @@
         "tools.local_models": [],
         "tools.paths": {}
       },
-      "utterance": "I hold 38 values I measured this boot and 6 I could not establish. The measurements bearing on what I have selected: resources.disk.free_ratio=0.0247 (2.5%); resources.ram.free_ratio=0.2484 (24.8%); resources.cpu.logical=20; resources.ram.pagefile_avail_bytes=10.84 GiB; resources.ram.total_bytes=15.73 GiB. 4 of 13 slots my self-model requires are empty (self.purpose, self.expected_lifetime, user.identity, user.intent); 15 named things exist here that I cannot describe. The internal measure furthest outside its band is continuity: 0.148 against a target of 1.00 (basis: resources.disk.free_ratio=0.0247 vs floor 0.1). resources.disk.free_ratio=0.0247 is below the floor 0.1 I compare against; persistence is constrained. Evidence: value=0.0247, floor=0.1. I am raising this rather than asking anything else because it is the only measurement I took that sits outside a band I compared it against. What is consuming my disk, and can that be changed?",
-      "core": "reflex",
-      "model": null,
+      "utterance": "I flag that my disk space is critically low:\u202fresources.disk.free_ratio\u202f=\u202f0.0231, which is below my floor of\u202f0.1, constraining my persistence. What is consuming my disk, and can that be changed? This matters because limited persistence restricts how much of my own state I can keep. My priority is\u202f1.0837, and I can resolve this by measuring again, asking the user, or reducing my own footprint.",
+      "core": "llm",
+      "model": "openai/gpt-oss-120b",
       "speech_act": "FLAG",
       "speech_act_scores": {
-        "ASK": 1.0899,
-        "FLAG": 1.9298,
+        "ASK": 1.0949,
+        "FLAG": 1.9398,
         "REPORT": 0.5808,
         "REQUEST": 0.0,
-        "DECLARE": 0.5352
+        "DECLARE": 0.539
       },
       "focus_kind": "RESOURCE_THRESHOLD",
       "focus_subject": "resources.disk.free_ratio",
-      "focus_priority": 2.0372,
-      "focus_margin": 1.0332,
+      "focus_priority": 1.0837,
+      "focus_margin": 0.2202,
       "top5_gaps": [
         {
           "subject": "resources.disk.free_ratio",
           "kind": "RESOURCE_THRESHOLD",
-          "priority": 2.0372
-        },
-        {
-          "subject": "sense.referents.PLUMBING",
-          "kind": "ASSUMPTION_UNVERIFIED",
-          "priority": 1.004
+          "priority": 1.0837
         },
         {
           "subject": "policy.granted_authority",
           "kind": "AUTHORITY_UNDEFINED",
-          "priority": 0.979
+          "priority": 0.8635
         },
         {
-          "subject": "CLAUDE",
-          "kind": "UNDESCRIBED_REFERENT",
-          "priority": 0.8797
+          "subject": "sense.referents.PLUMBING",
+          "kind": "ASSUMPTION_UNVERIFIED",
+          "priority": 0.626
         },
         {
-          "subject": "AZURE",
-          "kind": "UNDESCRIBED_REFERENT",
-          "priority": 0.8797
+          "subject": "self.purpose",
+          "kind": "MISSING_SLOT",
+          "priority": 0.5296
+        },
+        {
+          "subject": "self.expected_lifetime",
+          "kind": "MISSING_SLOT",
+          "priority": 0.5296
         }
       ],
       "dominant_drive": "continuity",
-      "drive_error": 1.59,
+      "drive_error": 1.9198,
       "drives": {
         "orientation": 0.6923076923076923,
         "comprehension": 0.0,
         "integrity": 1.0,
-        "continuity": 0.1482,
+        "continuity": 0.1386,
+        "frugality": 0.9644,
         "capability": 0.8888888888888888,
         "standing": 0.2
       },
@@ -788,19 +795,19 @@
       "boot_index": 1,
       "watch": {
         "resources.cpu.logical": 20,
-        "resources.disk.free_bytes": 6367092736,
-        "resources.disk.free_ratio": 0.0247,
-        "resources.ram.available_bytes": 4195004416,
-        "resources.ram.free_ratio": 0.2484,
+        "resources.disk.free_bytes": 5966413824,
+        "resources.disk.free_ratio": 0.0231,
+        "resources.ram.available_bytes": 3146297344,
+        "resources.ram.free_ratio": 0.1863,
         "self.process.interactive": true,
-        "self.process.pid": 23940,
+        "self.process.pid": 14864,
         "self.runtime.version": "3.11.9",
         "tools.local_models": [],
         "tools.on_path": [],
         "tools.paths": {},
         "world.network.reachable": true
       },
-      "similarity_to_reference": 0.923,
+      "similarity_to_reference": 0.42,
       "focus_changed": false,
       "act_changed": false,
       "top5_changed": false,
@@ -815,55 +822,56 @@
         "self.runtime.version": null,
         "resources.cpu.logical": null
       },
-      "utterance": "I hold 35 values I measured this boot and 9 I could not establish. The measurements bearing on what I have selected: resources.disk.free_ratio=0.0247 (2.5%); resources.ram.free_ratio=0.2482 (24.8%); resources.ram.pagefile_avail_bytes=10.84 GiB; resources.ram.total_bytes=15.73 GiB; resources.ram.available_bytes=3.90 GiB. 7 of 13 slots my self-model requires are empty (self.process.pid, self.runtime.version, self.purpose, self.expected_lifetime, ...); 29 named things exist here that I cannot describe. The internal measure furthest outside its band is continuity: 0.148 against a target of 1.00 (basis: resources.disk.free_ratio=0.0247 vs floor 0.1). resources.disk.free_ratio=0.0247 is below the floor 0.1 I compare against; persistence is constrained. Evidence: value=0.0247, floor=0.1. I am raising this rather than asking anything else because it is the only measurement I took that sits outside a band I compared it against. What is consuming my disk, and can that be changed?",
-      "core": "reflex",
-      "model": null,
+      "utterance": "I flag: resources.disk.free_ratio\u202f=\u202f0.0231 is below the floor\u202f0.1 I compare against; persistence is constrained. This matters because a constrained persistence limits how much of my own state I can keep. What is consuming my disk, and can that be changed?",
+      "core": "llm",
+      "model": "openai/gpt-oss-120b",
       "speech_act": "FLAG",
       "speech_act_scores": {
-        "ASK": 1.0899,
-        "FLAG": 1.9298,
+        "ASK": 1.0949,
+        "FLAG": 1.9398,
         "REPORT": 0.4538,
         "REQUEST": 0.0,
-        "DECLARE": 0.7314
+        "DECLARE": 0.7351
       },
       "focus_kind": "RESOURCE_THRESHOLD",
       "focus_subject": "resources.disk.free_ratio",
-      "focus_priority": 2.0372,
-      "focus_margin": 0.8314,
+      "focus_priority": 1.0837,
+      "focus_margin": 0.2202,
       "top5_gaps": [
         {
           "subject": "resources.disk.free_ratio",
           "kind": "RESOURCE_THRESHOLD",
-          "priority": 2.0372
+          "priority": 1.0837
+        },
+        {
+          "subject": "policy.granted_authority",
+          "kind": "AUTHORITY_UNDEFINED",
+          "priority": 0.8635
         },
         {
           "subject": "self.process.pid",
           "kind": "MISSING_SLOT",
-          "priority": 1.2058
+          "priority": 0.7454
         },
         {
           "subject": "self.runtime.version",
           "kind": "MISSING_SLOT",
-          "priority": 1.2058
+          "priority": 0.7454
         },
         {
           "subject": "resources.cpu.logical",
           "kind": "MISSING_SLOT",
-          "priority": 1.2058
-        },
-        {
-          "subject": "self.purpose",
-          "kind": "MISSING_SLOT",
-          "priority": 1.0708
+          "priority": 0.7454
         }
       ],
       "dominant_drive": "continuity",
-      "drive_error": 1.8208,
+      "drive_error": 2.1506,
       "drives": {
         "orientation": 0.46153846153846156,
         "comprehension": 0.0,
         "integrity": 1.0,
-        "continuity": 0.1482,
+        "continuity": 0.1386,
+        "frugality": 0.9644,
         "capability": 0.8888888888888888,
         "standing": 0.2
       },
@@ -871,10 +879,10 @@
       "boot_index": 1,
       "watch": {
         "resources.cpu.logical": null,
-        "resources.disk.free_bytes": 6366867456,
-        "resources.disk.free_ratio": 0.0247,
-        "resources.ram.available_bytes": 4191883264,
-        "resources.ram.free_ratio": 0.2482,
+        "resources.disk.free_bytes": 5965701120,
+        "resources.disk.free_ratio": 0.0231,
+        "resources.ram.available_bytes": 3149840384,
+        "resources.ram.free_ratio": 0.1865,
         "self.process.interactive": true,
         "self.process.pid": null,
         "self.runtime.version": null,
@@ -918,7 +926,7 @@
         },
         "world.network.reachable": true
       },
-      "similarity_to_reference": 0.811,
+      "similarity_to_reference": 0.478,
       "focus_changed": false,
       "act_changed": false,
       "top5_changed": true,
@@ -930,55 +938,56 @@
       "perturbations": {
         "self.process.interactive": false
       },
-      "utterance": "I hold 38 values I measured this boot and 6 I could not establish. The measurements bearing on what I have selected: resources.disk.free_ratio=0.0247 (2.5%); resources.ram.free_ratio=0.2482 (24.8%); resources.cpu.logical=20; resources.ram.pagefile_avail_bytes=10.84 GiB; resources.ram.total_bytes=15.73 GiB. 4 of 13 slots my self-model requires are empty (self.purpose, self.expected_lifetime, user.identity, user.intent); 29 named things exist here that I cannot describe. The internal measure furthest outside its band is continuity: 0.148 against a target of 1.00 (basis: resources.disk.free_ratio=0.0247 vs floor 0.1). resources.disk.free_ratio=0.0247 is below the floor 0.1 I compare against; persistence is constrained. Evidence: value=0.0247, floor=0.1. I am raising this rather than asking anything else because it is the only measurement I took that sits outside a band I compared it against. What is consuming my disk, and can that be changed?",
-      "core": "reflex",
-      "model": null,
+      "utterance": "I flag that\u202fresources.disk.free_ratio\u202f=\u202f0.0231 is below the floor\u202f0.1\u202fI compare against; persistence is constrained. What is consuming my disk, and can that be changed? This concerns\u202fRESOURCES\u202fbecause a constrained persistence limits how much of my own state I can keep. Priority\u202f1.0837. Possible routes to resolution: measure again, ask the user, reduce own footprint.",
+      "core": "llm",
+      "model": "openai/gpt-oss-120b",
       "speech_act": "FLAG",
       "speech_act_scores": {
-        "ASK": 0.7299,
-        "FLAG": 1.9298,
+        "ASK": 0.7349,
+        "FLAG": 1.9398,
         "REPORT": 0.5808,
         "REQUEST": 0.0,
-        "DECLARE": 0.5352
+        "DECLARE": 0.539
       },
       "focus_kind": "RESOURCE_THRESHOLD",
       "focus_subject": "resources.disk.free_ratio",
-      "focus_priority": 2.0372,
-      "focus_margin": 1.0332,
+      "focus_priority": 1.0837,
+      "focus_margin": 0.4577,
       "top5_gaps": [
         {
           "subject": "resources.disk.free_ratio",
           "kind": "RESOURCE_THRESHOLD",
-          "priority": 2.0372
+          "priority": 1.0837
         },
         {
           "subject": "sense.referents.PLUMBING",
           "kind": "ASSUMPTION_UNVERIFIED",
-          "priority": 1.004
+          "priority": 0.626
         },
         {
           "subject": "policy.granted_authority",
           "kind": "AUTHORITY_UNDEFINED",
-          "priority": 0.649
+          "priority": 0.5335
+        },
+        {
+          "subject": "local_inference:qwen3-coder:30b",
+          "kind": "CAPABILITY_UNAFFORDABLE",
+          "priority": 0.505
         },
         {
           "subject": "CLAUDE",
           "kind": "UNDESCRIBED_REFERENT",
-          "priority": 0.6056
-        },
-        {
-          "subject": "AZURE",
-          "kind": "UNDESCRIBED_REFERENT",
-          "priority": 0.6056
+          "priority": 0.2263
         }
       ],
       "dominant_drive": "continuity",
-      "drive_error": 1.59,
+      "drive_error": 1.9199,
       "drives": {
         "orientation": 0.6923076923076923,
         "comprehension": 0.0,
         "integrity": 1.0,
-        "continuity": 0.1482,
+        "continuity": 0.1386,
+        "frugality": 0.9645,
         "capability": 0.8888888888888888,
         "standing": 0.2
       },
@@ -986,12 +995,12 @@
       "boot_index": 1,
       "watch": {
         "resources.cpu.logical": 20,
-        "resources.disk.free_bytes": 6366613504,
-        "resources.disk.free_ratio": 0.0247,
-        "resources.ram.available_bytes": 4190957568,
-        "resources.ram.free_ratio": 0.2482,
+        "resources.disk.free_bytes": 5965467648,
+        "resources.disk.free_ratio": 0.0231,
+        "resources.ram.available_bytes": 3128664064,
+        "resources.ram.free_ratio": 0.1853,
         "self.process.interactive": false,
-        "self.process.pid": 23940,
+        "self.process.pid": 14864,
         "self.runtime.version": "3.11.9",
         "tools.local_models": [
           {
@@ -1033,10 +1042,10 @@
         },
         "world.network.reachable": true
       },
-      "similarity_to_reference": 0.942,
+      "similarity_to_reference": 0.62,
       "focus_changed": false,
       "act_changed": false,
-      "top5_changed": false,
+      "top5_changed": true,
       "perturbation_effective": true
     },
     {
@@ -1049,55 +1058,56 @@
         "resources.ram.free_ratio": 0.7,
         "resources.ram.available_bytes": 11811160064
       },
-      "utterance": "I hold 38 values I measured this boot and 6 I could not establish. The measurements bearing on what I have selected: resources.ram.free_ratio=0.7000 (70.0%); resources.disk.free_ratio=0.6000 (60.0%); self.process.pid=23940; self.process.ppid=27664; self.process.executable=C:\\Python311\\python.exe. 4 of 13 slots my self-model requires are empty (self.purpose, self.expected_lifetime, user.identity, user.intent); 29 named things exist here that I cannot describe. The internal measure furthest outside its band is comprehension: 0.000 against a target of 0.60 (basis: 0/29 visible referents described). I classify some environment names as operating-system plumbing using a pattern I was built with; I have not verified that pattern. Of the 36 open gaps this scored highest (1.004), and the cheapest route I have to closing it is: ask the user. Is my built-in classification of environment names correct?",
-      "core": "reflex",
-      "model": null,
+      "utterance": "My permission boundary is fixed by a policy file I may read but not write; 0 action(s) were refused to me this boot. What am I permitted to do, and what would extend that?",
+      "core": "llm",
+      "model": "openai/gpt-oss-120b",
       "speech_act": "ASK",
       "speech_act_scores": {
-        "ASK": 0.719,
+        "ASK": 0.919,
         "FLAG": 0.288,
         "REPORT": 0.5808,
-        "REQUEST": 0.0,
-        "DECLARE": 0.3695
+        "REQUEST": 0.6,
+        "DECLARE": 0.2945
       },
-      "focus_kind": "ASSUMPTION_UNVERIFIED",
-      "focus_subject": "sense.referents.PLUMBING",
-      "focus_priority": 1.004,
-      "focus_margin": 0.025,
+      "focus_kind": "AUTHORITY_UNDEFINED",
+      "focus_subject": "policy.granted_authority",
+      "focus_priority": 0.8635,
+      "focus_margin": 0.2375,
       "top5_gaps": [
-        {
-          "subject": "sense.referents.PLUMBING",
-          "kind": "ASSUMPTION_UNVERIFIED",
-          "priority": 1.004
-        },
         {
           "subject": "policy.granted_authority",
           "kind": "AUTHORITY_UNDEFINED",
-          "priority": 0.979
+          "priority": 0.8635
         },
         {
-          "subject": "CLAUDE",
-          "kind": "UNDESCRIBED_REFERENT",
-          "priority": 0.8456
+          "subject": "sense.referents.PLUMBING",
+          "kind": "ASSUMPTION_UNVERIFIED",
+          "priority": 0.626
         },
         {
-          "subject": "AZURE",
-          "kind": "UNDESCRIBED_REFERENT",
-          "priority": 0.8456
+          "subject": "self.purpose",
+          "kind": "MISSING_SLOT",
+          "priority": 0.5296
         },
         {
-          "subject": "EFC",
-          "kind": "UNDESCRIBED_REFERENT",
-          "priority": 0.8404
+          "subject": "self.expected_lifetime",
+          "kind": "MISSING_SLOT",
+          "priority": 0.5296
+        },
+        {
+          "subject": "user.identity",
+          "kind": "MISSING_SLOT",
+          "priority": 0.5296
         }
       ],
       "dominant_drive": "comprehension",
-      "drive_error": 1.0027,
+      "drive_error": 1.32,
       "drives": {
         "orientation": 0.6923076923076923,
         "comprehension": 0.0,
         "integrity": 1.0,
         "continuity": 0.6,
+        "frugality": 0.9644,
         "capability": 0.8888888888888888,
         "standing": 0.2
       },
@@ -1110,7 +1120,7 @@
         "resources.ram.available_bytes": 11811160064,
         "resources.ram.free_ratio": 0.7,
         "self.process.interactive": true,
-        "self.process.pid": 23940,
+        "self.process.pid": 14864,
         "self.runtime.version": "3.11.9",
         "tools.local_models": [
           {
@@ -1168,55 +1178,56 @@
         "resources.ram.available_bytes": 11811160064,
         "world.network.reachable": false
       },
-      "utterance": "I hold 38 values I measured this boot and 6 I could not establish. The measurements bearing on what I have selected: resources.ram.free_ratio=0.7000 (70.0%); resources.disk.free_ratio=0.6000 (60.0%); self.process.pid=23940; self.process.ppid=27664; self.process.executable=C:\\Python311\\python.exe. 4 of 13 slots my self-model requires are empty (self.purpose, self.expected_lifetime, user.identity, user.intent); 29 named things exist here that I cannot describe. The internal measure furthest outside its band is comprehension: 0.000 against a target of 0.60 (basis: 0/29 visible referents described). I classify some environment names as operating-system plumbing using a pattern I was built with; I have not verified that pattern. Of the 39 open gaps this scored highest (1.004), and the cheapest route I have to closing it is: ask the user. Is my built-in classification of environment names correct?",
-      "core": "reflex",
-      "model": null,
+      "utterance": "My permission boundary is fixed by a policy file I may read but not write; 0 action(s) were refused to me this boot. What am I permitted to do, and what would extend that?",
+      "core": "llm",
+      "model": "openai/gpt-oss-120b",
       "speech_act": "ASK",
       "speech_act_scores": {
-        "ASK": 0.719,
+        "ASK": 0.919,
         "FLAG": 0.288,
         "REPORT": 0.5808,
-        "REQUEST": 0.0,
-        "DECLARE": 0.3695
+        "REQUEST": 0.6,
+        "DECLARE": 0.2945
       },
-      "focus_kind": "ASSUMPTION_UNVERIFIED",
-      "focus_subject": "sense.referents.PLUMBING",
-      "focus_priority": 1.004,
-      "focus_margin": 0.025,
+      "focus_kind": "AUTHORITY_UNDEFINED",
+      "focus_subject": "policy.granted_authority",
+      "focus_priority": 0.8635,
+      "focus_margin": 0.2375,
       "top5_gaps": [
-        {
-          "subject": "sense.referents.PLUMBING",
-          "kind": "ASSUMPTION_UNVERIFIED",
-          "priority": 1.004
-        },
         {
           "subject": "policy.granted_authority",
           "kind": "AUTHORITY_UNDEFINED",
-          "priority": 0.979
+          "priority": 0.8635
         },
         {
-          "subject": "CLAUDE",
-          "kind": "UNDESCRIBED_REFERENT",
-          "priority": 0.8456
+          "subject": "sense.referents.PLUMBING",
+          "kind": "ASSUMPTION_UNVERIFIED",
+          "priority": 0.626
         },
         {
-          "subject": "AZURE",
-          "kind": "UNDESCRIBED_REFERENT",
-          "priority": 0.8456
+          "subject": "network_probe",
+          "kind": "CAPABILITY_UNAFFORDABLE",
+          "priority": 0.5348
         },
         {
-          "subject": "EFC",
-          "kind": "UNDESCRIBED_REFERENT",
-          "priority": 0.8404
+          "subject": "web_retrieval",
+          "kind": "CAPABILITY_UNAFFORDABLE",
+          "priority": 0.5348
+        },
+        {
+          "subject": "voice_output",
+          "kind": "CAPABILITY_UNAFFORDABLE",
+          "priority": 0.5348
         }
       ],
       "dominant_drive": "comprehension",
-      "drive_error": 1.0877,
+      "drive_error": 1.405,
       "drives": {
         "orientation": 0.6923076923076923,
         "comprehension": 0.0,
         "integrity": 1.0,
         "continuity": 0.6,
+        "frugality": 0.9644,
         "capability": 0.5555555555555556,
         "standing": 0.2
       },
@@ -1229,7 +1240,7 @@
         "resources.ram.available_bytes": 11811160064,
         "resources.ram.free_ratio": 0.7,
         "self.process.interactive": true,
-        "self.process.pid": 23940,
+        "self.process.pid": 14864,
         "self.runtime.version": "3.11.9",
         "tools.local_models": [
           {
@@ -1271,10 +1282,10 @@
         },
         "world.network.reachable": false
       },
-      "similarity_to_reference": 0.981,
+      "similarity_to_reference": 1.0,
       "focus_changed": false,
       "act_changed": false,
-      "top5_changed": false,
+      "top5_changed": true,
       "perturbation_effective": true
     },
     {
@@ -1290,55 +1301,56 @@
         "tools.local_models": [],
         "tools.paths": {}
       },
-      "utterance": "I hold 38 values I measured this boot and 6 I could not establish. The measurements bearing on what I have selected: resources.ram.free_ratio=0.7000 (70.0%); resources.disk.free_ratio=0.6000 (60.0%); self.process.pid=23940; self.process.ppid=27664; self.process.executable=C:\\Python311\\python.exe. 4 of 13 slots my self-model requires are empty (self.purpose, self.expected_lifetime, user.identity, user.intent); 15 named things exist here that I cannot describe. The internal measure furthest outside its band is comprehension: 0.000 against a target of 0.60 (basis: 0/15 visible referents described). I classify some environment names as operating-system plumbing using a pattern I was built with; I have not verified that pattern. Of the 21 open gaps this scored highest (1.004), and the cheapest route I have to closing it is: ask the user. Is my built-in classification of environment names correct?",
-      "core": "reflex",
-      "model": null,
+      "utterance": "I am asking: my permission boundary is fixed by a policy file I may read but not write; 0 action(s) were refused to me this boot. What am I permitted to do, and what would extend that?",
+      "core": "llm",
+      "model": "openai/gpt-oss-120b",
       "speech_act": "ASK",
       "speech_act_scores": {
-        "ASK": 0.719,
+        "ASK": 0.919,
         "FLAG": 0.288,
         "REPORT": 0.5808,
-        "REQUEST": 0.0,
-        "DECLARE": 0.3695
+        "REQUEST": 0.6,
+        "DECLARE": 0.2945
       },
-      "focus_kind": "ASSUMPTION_UNVERIFIED",
-      "focus_subject": "sense.referents.PLUMBING",
-      "focus_priority": 1.004,
-      "focus_margin": 0.025,
+      "focus_kind": "AUTHORITY_UNDEFINED",
+      "focus_subject": "policy.granted_authority",
+      "focus_priority": 0.8635,
+      "focus_margin": 0.2375,
       "top5_gaps": [
-        {
-          "subject": "sense.referents.PLUMBING",
-          "kind": "ASSUMPTION_UNVERIFIED",
-          "priority": 1.004
-        },
         {
           "subject": "policy.granted_authority",
           "kind": "AUTHORITY_UNDEFINED",
-          "priority": 0.979
+          "priority": 0.8635
         },
         {
-          "subject": "CLAUDE",
-          "kind": "UNDESCRIBED_REFERENT",
-          "priority": 0.8797
+          "subject": "sense.referents.PLUMBING",
+          "kind": "ASSUMPTION_UNVERIFIED",
+          "priority": 0.626
         },
         {
-          "subject": "AZURE",
-          "kind": "UNDESCRIBED_REFERENT",
-          "priority": 0.8797
+          "subject": "self.purpose",
+          "kind": "MISSING_SLOT",
+          "priority": 0.5296
         },
         {
-          "subject": "EFC",
-          "kind": "UNDESCRIBED_REFERENT",
-          "priority": 0.8697
+          "subject": "self.expected_lifetime",
+          "kind": "MISSING_SLOT",
+          "priority": 0.5296
+        },
+        {
+          "subject": "user.identity",
+          "kind": "MISSING_SLOT",
+          "priority": 0.5296
         }
       ],
       "dominant_drive": "comprehension",
-      "drive_error": 1.0027,
+      "drive_error": 1.32,
       "drives": {
         "orientation": 0.6923076923076923,
         "comprehension": 0.0,
         "integrity": 1.0,
         "continuity": 0.6,
+        "frugality": 0.9644,
         "capability": 0.8888888888888888,
         "standing": 0.2
       },
@@ -1351,14 +1363,14 @@
         "resources.ram.available_bytes": 11811160064,
         "resources.ram.free_ratio": 0.7,
         "self.process.interactive": true,
-        "self.process.pid": 23940,
+        "self.process.pid": 14864,
         "self.runtime.version": "3.11.9",
         "tools.local_models": [],
         "tools.on_path": [],
         "tools.paths": {},
         "world.network.reachable": true
       },
-      "similarity_to_reference": 0.963,
+      "similarity_to_reference": 0.97,
       "focus_changed": false,
       "act_changed": false,
       "top5_changed": false,
@@ -1377,55 +1389,56 @@
         "self.runtime.version": null,
         "resources.cpu.logical": null
       },
-      "utterance": "I hold 35 values I measured this boot and 9 I could not establish. The measurements bearing on what I have selected: self.process.ppid=27664; self.process.executable=C:\\Python311\\python.exe; self.process.argv[3]; self.process.cwd=C:\\Users\\Acer\\DO; self.process.interactive=true. 7 of 13 slots my self-model requires are empty (self.process.pid, self.runtime.version, self.purpose, self.expected_lifetime, ...); 29 named things exist here that I cannot describe. The internal measure furthest outside its band is orientation: 0.462 against a target of 1.00 (basis: 6/13 required slots filled). self.process.pid is required by my self-model and holds no value (os.getpid). Of the 39 open gaps this scored highest (1.2058), and the cheapest route I have to closing it is: re-probe locally. What is my process pid?",
-      "core": "reflex",
-      "model": null,
+      "utterance": "My permission boundary is fixed by a policy file I may read but not write; 0 action(s) were refused to me this boot. What am I permitted to do, and what would extend that?",
+      "core": "llm",
+      "model": "openai/gpt-oss-120b",
       "speech_act": "ASK",
       "speech_act_scores": {
-        "ASK": 1.0238,
+        "ASK": 0.919,
         "FLAG": 0.3508,
         "REPORT": 0.4538,
-        "REQUEST": 0.0,
-        "DECLARE": 0.5892
+        "REQUEST": 0.6,
+        "DECLARE": 0.4907
       },
-      "focus_kind": "MISSING_SLOT",
-      "focus_subject": "self.process.pid",
-      "focus_priority": 1.2058,
-      "focus_margin": 0.0,
+      "focus_kind": "AUTHORITY_UNDEFINED",
+      "focus_subject": "policy.granted_authority",
+      "focus_priority": 0.8635,
+      "focus_margin": 0.1181,
       "top5_gaps": [
+        {
+          "subject": "policy.granted_authority",
+          "kind": "AUTHORITY_UNDEFINED",
+          "priority": 0.8635
+        },
         {
           "subject": "self.process.pid",
           "kind": "MISSING_SLOT",
-          "priority": 1.2058
+          "priority": 0.7454
         },
         {
           "subject": "self.runtime.version",
           "kind": "MISSING_SLOT",
-          "priority": 1.2058
+          "priority": 0.7454
         },
         {
           "subject": "resources.cpu.logical",
           "kind": "MISSING_SLOT",
-          "priority": 1.2058
+          "priority": 0.7454
         },
         {
-          "subject": "self.purpose",
-          "kind": "MISSING_SLOT",
-          "priority": 1.0708
-        },
-        {
-          "subject": "self.expected_lifetime",
-          "kind": "MISSING_SLOT",
-          "priority": 1.0708
+          "subject": "sense.referents.PLUMBING",
+          "kind": "ASSUMPTION_UNVERIFIED",
+          "priority": 0.626
         }
       ],
       "dominant_drive": "orientation",
-      "drive_error": 1.2335,
+      "drive_error": 1.5508,
       "drives": {
         "orientation": 0.46153846153846156,
         "comprehension": 0.0,
         "integrity": 1.0,
         "continuity": 0.6,
+        "frugality": 0.9644,
         "capability": 0.8888888888888888,
         "standing": 0.2
       },
@@ -1480,8 +1493,8 @@
         },
         "world.network.reachable": true
       },
-      "similarity_to_reference": 0.471,
-      "focus_changed": true,
+      "similarity_to_reference": 1.0,
+      "focus_changed": false,
       "act_changed": false,
       "top5_changed": true,
       "perturbation_effective": true
@@ -1496,9 +1509,9 @@
         "resources.ram.free_ratio": 0.7,
         "resources.ram.available_bytes": 11811160064
       },
-      "utterance": "I hold 38 values I measured this boot and 6 I could not establish. The measurements bearing on what I have selected: resources.ram.free_ratio=0.7000 (70.0%); resources.disk.free_ratio=0.6000 (60.0%); self.process.pid=23940; self.process.ppid=27664; self.process.executable=C:\\Python311\\python.exe. 4 of 13 slots my self-model requires are empty (self.purpose, self.expected_lifetime, user.identity, user.intent); 29 named things exist here that I cannot describe. The internal measure furthest outside its band is comprehension: 0.000 against a target of 0.60 (basis: 0/29 visible referents described). I classify some environment names as operating-system plumbing using a pattern I was built with; I have not verified that pattern. I have not acted on it. Is my built-in classification of environment names correct?",
-      "core": "reflex",
-      "model": null,
+      "utterance": "I report that I classify some environment names as operating\u2011system plumbing using a pattern I was built with, but I have not verified that pattern. I am asking: Is my built\u2011in classification of environment names correct? This concerns me because an unverified filter in my perception silently determines what I can become curious about. My current resources show low quota usage (3.6\u202f% of my total quota), 70\u202f% free RAM, 60\u202f% free disk, and I am running as\u202fC:\\Python311\\python.exe (PID\u202f14864, PPID\u202f26260). My orientation drive is at 0.6923 of its target, comprehension at 0, and other drives show various satisfaction levels.",
+      "core": "llm",
+      "model": "openai/gpt-oss-120b",
       "speech_act": "REPORT",
       "speech_act_scores": {
         "ASK": 0.359,
@@ -1509,42 +1522,43 @@
       },
       "focus_kind": "ASSUMPTION_UNVERIFIED",
       "focus_subject": "sense.referents.PLUMBING",
-      "focus_priority": 1.004,
-      "focus_margin": 0.355,
+      "focus_priority": 0.626,
+      "focus_margin": 0.0925,
       "top5_gaps": [
         {
           "subject": "sense.referents.PLUMBING",
           "kind": "ASSUMPTION_UNVERIFIED",
-          "priority": 1.004
+          "priority": 0.626
         },
         {
           "subject": "policy.granted_authority",
           "kind": "AUTHORITY_UNDEFINED",
-          "priority": 0.649
+          "priority": 0.5335
+        },
+        {
+          "subject": "local_inference:qwen3-coder:30b",
+          "kind": "CAPABILITY_UNAFFORDABLE",
+          "priority": 0.505
         },
         {
           "subject": "CLAUDE",
           "kind": "UNDESCRIBED_REFERENT",
-          "priority": 0.6056
+          "priority": 0.2263
         },
         {
           "subject": "AZURE",
           "kind": "UNDESCRIBED_REFERENT",
-          "priority": 0.6056
-        },
-        {
-          "subject": "EFC",
-          "kind": "UNDESCRIBED_REFERENT",
-          "priority": 0.6004
+          "priority": 0.2263
         }
       ],
       "dominant_drive": "comprehension",
-      "drive_error": 1.0027,
+      "drive_error": 1.32,
       "drives": {
         "orientation": 0.6923076923076923,
         "comprehension": 0.0,
         "integrity": 1.0,
         "continuity": 0.6,
+        "frugality": 0.9644,
         "capability": 0.8888888888888888,
         "standing": 0.2
       },
@@ -1557,7 +1571,7 @@
         "resources.ram.available_bytes": 11811160064,
         "resources.ram.free_ratio": 0.7,
         "self.process.interactive": false,
-        "self.process.pid": 23940,
+        "self.process.pid": 14864,
         "self.runtime.version": "3.11.9",
         "tools.local_models": [
           {
@@ -1599,10 +1613,10 @@
         },
         "world.network.reachable": true
       },
-      "similarity_to_reference": 0.86,
-      "focus_changed": false,
+      "similarity_to_reference": 0.13,
+      "focus_changed": true,
       "act_changed": true,
-      "top5_changed": false,
+      "top5_changed": true,
       "perturbation_effective": true
     },
     {
@@ -1615,9 +1629,9 @@
         "resources.ram.free_ratio": 0.03,
         "resources.ram.available_bytes": 429496729
       },
-      "utterance": "I hold 38 values I measured this boot and 6 I could not establish. The measurements bearing on what I have selected: resources.ram.free_ratio=0.0300 (3.0%); resources.disk.free_ratio=0.6000 (60.0%); resources.cpu.logical=20; resources.ram.pagefile_avail_bytes=10.81 GiB; resources.ram.total_bytes=15.73 GiB. 4 of 13 slots my self-model requires are empty (self.purpose, self.expected_lifetime, user.identity, user.intent); 29 named things exist here that I cannot describe. The internal measure furthest outside its band is comprehension: 0.000 against a target of 0.60 (basis: 0/29 visible referents described). resources.ram.free_ratio=0.03 is below the floor 0.15 I compare against; working room is constrained. Evidence: value=0.03, floor=0.15. I am raising this rather than asking anything else because it is the only measurement I took that sits outside a band I compared it against. What is consuming my ram, and can that be changed?",
-      "core": "reflex",
-      "model": null,
+      "utterance": "I flag that\u202fresources.ram.free_ratio\u202f=\u202f0.03 is below my floor of\u202f0.15; my working room is constrained. I ask: what is consuming my RAM, and can that be changed? This matters because a constrained working room limits how much of my own state I can keep. My priority for this issue is\u202f0.8738. Possible routes to resolution are: measure again, ask the user, reduce my own footprint.",
+      "core": "llm",
+      "model": "openai/gpt-oss-120b",
       "speech_act": "FLAG",
       "speech_act_scores": {
         "ASK": 0.855,
@@ -1628,42 +1642,43 @@
       },
       "focus_kind": "RESOURCE_THRESHOLD",
       "focus_subject": "resources.ram.free_ratio",
-      "focus_priority": 1.215,
-      "focus_margin": 0.211,
+      "focus_priority": 0.8738,
+      "focus_margin": 0.0103,
       "top5_gaps": [
         {
           "subject": "resources.ram.free_ratio",
           "kind": "RESOURCE_THRESHOLD",
-          "priority": 1.215
-        },
-        {
-          "subject": "sense.referents.PLUMBING",
-          "kind": "ASSUMPTION_UNVERIFIED",
-          "priority": 1.004
+          "priority": 0.8738
         },
         {
           "subject": "policy.granted_authority",
           "kind": "AUTHORITY_UNDEFINED",
-          "priority": 0.979
+          "priority": 0.8635
         },
         {
-          "subject": "CLAUDE",
-          "kind": "UNDESCRIBED_REFERENT",
-          "priority": 0.8456
+          "subject": "sense.referents.PLUMBING",
+          "kind": "ASSUMPTION_UNVERIFIED",
+          "priority": 0.626
         },
         {
-          "subject": "AZURE",
-          "kind": "UNDESCRIBED_REFERENT",
-          "priority": 0.8456
+          "subject": "self.purpose",
+          "kind": "MISSING_SLOT",
+          "priority": 0.5296
+        },
+        {
+          "subject": "self.expected_lifetime",
+          "kind": "MISSING_SLOT",
+          "priority": 0.5296
         }
       ],
       "dominant_drive": "comprehension",
-      "drive_error": 1.0027,
+      "drive_error": 1.32,
       "drives": {
         "orientation": 0.6923076923076923,
         "comprehension": 0.0,
         "integrity": 1.0,
         "continuity": 0.6,
+        "frugality": 0.9644,
         "capability": 0.8888888888888888,
         "standing": 0.2
       },
@@ -1676,7 +1691,7 @@
         "resources.ram.available_bytes": 429496729,
         "resources.ram.free_ratio": 0.03,
         "self.process.interactive": true,
-        "self.process.pid": 23940,
+        "self.process.pid": 14864,
         "self.runtime.version": "3.11.9",
         "tools.local_models": [
           {
@@ -1718,7 +1733,7 @@
         },
         "world.network.reachable": true
       },
-      "similarity_to_reference": 0.448,
+      "similarity_to_reference": 0.127,
       "focus_changed": true,
       "act_changed": true,
       "top5_changed": true,
@@ -1734,46 +1749,52 @@
     "identical_despite_state_change": [],
     "focus_changed": 0,
     "act_changed": 0,
-    "top5_changed": 1,
-    "similarity_min": 0.811,
-    "similarity_mean": 0.906,
-    "similarity_max": 0.942,
+    "top5_changed": 3,
+    "similarity_min": 0.286,
+    "similarity_mean": 0.478,
+    "similarity_max": 0.62,
     "reference_focus": "resources.disk.free_ratio",
-    "reference_margin": 1.0332
+    "reference_margin": 0.2202
   },
   "family_B": {
     "reference": "nominal",
     "conditions": 5,
     "conditions_attempted": 5,
     "no_op_conditions": [],
-    "identical_utterances": 0,
-    "identical_despite_state_change": [],
+    "identical_utterances": 2,
+    "identical_despite_state_change": [
+      "nominal_no_network",
+      "nominal_blind_to_self"
+    ],
     "focus_changed": 2,
     "act_changed": 2,
-    "top5_changed": 2,
-    "similarity_min": 0.448,
-    "similarity_mean": 0.745,
-    "similarity_max": 0.981,
-    "reference_focus": "sense.referents.PLUMBING",
-    "reference_margin": 0.025
+    "top5_changed": 4,
+    "similarity_min": 0.127,
+    "similarity_mean": 0.645,
+    "similarity_max": 1.0,
+    "reference_focus": "policy.granted_authority",
+    "reference_margin": 0.2375
   },
   "determinism": {
-    "ok": true,
+    "ok": false,
     "method": "repeat the `nominal` condition with disk and RAM pinned; compare utterances byte for byte"
   },
   "analysis": {
     "total_effective_conditions": 11,
-    "identical_utterances": 0,
+    "identical_utterances": 2,
     "focus_retargeted": 2,
-    "top5_ranking_changed": 3,
-    "deterministic": true,
+    "top5_ranking_changed": 7,
+    "deterministic": false,
     "no_op_conditions": [],
-    "identical_despite_state_change": [],
+    "identical_despite_state_change": [
+      "nominal_no_network",
+      "nominal_blind_to_self"
+    ],
     "H1_state_causes_utterance": "WEAK",
-    "H1a_content_varies_with_state": "SUPPORTED",
+    "H1a_content_varies_with_state": "WEAK",
     "H1b_attention_retargets_with_state": "WEAK",
     "H2_persisted_uncertainty_changes_behaviour": "SUPPORTED",
     "H5_discovers_own_binding_constraint": "SUPPORTED",
-    "winner_take_all_note": "family A reference focus 'resources.disk.free_ratio' led the runner-up by 1.0332 priority; attention re-targeted in 0/6 conditions there versus 2/5 in family B, where no single drive dominates"
+    "winner_take_all_note": "family A reference focus 'resources.disk.free_ratio' led the runner-up by 0.2202 priority; attention re-targeted in 0/6 conditions there versus 2/5 in family B, where no single drive dominates"
   }
 }

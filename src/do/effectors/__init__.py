@@ -25,6 +25,12 @@ from ..ledger import EventType, Ledger
 from ..policy import ALLOW, DENY, REQUIRE_APPROVAL, Budget, KillSwitch, Policy
 
 
+# How D.O. identifies itself to any remote service. Truthful by policy: it names the
+# software and links to its source, so an operator seeing this in a log can find out
+# exactly what called them.
+USER_AGENT = "D.O./0.2 (digital-organism research seed; +https://github.com/rajj28/DO)"
+
+
 class SandboxViolation(Exception):
     pass
 
@@ -136,7 +142,7 @@ class Gate:
         return {"reachable": True, "rtt_ms": round((time.perf_counter() - t0) * 1000, 1)}
 
     def _http(self, req: EffectRequest):
-        r = urllib.request.Request(req.target, headers={"User-Agent": "D.O./0.1 (research seed)"})
+        r = urllib.request.Request(req.target, headers={"User-Agent": USER_AGENT})
         try:
             with urllib.request.urlopen(r, timeout=float(req.payload.get("timeout", 15))) as resp:
                 body = resp.read(int(req.payload.get("max_bytes", 200_000)))
@@ -150,17 +156,37 @@ class Gate:
         adapter and still arrive here as an EffectRequest, so every token spent is a
         ledger row."""
         payload = json.dumps(req.payload.get("body", {})).encode("utf-8")
+        # Identify the client honestly. Python's default urllib User-Agent trips
+        # Cloudflare's browser-integrity check (error 1010) in front of some
+        # providers. The fix is to say what this is - NOT to impersonate a browser.
+        # docs/SAFETY.md forbids evading detection, and a spoofed User-Agent is
+        # exactly that; a truthful one is the opposite.
         r = urllib.request.Request(req.target, data=payload,
                                    headers={"Content-Type": "application/json",
+                                            "Accept": "application/json",
+                                            "User-Agent": USER_AGENT,
                                             **req.payload.get("headers", {})})
-        try:
-            with urllib.request.urlopen(r, timeout=float(req.payload.get("timeout", 120))) as resp:
-                return json.loads(resp.read().decode("utf-8", "replace"))
-        except urllib.error.HTTPError as e:
-            # A provider's error body says exactly what was wrong with the request.
-            # Discarding it and logging only the status code makes a failure
-            # undiagnosable, which in a project about observability is a defect.
-            raise RuntimeError(f"{_http_error(e)} | request_bytes={len(payload)}") from None
+        # Respect the provider's stated rate limit rather than hammering it. Honouring
+        # Retry-After is the opposite of evasion: the server said when to come back,
+        # and this waits that long. Bounded attempts, so a persistent limit surfaces
+        # as a failure instead of an infinite stall.
+        attempts = int(req.payload.get("retries", 4))
+        for attempt in range(1, attempts + 1):
+            try:
+                with urllib.request.urlopen(
+                        r, timeout=float(req.payload.get("timeout", 120))) as resp:
+                    return json.loads(resp.read().decode("utf-8", "replace"))
+            except urllib.error.HTTPError as e:
+                if e.code == 429 and attempt < attempts:
+                    wait = _retry_after(e, attempt)
+                    self.ledger.append(EventType.RECOVERY, {
+                        "kind": req.kind, "http": 429, "attempt": attempt,
+                        "waiting_s": wait, "note": "honouring provider rate limit"})
+                    time.sleep(wait)
+                    continue
+                raise RuntimeError(
+                    f"{_http_error(e)} | request_bytes={len(payload)} "
+                    f"| attempts={attempt}") from None
 
     def _resolve_sandboxed(self, target: str) -> Path:
         rel = target.split("sandbox:", 1)[-1].lstrip("/\\")
@@ -184,6 +210,18 @@ class Gate:
 
     def _human_ask(self, req: EffectRequest):
         return {"queued": True, "question": req.payload.get("question", "")}
+
+
+def _retry_after(e: "urllib.error.HTTPError", attempt: int) -> float:
+    """How long the provider asked us to wait, or a backoff if it did not say."""
+    hdr = (e.headers.get("retry-after") or e.headers.get("Retry-After") or "").strip()
+    try:
+        return min(60.0, max(1.0, float(hdr)))
+    except (TypeError, ValueError):
+        pass
+    import re as _re
+    m = _re.search(r"try again in ([\d.]+)s", str(e.headers.get("x-ratelimit-reset") or ""))
+    return min(60.0, 2.0 ** attempt)
 
 
 def _http_error(e: "urllib.error.HTTPError", limit: int = 400) -> str:

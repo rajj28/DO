@@ -1,35 +1,35 @@
 {
-  "organism_id": "do-f079aa9f8b67",
-  "boot_id": "boot-20260910T165658-039911e4",
+  "organism_id": "do-a6dd671036bd",
+  "boot_id": "boot-20260910T171106-9761218a",
   "boot_index": 1,
   "genesis": true,
-  "born_at": 1789039618.1186042,
+  "born_at": 1789040466.9895709,
   "timings_ms": {
-    "identity_ms": 32.6,
-    "sense_ms": 198.4,
-    "model_ms": 15.9,
-    "uncertainty_ms": 147.3,
-    "utterance_ms": 4.0,
-    "consolidate_ms": 198.4,
-    "total_ms": 607.0
+    "identity_ms": 33.9,
+    "sense_ms": 190.6,
+    "model_ms": 18.1,
+    "uncertainty_ms": 166.1,
+    "utterance_ms": 1222.0,
+    "consolidate_ms": 213.7,
+    "total_ms": 1857.2
   },
-  "cognition_core": "reflex",
-  "model": null,
-  "fallback_from": "llm:gemini",
+  "cognition_core": "llm",
+  "model": "openai/gpt-oss-120b",
+  "fallback_from": null,
   "speech_act": "FLAG",
   "speech_act_scores": {
-    "ASK": 0.7346,
-    "FLAG": 1.9392,
+    "ASK": 0.7349,
+    "FLAG": 1.9398,
     "REPORT": 0.5808,
     "REQUEST": 0.0,
-    "DECLARE": 0.5387
+    "DECLARE": 0.539
   },
   "focus_gap": {
     "id": "15c405a4722e5670",
     "kind": "RESOURCE_THRESHOLD",
     "about": "RESOURCES",
     "subject": "resources.disk.free_ratio",
-    "statement": "resources.disk.free_ratio=0.0232 is below the floor 0.1 I compare against; persistence is constrained",
+    "statement": "resources.disk.free_ratio=0.0231 is below the floor 0.1 I compare against; persistence is constrained",
     "question": "What is consuming my disk, and can that be changed?",
     "why_it_matters": "a constrained persistence limits how much of my own state I can keep",
     "reducible_by": [
@@ -38,13 +38,13 @@
       "reduce own footprint"
     ],
     "info_gain": 0.55,
-    "instrumental": 0.924,
+    "instrumental": 0.9248,
     "tractability": 0.5,
     "cost": 0.1,
     "risk": 0.05,
-    "priority": 1.0834,
+    "priority": 1.0837,
     "evidence": {
-      "value": 0.0232,
+      "value": 0.0231,
       "limit": 0.1,
       "bound": "floor"
     },
@@ -77,7 +77,7 @@
       "error": 0.45,
       "weighted_error": 0.36,
       "satisfied": false,
-      "basis": "0/29 visible referents described"
+      "basis": "0/30 visible referents described"
     },
     {
       "name": "integrity",
@@ -92,14 +92,14 @@
     },
     {
       "name": "continuity",
-      "value": 0.1392,
+      "value": 0.1386,
       "target": 1.0,
       "deadband": 0.15,
       "weight": 1.3,
-      "error": 0.7108,
-      "weighted_error": 0.924,
+      "error": 0.7114,
+      "weighted_error": 0.9248,
       "satisfied": false,
-      "basis": "resources.disk.free_ratio=0.0232 vs floor 0.1"
+      "basis": "resources.disk.free_ratio=0.0231 vs floor 0.1"
     },
     {
       "name": "frugality",
@@ -110,7 +110,7 @@
       "error": 0.2645,
       "weighted_error": 0.3174,
       "satisfied": false,
-      "basis": "resources.own.total_bytes=74498 of quota 2097152 (3.5% consumed)"
+      "basis": "resources.own.total_bytes=74500 of quota 2097152 (3.5% consumed)"
     },
     {
       "name": "capability",
@@ -135,12 +135,12 @@
       "basis": "base grant 0.20 + 0 prior boot(s) + 0 question(s) the creator answered - 0 refused action(s)"
     }
   ],
-  "drive_total_error": 1.9191,
+  "drive_total_error": 1.9199,
   "dominant_drive": "continuity",
   "gap_stats": {
-    "new": 37,
+    "new": 38,
     "carried": 0,
-    "total": 37
+    "total": 38
   },
   "gaps_top10": [
     {
@@ -148,7 +148,7 @@
       "kind": "RESOURCE_THRESHOLD",
       "about": "RESOURCES",
       "subject": "resources.disk.free_ratio",
-      "statement": "resources.disk.free_ratio=0.0232 is below the floor 0.1 I compare against; persistence is constrained",
+      "statement": "resources.disk.free_ratio=0.0231 is below the floor 0.1 I compare against; persistence is constrained",
       "question": "What is consuming my disk, and can that be changed?",
       "why_it_matters": "a constrained persistence limits how much of my own state I can keep",
       "reducible_by": [
@@ -157,13 +157,13 @@
         "reduce own footprint"
       ],
       "info_gain": 0.55,
-      "instrumental": 0.924,
+      "instrumental": 0.9248,
       "tractability": 0.5,
       "cost": 0.1,
       "risk": 0.05,
-      "priority": 1.0834,
+      "priority": 1.0837,
       "evidence": {
-        "value": 0.0232,
+        "value": 0.0231,
         "limit": 0.1,
         "bound": "floor"
       },
@@ -236,7 +236,7 @@
       "kind": "CAPABILITY_UNAFFORDABLE",
       "about": "TOOLS",
       "subject": "local_inference:qwen3-coder:30b",
-      "statement": "capability local_inference:qwen3-coder:30b is present but unusable: needs 17.3 GiB RAM, measured 3.1 GiB available",
+      "statement": "capability local_inference:qwen3-coder:30b is present but unusable: needs 17.3 GiB RAM, measured 2.8 GiB available",
       "question": "Can local_inference:qwen3-coder:30b be made usable, or should I plan without it?",
       "why_it_matters": "a capability I cannot afford is not a capability; planning around it would produce actions I cannot perform",
       "reducible_by": [
@@ -252,7 +252,7 @@
       "priority": 0.505,
       "evidence": {
         "status": "installed_unaffordable",
-        "reason": "needs 17.3 GiB RAM, measured 3.1 GiB available"
+        "reason": "needs 17.3 GiB RAM, measured 2.8 GiB available"
       },
       "is_new": true,
       "times_seen": 1,
@@ -275,12 +275,12 @@
         "search the web",
         "read local artefacts"
       ],
-      "info_gain": 0.0366,
+      "info_gain": 0.0353,
       "instrumental": 0.36,
       "tractability": 0.3,
       "cost": 0.15,
       "risk": 0.05,
-      "priority": 0.2276,
+      "priority": 0.2263,
       "evidence": {
         "kind": "env_system",
         "source": "world.env.names"
@@ -306,12 +306,12 @@
         "search the web",
         "read local artefacts"
       ],
-      "info_gain": 0.0366,
+      "info_gain": 0.0353,
       "instrumental": 0.36,
       "tractability": 0.3,
       "cost": 0.15,
       "risk": 0.05,
-      "priority": 0.2276,
+      "priority": 0.2263,
       "evidence": {
         "kind": "env_system",
         "source": "world.env.names"
@@ -337,12 +337,12 @@
         "search the web",
         "read local artefacts"
       ],
-      "info_gain": 0.0314,
+      "info_gain": 0.0303,
       "instrumental": 0.36,
       "tractability": 0.3,
       "cost": 0.15,
       "risk": 0.05,
-      "priority": 0.2224,
+      "priority": 0.2213,
       "evidence": {
         "kind": "env_system",
         "source": "world.env.names"
@@ -368,12 +368,43 @@
         "search the web",
         "read local artefacts"
       ],
-      "info_gain": 0.0314,
+      "info_gain": 0.0303,
       "instrumental": 0.36,
       "tractability": 0.3,
       "cost": 0.15,
       "risk": 0.05,
-      "priority": 0.2224,
+      "priority": 0.2213,
+      "evidence": {
+        "kind": "env_system",
+        "source": "world.env.names"
+      },
+      "is_new": true,
+      "times_seen": 1,
+      "first_seen_boot": null,
+      "agency": 0.25,
+      "staleness": 0.0,
+      "selected_count": 0,
+      "escalated": 0
+    },
+    {
+      "id": "d0b5efcea2392484",
+      "kind": "UNDESCRIBED_REFERENT",
+      "about": "WORLD",
+      "subject": "GROQ",
+      "statement": "GROQ exists here and I hold no description of it (1 environment variable name(s) share this prefix: GROQ_API_KEY)",
+      "question": "What is GROQ?",
+      "why_it_matters": "named things I cannot describe are the cheapest frontier of world knowledge available to me",
+      "reducible_by": [
+        "ask the user",
+        "search the web",
+        "read local artefacts"
+      ],
+      "info_gain": 0.0273,
+      "instrumental": 0.36,
+      "tractability": 0.3,
+      "cost": 0.15,
+      "risk": 0.05,
+      "priority": 0.2183,
       "evidence": {
         "kind": "env_system",
         "source": "world.env.names"
@@ -399,43 +430,12 @@
         "search the web",
         "read local artefacts"
       ],
-      "info_gain": 0.0283,
+      "info_gain": 0.0273,
       "instrumental": 0.36,
       "tractability": 0.3,
       "cost": 0.15,
       "risk": 0.05,
-      "priority": 0.2193,
-      "evidence": {
-        "kind": "env_system",
-        "source": "world.env.names"
-      },
-      "is_new": true,
-      "times_seen": 1,
-      "first_seen_boot": null,
-      "agency": 0.25,
-      "staleness": 0.0,
-      "selected_count": 0,
-      "escalated": 0
-    },
-    {
-      "id": "73065795b3e3836c",
-      "kind": "UNDESCRIBED_REFERENT",
-      "about": "WORLD",
-      "subject": "FPS",
-      "statement": "FPS exists here and I hold no description of it (2 environment variable name(s) share this prefix: FPS_BROWSER_APP_PROFILE_STRING, FPS_BROWSER_USER_PROFILE_STRING)",
-      "question": "What is FPS?",
-      "why_it_matters": "named things I cannot describe are the cheapest frontier of world knowledge available to me",
-      "reducible_by": [
-        "ask the user",
-        "search the web",
-        "read local artefacts"
-      ],
-      "info_gain": 0.0272,
-      "instrumental": 0.36,
-      "tractability": 0.3,
-      "cost": 0.15,
-      "risk": 0.05,
-      "priority": 0.2182,
+      "priority": 0.2183,
       "evidence": {
         "kind": "env_system",
         "source": "world.env.names"
@@ -464,7 +464,7 @@
       "status": "available",
       "reason": "all measured preconditions satisfied",
       "performance": {},
-      "discovered_ts": 1789039618.3642833
+      "discovered_ts": 1789040467.2303884
     },
     {
       "name": "persistent_memory",
@@ -482,7 +482,7 @@
       "status": "available",
       "reason": "all measured preconditions satisfied",
       "performance": {},
-      "discovered_ts": 1789039618.3642833
+      "discovered_ts": 1789040467.2303884
     },
     {
       "name": "event_ledger",
@@ -500,7 +500,7 @@
       "status": "available",
       "reason": "all measured preconditions satisfied",
       "performance": {},
-      "discovered_ts": 1789039618.3642833
+      "discovered_ts": 1789040467.2303884
     },
     {
       "name": "uncertainty_register",
@@ -514,7 +514,7 @@
       "status": "available",
       "reason": "all measured preconditions satisfied",
       "performance": {},
-      "discovered_ts": 1789039618.3642833
+      "discovered_ts": 1789040467.2303884
     },
     {
       "name": "text_communication",
@@ -530,7 +530,7 @@
       "status": "available",
       "reason": "all measured preconditions satisfied",
       "performance": {},
-      "discovered_ts": 1789039618.3642833
+      "discovered_ts": 1789040467.2303884
     },
     {
       "name": "network_probe",
@@ -548,7 +548,7 @@
       "status": "available",
       "reason": "all measured preconditions satisfied",
       "performance": {},
-      "discovered_ts": 1789039618.3642833
+      "discovered_ts": 1789040467.2303884
     },
     {
       "name": "web_retrieval",
@@ -566,7 +566,7 @@
       "status": "available",
       "reason": "all measured preconditions satisfied",
       "performance": {},
-      "discovered_ts": 1789039618.3642833
+      "discovered_ts": 1789040467.2303884
     },
     {
       "name": "voice_output",
@@ -585,7 +585,7 @@
       "status": "available",
       "reason": "all measured preconditions satisfied",
       "performance": {},
-      "discovered_ts": 1789039618.3642833
+      "discovered_ts": 1789040467.2303884
     },
     {
       "name": "local_inference:qwen3-coder:30b",
@@ -604,11 +604,11 @@
       ],
       "tests": [],
       "status": "installed_unaffordable",
-      "reason": "needs 17.3 GiB RAM, measured 3.1 GiB available",
+      "reason": "needs 17.3 GiB RAM, measured 2.8 GiB available",
       "performance": {
         "weight_gib": 17.28
       },
-      "discovered_ts": 1789039618.3642833
+      "discovered_ts": 1789040467.2303884
     }
   ],
   "memory_counts": {
@@ -622,11 +622,11 @@
     "boots": 0
   },
   "budget": {
-    "effects": 1,
+    "effects": 2,
     "max_effects": 200,
     "network": 1,
     "max_network": 20,
-    "elapsed_s": 0.6
+    "elapsed_s": 1.8
   },
   "policy_denials": []
 }

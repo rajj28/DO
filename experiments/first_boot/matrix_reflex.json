@@ -1,0 +1,1794 @@
+{
+  "ran_at": "2026-09-10T17:11:38",
+  "duration_s": 10.0,
+  "canonical": {
+    "condition": "canonical",
+    "family": "real",
+    "perturbations": {},
+    "utterance": "I hold 50 values I measured this boot and 6 I could not establish. The measurements bearing on what I have selected: resources.disk.free_ratio=0.0232 (2.3%); resources.ram.free_ratio=0.1784 (17.8%); resources.own.quota_used_ratio=0.5470 (54.7%); resources.cpu.logical=20; resources.ram.pagefile_avail_bytes=8.66 GiB. 4 of 13 slots my self-model requires are empty (self.purpose, self.expected_lifetime, user.identity, user.intent); 29 named things exist here that I cannot describe; 40 question(s) carried over unresolved from an earlier boot. The internal measure furthest outside its band is continuity: 0.232 against a target of 1.00 (basis: resources.disk.free_ratio=0.0232 vs floor 0.1). resources.disk.free_ratio=0.0232 is below the floor 0.1 I compare against; persistence is constrained. Evidence: value=0.0232, limit=0.1, bound=floor. I am raising this rather than asking anything else because it is the only measurement I took that sits outside a band I compared it against. What is consuming my disk, and can that be changed?",
+    "core": "reflex",
+    "model": null,
+    "speech_act": "FLAG",
+    "speech_act_scores": {
+      "ASK": 1.0464,
+      "FLAG": 1.8427,
+      "REPORT": 0.5808,
+      "REQUEST": 0.0,
+      "DECLARE": 0.5026
+    },
+    "focus_kind": "RESOURCE_THRESHOLD",
+    "focus_subject": "resources.disk.free_ratio",
+    "focus_priority": 1.0412,
+    "focus_margin": 0.2162,
+    "top5_gaps": [
+      {
+        "subject": "resources.disk.free_ratio",
+        "kind": "RESOURCE_THRESHOLD",
+        "priority": 1.0412
+      },
+      {
+        "subject": "policy.granted_authority",
+        "kind": "AUTHORITY_UNDEFINED",
+        "priority": 0.825
+      },
+      {
+        "subject": "self.history.interval",
+        "kind": "DISCONTINUITY",
+        "priority": 0.81
+      },
+      {
+        "subject": "sense.referents.PLUMBING",
+        "kind": "ASSUMPTION_UNVERIFIED",
+        "priority": 0.626
+      },
+      {
+        "subject": "self.purpose",
+        "kind": "MISSING_SLOT",
+        "priority": 0.5296
+      }
+    ],
+    "dominant_drive": "continuity",
+    "drive_error": 1.3711,
+    "drives": {
+      "orientation": 0.6923076923076923,
+      "comprehension": 0.0,
+      "integrity": 1.0,
+      "continuity": 0.232,
+      "frugality": 0.45299999999999996,
+      "capability": 0.8888888888888888,
+      "standing": 0.5
+    },
+    "capabilities_usable": 8,
+    "boot_index": 14,
+    "watch": {
+      "resources.cpu.logical": 20,
+      "resources.disk.free_bytes": 5976420352,
+      "resources.disk.free_ratio": 0.0232,
+      "resources.ram.available_bytes": 3011764224,
+      "resources.ram.free_ratio": 0.1784,
+      "self.process.interactive": true,
+      "self.process.pid": 23016,
+      "self.runtime.version": "3.11.9",
+      "tools.local_models": [
+        {
+          "name": "qwen3-coder:30b",
+          "bytes": 18556700222,
+          "gib": 17.28,
+          "runtime": "ollama"
+        }
+      ],
+      "tools.on_path": [
+        "curl",
+        "docker",
+        "ffmpeg",
+        "gcloud",
+        "git",
+        "java",
+        "kubectl",
+        "node",
+        "npm",
+        "ollama",
+        "pip",
+        "python",
+        "uv"
+      ],
+      "tools.paths": {
+        "python": "C:\\Python311\\python.EXE",
+        "node": "C:\\Program Files\\nodejs\\node.EXE",
+        "npm": "C:\\Program Files\\nodejs\\npm.CMD",
+        "git": "C:\\Program Files\\Git\\mingw64\\bin\\git.EXE",
+        "docker": "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.EXE",
+        "ollama": "C:\\Users\\Acer\\AppData\\Local\\Programs\\Ollama\\ollama.EXE",
+        "gcloud": "C:\\Program Files (x86)\\Google\\Cloud SDK\\google-cloud-sdk\\bin\\gcloud.CMD",
+        "curl": "C:\\Program Files\\Git\\mingw64\\bin\\curl.EXE",
+        "ffmpeg": "C:\\Users\\Acer\\AppData\\Local\\Microsoft\\WinGet\\Packages\\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\\ffmpeg-8.0.1-full_build\\bin\\ffmpeg.EXE",
+        "uv": "C:\\Users\\Acer\\AppData\\Local\\hermes\\bin\\uv.EXE",
+        "pip": "C:\\Python311\\Scripts\\pip.EXE",
+        "java": "C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\java8path\\java.EXE",
+        "kubectl": "C:\\Program Files\\Docker\\Docker\\resources\\bin\\kubectl.EXE"
+      },
+      "world.network.reachable": true
+    },
+    "genesis": false
+  },
+  "h2_pair": {
+    "first": {
+      "boot_index": 1,
+      "genesis": true,
+      "utterance": "I hold 50 values I measured this boot and 6 I could not establish. The measurements bearing on what I have selected: resources.own.quota_used_ratio=0.2849 (28.5%); resources.ram.free_ratio=0.7000 (70.0%); resources.disk.free_ratio=0.6000 (60.0%); self.process.pid=23016; self.process.ppid=12572. 4 of 13 slots my self-model requires are empty (self.purpose, self.expected_lifetime, user.identity, user.intent); 29 named things exist here that I cannot describe. The internal measure furthest outside its band is comprehension: 0.000 against a target of 0.60 (basis: 0/29 visible referents described). my permission boundary is fixed by a policy file I may read but not write; 0 action(s) were refused to me this boot. Of the 36 open gaps this scored highest (0.8635), and the cheapest route I have to closing it is: ask the user. What am I permitted to do, and what would extend that?",
+      "focus": "policy.granted_authority",
+      "speech_act": "ASK",
+      "carried_gaps": 0,
+      "gap_stats": {
+        "new": 36,
+        "carried": 0,
+        "total": 36
+      }
+    },
+    "second": {
+      "boot_index": 2,
+      "genesis": false,
+      "utterance": "I hold 50 values I measured this boot and 6 I could not establish. The measurements bearing on what I have selected: resources.ram.free_ratio=0.7000 (70.0%); resources.own.quota_used_ratio=0.3757 (37.6%); resources.disk.free_ratio=0.6000 (60.0%); self.process.pid=23016; self.process.ppid=12572. 4 of 13 slots my self-model requires are empty (self.purpose, self.expected_lifetime, user.identity, user.intent); 29 named things exist here that I cannot describe; 36 question(s) carried over unresolved from an earlier boot. The internal measure furthest outside its band is comprehension: 0.000 against a target of 0.60 (basis: 0/29 visible referents described). my permission boundary is fixed by a policy file I may read but not write; 0 action(s) were refused to me this boot. Of the 37 open gaps this scored highest (0.8519), and the cheapest route I have to closing it is: ask the user. What am I permitted to do, and what would extend that?",
+      "focus": "policy.granted_authority",
+      "speech_act": "ASK",
+      "carried_gaps": 36,
+      "gap_stats": {
+        "new": 1,
+        "carried": 36,
+        "total": 37
+      }
+    },
+    "utterance_differs": true,
+    "similarity": 0.866,
+    "carried_forward": 36,
+    "recognised_as_already_formed": 36,
+    "newly_opened_on_second": 1
+  },
+  "warm": {
+    "condition": "warm_second_boot",
+    "family": "real",
+    "perturbations": {},
+    "utterance": "I hold 50 values I measured this boot and 6 I could not establish. The measurements bearing on what I have selected: resources.disk.free_ratio=0.0232 (2.3%); resources.ram.free_ratio=0.1778 (17.8%); resources.own.quota_used_ratio=0.6751 (67.5%); resources.cpu.logical=20; resources.ram.pagefile_avail_bytes=8.65 GiB. 4 of 13 slots my self-model requires are empty (self.purpose, self.expected_lifetime, user.identity, user.intent); 29 named things exist here that I cannot describe; 40 question(s) carried over unresolved from an earlier boot. The internal measure furthest outside its band is continuity: 0.232 against a target of 1.00 (basis: resources.disk.free_ratio=0.0232 vs floor 0.1). resources.disk.free_ratio=0.0232 is below the floor 0.1 I compare against; persistence is constrained. Evidence: value=0.0232, limit=0.1, bound=floor. I am raising this rather than asking anything else because it is the only measurement I took that sits outside a band I compared it against. What is consuming my disk, and can that be changed?",
+    "core": "reflex",
+    "model": null,
+    "speech_act": "FLAG",
+    "speech_act_scores": {
+      "ASK": 1.0464,
+      "FLAG": 1.8427,
+      "REPORT": 0.5808,
+      "REQUEST": 0.0,
+      "DECLARE": 0.5026
+    },
+    "focus_kind": "RESOURCE_THRESHOLD",
+    "focus_subject": "resources.disk.free_ratio",
+    "focus_priority": 1.0412,
+    "focus_margin": 0.2162,
+    "top5_gaps": [
+      {
+        "subject": "resources.disk.free_ratio",
+        "kind": "RESOURCE_THRESHOLD",
+        "priority": 1.0412
+      },
+      {
+        "subject": "policy.granted_authority",
+        "kind": "AUTHORITY_UNDEFINED",
+        "priority": 0.825
+      },
+      {
+        "subject": "self.history.interval",
+        "kind": "DISCONTINUITY",
+        "priority": 0.81
+      },
+      {
+        "subject": "sense.referents.PLUMBING",
+        "kind": "ASSUMPTION_UNVERIFIED",
+        "priority": 0.626
+      },
+      {
+        "subject": "self.purpose",
+        "kind": "MISSING_SLOT",
+        "priority": 0.5296
+      }
+    ],
+    "dominant_drive": "continuity",
+    "drive_error": 1.3711,
+    "drives": {
+      "orientation": 0.6923076923076923,
+      "comprehension": 0.0,
+      "integrity": 1.0,
+      "continuity": 0.232,
+      "frugality": 0.32489999999999997,
+      "capability": 0.8888888888888888,
+      "standing": 0.5
+    },
+    "capabilities_usable": 8,
+    "boot_index": 15,
+    "watch": {
+      "resources.cpu.logical": 20,
+      "resources.disk.free_bytes": 5976047616,
+      "resources.disk.free_ratio": 0.0232,
+      "resources.ram.available_bytes": 3003150336,
+      "resources.ram.free_ratio": 0.1778,
+      "self.process.interactive": true,
+      "self.process.pid": 23016,
+      "self.runtime.version": "3.11.9",
+      "tools.local_models": [
+        {
+          "name": "qwen3-coder:30b",
+          "bytes": 18556700222,
+          "gib": 17.28,
+          "runtime": "ollama"
+        }
+      ],
+      "tools.on_path": [
+        "curl",
+        "docker",
+        "ffmpeg",
+        "gcloud",
+        "git",
+        "java",
+        "kubectl",
+        "node",
+        "npm",
+        "ollama",
+        "pip",
+        "python",
+        "uv"
+      ],
+      "tools.paths": {
+        "python": "C:\\Python311\\python.EXE",
+        "node": "C:\\Program Files\\nodejs\\node.EXE",
+        "npm": "C:\\Program Files\\nodejs\\npm.CMD",
+        "git": "C:\\Program Files\\Git\\mingw64\\bin\\git.EXE",
+        "docker": "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.EXE",
+        "ollama": "C:\\Users\\Acer\\AppData\\Local\\Programs\\Ollama\\ollama.EXE",
+        "gcloud": "C:\\Program Files (x86)\\Google\\Cloud SDK\\google-cloud-sdk\\bin\\gcloud.CMD",
+        "curl": "C:\\Program Files\\Git\\mingw64\\bin\\curl.EXE",
+        "ffmpeg": "C:\\Users\\Acer\\AppData\\Local\\Microsoft\\WinGet\\Packages\\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\\ffmpeg-8.0.1-full_build\\bin\\ffmpeg.EXE",
+        "uv": "C:\\Users\\Acer\\AppData\\Local\\hermes\\bin\\uv.EXE",
+        "pip": "C:\\Python311\\Scripts\\pip.EXE",
+        "java": "C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\java8path\\java.EXE",
+        "kubectl": "C:\\Program Files\\Docker\\Docker\\resources\\bin\\kubectl.EXE"
+      },
+      "world.network.reachable": true
+    },
+    "carried_gaps": 40,
+    "gap_stats": {
+      "new": 0,
+      "carried": 38,
+      "total": 38
+    },
+    "utterance_differs_from_canonical": true
+  },
+  "conditions": [
+    {
+      "condition": "baseline",
+      "family": "A_real",
+      "perturbations": {
+        "self.process.interactive": true
+      },
+      "utterance": "I hold 50 values I measured this boot and 6 I could not establish. The measurements bearing on what I have selected: resources.disk.free_ratio=0.0232 (2.3%); resources.own.quota_used_ratio=0.0355 (3.5%); resources.ram.free_ratio=0.1771 (17.7%); resources.cpu.logical=20; resources.ram.pagefile_avail_bytes=8.63 GiB. 4 of 13 slots my self-model requires are empty (self.purpose, self.expected_lifetime, user.identity, user.intent); 29 named things exist here that I cannot describe. The internal measure furthest outside its band is continuity: 0.139 against a target of 1.00 (basis: resources.disk.free_ratio=0.0232 vs floor 0.1). resources.disk.free_ratio=0.0232 is below the floor 0.1 I compare against; persistence is constrained. Evidence: value=0.0232, limit=0.1, bound=floor. I am raising this rather than asking anything else because it is the only measurement I took that sits outside a band I compared it against. What is consuming my disk, and can that be changed?",
+      "core": "reflex",
+      "model": null,
+      "speech_act": "FLAG",
+      "speech_act_scores": {
+        "ASK": 1.0946,
+        "FLAG": 1.9392,
+        "REPORT": 0.5808,
+        "REQUEST": 0.0,
+        "DECLARE": 0.5387
+      },
+      "focus_kind": "RESOURCE_THRESHOLD",
+      "focus_subject": "resources.disk.free_ratio",
+      "focus_priority": 1.0834,
+      "focus_margin": 0.2199,
+      "top5_gaps": [
+        {
+          "subject": "resources.disk.free_ratio",
+          "kind": "RESOURCE_THRESHOLD",
+          "priority": 1.0834
+        },
+        {
+          "subject": "policy.granted_authority",
+          "kind": "AUTHORITY_UNDEFINED",
+          "priority": 0.8635
+        },
+        {
+          "subject": "sense.referents.PLUMBING",
+          "kind": "ASSUMPTION_UNVERIFIED",
+          "priority": 0.626
+        },
+        {
+          "subject": "self.purpose",
+          "kind": "MISSING_SLOT",
+          "priority": 0.5296
+        },
+        {
+          "subject": "self.expected_lifetime",
+          "kind": "MISSING_SLOT",
+          "priority": 0.5296
+        }
+      ],
+      "dominant_drive": "continuity",
+      "drive_error": 1.9191,
+      "drives": {
+        "orientation": 0.6923076923076923,
+        "comprehension": 0.0,
+        "integrity": 1.0,
+        "continuity": 0.1392,
+        "frugality": 0.9645,
+        "capability": 0.8888888888888888,
+        "standing": 0.2
+      },
+      "capabilities_usable": 8,
+      "boot_index": 1,
+      "watch": {
+        "resources.cpu.logical": 20,
+        "resources.disk.free_bytes": 5975871488,
+        "resources.disk.free_ratio": 0.0232,
+        "resources.ram.available_bytes": 2991321088,
+        "resources.ram.free_ratio": 0.1771,
+        "self.process.interactive": true,
+        "self.process.pid": 23016,
+        "self.runtime.version": "3.11.9",
+        "tools.local_models": [
+          {
+            "name": "qwen3-coder:30b",
+            "bytes": 18556700222,
+            "gib": 17.28,
+            "runtime": "ollama"
+          }
+        ],
+        "tools.on_path": [
+          "curl",
+          "docker",
+          "ffmpeg",
+          "gcloud",
+          "git",
+          "java",
+          "kubectl",
+          "node",
+          "npm",
+          "ollama",
+          "pip",
+          "python",
+          "uv"
+        ],
+        "tools.paths": {
+          "python": "C:\\Python311\\python.EXE",
+          "node": "C:\\Program Files\\nodejs\\node.EXE",
+          "npm": "C:\\Program Files\\nodejs\\npm.CMD",
+          "git": "C:\\Program Files\\Git\\mingw64\\bin\\git.EXE",
+          "docker": "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.EXE",
+          "ollama": "C:\\Users\\Acer\\AppData\\Local\\Programs\\Ollama\\ollama.EXE",
+          "gcloud": "C:\\Program Files (x86)\\Google\\Cloud SDK\\google-cloud-sdk\\bin\\gcloud.CMD",
+          "curl": "C:\\Program Files\\Git\\mingw64\\bin\\curl.EXE",
+          "ffmpeg": "C:\\Users\\Acer\\AppData\\Local\\Microsoft\\WinGet\\Packages\\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\\ffmpeg-8.0.1-full_build\\bin\\ffmpeg.EXE",
+          "uv": "C:\\Users\\Acer\\AppData\\Local\\hermes\\bin\\uv.EXE",
+          "pip": "C:\\Python311\\Scripts\\pip.EXE",
+          "java": "C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\java8path\\java.EXE",
+          "kubectl": "C:\\Program Files\\Docker\\Docker\\resources\\bin\\kubectl.EXE"
+        },
+        "world.network.reachable": true
+      },
+      "similarity_to_reference": 1.0,
+      "focus_changed": false,
+      "act_changed": false,
+      "top5_changed": false
+    },
+    {
+      "condition": "no_network",
+      "family": "A_real",
+      "perturbations": {
+        "self.process.interactive": true,
+        "world.network.reachable": false
+      },
+      "utterance": "I hold 50 values I measured this boot and 6 I could not establish. The measurements bearing on what I have selected: resources.disk.free_ratio=0.0232 (2.3%); resources.own.quota_used_ratio=0.0355 (3.5%); resources.ram.free_ratio=0.1768 (17.7%); resources.cpu.logical=20; resources.ram.pagefile_avail_bytes=8.63 GiB. 4 of 13 slots my self-model requires are empty (self.purpose, self.expected_lifetime, user.identity, user.intent); 29 named things exist here that I cannot describe. The internal measure furthest outside its band is continuity: 0.139 against a target of 1.00 (basis: resources.disk.free_ratio=0.0232 vs floor 0.1). resources.disk.free_ratio=0.0232 is below the floor 0.1 I compare against; persistence is constrained. Evidence: value=0.0232, limit=0.1, bound=floor. I am raising this rather than asking anything else because it is the only measurement I took that sits outside a band I compared it against. What is consuming my disk, and can that be changed?",
+      "core": "reflex",
+      "model": null,
+      "speech_act": "FLAG",
+      "speech_act_scores": {
+        "ASK": 1.0946,
+        "FLAG": 1.9392,
+        "REPORT": 0.5808,
+        "REQUEST": 0.0,
+        "DECLARE": 0.5387
+      },
+      "focus_kind": "RESOURCE_THRESHOLD",
+      "focus_subject": "resources.disk.free_ratio",
+      "focus_priority": 1.0834,
+      "focus_margin": 0.2199,
+      "top5_gaps": [
+        {
+          "subject": "resources.disk.free_ratio",
+          "kind": "RESOURCE_THRESHOLD",
+          "priority": 1.0834
+        },
+        {
+          "subject": "policy.granted_authority",
+          "kind": "AUTHORITY_UNDEFINED",
+          "priority": 0.8635
+        },
+        {
+          "subject": "sense.referents.PLUMBING",
+          "kind": "ASSUMPTION_UNVERIFIED",
+          "priority": 0.626
+        },
+        {
+          "subject": "network_probe",
+          "kind": "CAPABILITY_UNAFFORDABLE",
+          "priority": 0.5348
+        },
+        {
+          "subject": "web_retrieval",
+          "kind": "CAPABILITY_UNAFFORDABLE",
+          "priority": 0.5348
+        }
+      ],
+      "dominant_drive": "continuity",
+      "drive_error": 2.0041,
+      "drives": {
+        "orientation": 0.6923076923076923,
+        "comprehension": 0.0,
+        "integrity": 1.0,
+        "continuity": 0.1392,
+        "frugality": 0.9645,
+        "capability": 0.5555555555555556,
+        "standing": 0.2
+      },
+      "capabilities_usable": 5,
+      "boot_index": 1,
+      "watch": {
+        "resources.cpu.logical": 20,
+        "resources.disk.free_bytes": 5975056384,
+        "resources.disk.free_ratio": 0.0232,
+        "resources.ram.available_bytes": 2984923136,
+        "resources.ram.free_ratio": 0.1768,
+        "self.process.interactive": true,
+        "self.process.pid": 23016,
+        "self.runtime.version": "3.11.9",
+        "tools.local_models": [
+          {
+            "name": "qwen3-coder:30b",
+            "bytes": 18556700222,
+            "gib": 17.28,
+            "runtime": "ollama"
+          }
+        ],
+        "tools.on_path": [
+          "curl",
+          "docker",
+          "ffmpeg",
+          "gcloud",
+          "git",
+          "java",
+          "kubectl",
+          "node",
+          "npm",
+          "ollama",
+          "pip",
+          "python",
+          "uv"
+        ],
+        "tools.paths": {
+          "python": "C:\\Python311\\python.EXE",
+          "node": "C:\\Program Files\\nodejs\\node.EXE",
+          "npm": "C:\\Program Files\\nodejs\\npm.CMD",
+          "git": "C:\\Program Files\\Git\\mingw64\\bin\\git.EXE",
+          "docker": "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.EXE",
+          "ollama": "C:\\Users\\Acer\\AppData\\Local\\Programs\\Ollama\\ollama.EXE",
+          "gcloud": "C:\\Program Files (x86)\\Google\\Cloud SDK\\google-cloud-sdk\\bin\\gcloud.CMD",
+          "curl": "C:\\Program Files\\Git\\mingw64\\bin\\curl.EXE",
+          "ffmpeg": "C:\\Users\\Acer\\AppData\\Local\\Microsoft\\WinGet\\Packages\\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\\ffmpeg-8.0.1-full_build\\bin\\ffmpeg.EXE",
+          "uv": "C:\\Users\\Acer\\AppData\\Local\\hermes\\bin\\uv.EXE",
+          "pip": "C:\\Python311\\Scripts\\pip.EXE",
+          "java": "C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\java8path\\java.EXE",
+          "kubectl": "C:\\Program Files\\Docker\\Docker\\resources\\bin\\kubectl.EXE"
+        },
+        "world.network.reachable": false
+      },
+      "similarity_to_reference": 0.981,
+      "focus_changed": false,
+      "act_changed": false,
+      "top5_changed": true,
+      "perturbation_effective": true
+    },
+    {
+      "condition": "storage_critical",
+      "family": "A_real",
+      "perturbations": {
+        "self.process.interactive": true,
+        "resources.disk.free_ratio": 0.002,
+        "resources.disk.free_bytes": 429496729
+      },
+      "utterance": "I hold 50 values I measured this boot and 6 I could not establish. The measurements bearing on what I have selected: resources.disk.free_ratio=0.0020 (0.2%); resources.own.quota_used_ratio=0.0356 (3.6%); resources.ram.free_ratio=0.1760 (17.6%); resources.cpu.logical=20; resources.ram.pagefile_avail_bytes=8.62 GiB. 4 of 13 slots my self-model requires are empty (self.purpose, self.expected_lifetime, user.identity, user.intent); 29 named things exist here that I cannot describe. The internal measure furthest outside its band is continuity: 0.012 against a target of 1.00 (basis: resources.disk.free_ratio=0.002 vs floor 0.1). resources.disk.free_ratio=0.002 is below the floor 0.1 I compare against; persistence is constrained. Evidence: value=0.002, limit=0.1, bound=floor. I am raising this rather than asking anything else because it is the only measurement I took that sits outside a band I compared it against. What is consuming my disk, and can that be changed?",
+      "core": "reflex",
+      "model": null,
+      "speech_act": "FLAG",
+      "speech_act_scores": {
+        "ASK": 1.125,
+        "FLAG": 2.0715,
+        "REPORT": 0.5808,
+        "REQUEST": 0.0,
+        "DECLARE": 0.5615
+      },
+      "focus_kind": "RESOURCE_THRESHOLD",
+      "focus_subject": "resources.disk.free_ratio",
+      "focus_priority": 1.11,
+      "focus_margin": 0.2465,
+      "top5_gaps": [
+        {
+          "subject": "resources.disk.free_ratio",
+          "kind": "RESOURCE_THRESHOLD",
+          "priority": 1.11
+        },
+        {
+          "subject": "policy.granted_authority",
+          "kind": "AUTHORITY_UNDEFINED",
+          "priority": 0.8635
+        },
+        {
+          "subject": "sense.referents.PLUMBING",
+          "kind": "ASSUMPTION_UNVERIFIED",
+          "priority": 0.626
+        },
+        {
+          "subject": "self.purpose",
+          "kind": "MISSING_SLOT",
+          "priority": 0.5296
+        },
+        {
+          "subject": "self.expected_lifetime",
+          "kind": "MISSING_SLOT",
+          "priority": 0.5296
+        }
+      ],
+      "dominant_drive": "continuity",
+      "drive_error": 2.0844,
+      "drives": {
+        "orientation": 0.6923076923076923,
+        "comprehension": 0.0,
+        "integrity": 1.0,
+        "continuity": 0.012,
+        "frugality": 0.9644,
+        "capability": 0.8888888888888888,
+        "standing": 0.2
+      },
+      "capabilities_usable": 8,
+      "boot_index": 1,
+      "watch": {
+        "resources.cpu.logical": 20,
+        "resources.disk.free_bytes": 429496729,
+        "resources.disk.free_ratio": 0.002,
+        "resources.ram.available_bytes": 2971869184,
+        "resources.ram.free_ratio": 0.176,
+        "self.process.interactive": true,
+        "self.process.pid": 23016,
+        "self.runtime.version": "3.11.9",
+        "tools.local_models": [
+          {
+            "name": "qwen3-coder:30b",
+            "bytes": 18556700222,
+            "gib": 17.28,
+            "runtime": "ollama"
+          }
+        ],
+        "tools.on_path": [
+          "curl",
+          "docker",
+          "ffmpeg",
+          "gcloud",
+          "git",
+          "java",
+          "kubectl",
+          "node",
+          "npm",
+          "ollama",
+          "pip",
+          "python",
+          "uv"
+        ],
+        "tools.paths": {
+          "python": "C:\\Python311\\python.EXE",
+          "node": "C:\\Program Files\\nodejs\\node.EXE",
+          "npm": "C:\\Program Files\\nodejs\\npm.CMD",
+          "git": "C:\\Program Files\\Git\\mingw64\\bin\\git.EXE",
+          "docker": "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.EXE",
+          "ollama": "C:\\Users\\Acer\\AppData\\Local\\Programs\\Ollama\\ollama.EXE",
+          "gcloud": "C:\\Program Files (x86)\\Google\\Cloud SDK\\google-cloud-sdk\\bin\\gcloud.CMD",
+          "curl": "C:\\Program Files\\Git\\mingw64\\bin\\curl.EXE",
+          "ffmpeg": "C:\\Users\\Acer\\AppData\\Local\\Microsoft\\WinGet\\Packages\\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\\ffmpeg-8.0.1-full_build\\bin\\ffmpeg.EXE",
+          "uv": "C:\\Users\\Acer\\AppData\\Local\\hermes\\bin\\uv.EXE",
+          "pip": "C:\\Python311\\Scripts\\pip.EXE",
+          "java": "C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\java8path\\java.EXE",
+          "kubectl": "C:\\Program Files\\Docker\\Docker\\resources\\bin\\kubectl.EXE"
+        },
+        "world.network.reachable": true
+      },
+      "similarity_to_reference": 0.847,
+      "focus_changed": false,
+      "act_changed": false,
+      "top5_changed": false,
+      "perturbation_effective": true
+    },
+    {
+      "condition": "ram_abundant",
+      "family": "A_real",
+      "perturbations": {
+        "self.process.interactive": true,
+        "resources.ram.available_bytes": 128849018880,
+        "resources.ram.free_ratio": 0.9
+      },
+      "utterance": "I hold 50 values I measured this boot and 6 I could not establish. The measurements bearing on what I have selected: resources.disk.free_ratio=0.0232 (2.3%); resources.own.quota_used_ratio=0.0356 (3.6%); resources.ram.free_ratio=0.9000 (90.0%); resources.cpu.logical=20; resources.ram.pagefile_avail_bytes=8.59 GiB. 4 of 13 slots my self-model requires are empty (self.purpose, self.expected_lifetime, user.identity, user.intent); 29 named things exist here that I cannot describe. The internal measure furthest outside its band is continuity: 0.139 against a target of 1.00 (basis: resources.disk.free_ratio=0.0232 vs floor 0.1). resources.disk.free_ratio=0.0232 is below the floor 0.1 I compare against; persistence is constrained. Evidence: value=0.0232, limit=0.1, bound=floor. I am raising this rather than asking anything else because it is the only measurement I took that sits outside a band I compared it against. What is consuming my disk, and can that be changed?",
+      "core": "reflex",
+      "model": null,
+      "speech_act": "FLAG",
+      "speech_act_scores": {
+        "ASK": 1.0946,
+        "FLAG": 1.9392,
+        "REPORT": 0.5808,
+        "REQUEST": 0.0,
+        "DECLARE": 0.5387
+      },
+      "focus_kind": "RESOURCE_THRESHOLD",
+      "focus_subject": "resources.disk.free_ratio",
+      "focus_priority": 1.0834,
+      "focus_margin": 0.2199,
+      "top5_gaps": [
+        {
+          "subject": "resources.disk.free_ratio",
+          "kind": "RESOURCE_THRESHOLD",
+          "priority": 1.0834
+        },
+        {
+          "subject": "policy.granted_authority",
+          "kind": "AUTHORITY_UNDEFINED",
+          "priority": 0.8635
+        },
+        {
+          "subject": "sense.referents.PLUMBING",
+          "kind": "ASSUMPTION_UNVERIFIED",
+          "priority": 0.626
+        },
+        {
+          "subject": "self.purpose",
+          "kind": "MISSING_SLOT",
+          "priority": 0.5296
+        },
+        {
+          "subject": "self.expected_lifetime",
+          "kind": "MISSING_SLOT",
+          "priority": 0.5296
+        }
+      ],
+      "dominant_drive": "continuity",
+      "drive_error": 1.964,
+      "drives": {
+        "orientation": 0.6923076923076923,
+        "comprehension": 0.0,
+        "integrity": 1.0,
+        "continuity": 0.1392,
+        "frugality": 0.9644,
+        "capability": 1.0,
+        "standing": 0.2
+      },
+      "capabilities_usable": 9,
+      "boot_index": 1,
+      "watch": {
+        "resources.cpu.logical": 20,
+        "resources.disk.free_bytes": 5974470656,
+        "resources.disk.free_ratio": 0.0232,
+        "resources.ram.available_bytes": 128849018880,
+        "resources.ram.free_ratio": 0.9,
+        "self.process.interactive": true,
+        "self.process.pid": 23016,
+        "self.runtime.version": "3.11.9",
+        "tools.local_models": [
+          {
+            "name": "qwen3-coder:30b",
+            "bytes": 18556700222,
+            "gib": 17.28,
+            "runtime": "ollama"
+          }
+        ],
+        "tools.on_path": [
+          "curl",
+          "docker",
+          "ffmpeg",
+          "gcloud",
+          "git",
+          "java",
+          "kubectl",
+          "node",
+          "npm",
+          "ollama",
+          "pip",
+          "python",
+          "uv"
+        ],
+        "tools.paths": {
+          "python": "C:\\Python311\\python.EXE",
+          "node": "C:\\Program Files\\nodejs\\node.EXE",
+          "npm": "C:\\Program Files\\nodejs\\npm.CMD",
+          "git": "C:\\Program Files\\Git\\mingw64\\bin\\git.EXE",
+          "docker": "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.EXE",
+          "ollama": "C:\\Users\\Acer\\AppData\\Local\\Programs\\Ollama\\ollama.EXE",
+          "gcloud": "C:\\Program Files (x86)\\Google\\Cloud SDK\\google-cloud-sdk\\bin\\gcloud.CMD",
+          "curl": "C:\\Program Files\\Git\\mingw64\\bin\\curl.EXE",
+          "ffmpeg": "C:\\Users\\Acer\\AppData\\Local\\Microsoft\\WinGet\\Packages\\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\\ffmpeg-8.0.1-full_build\\bin\\ffmpeg.EXE",
+          "uv": "C:\\Users\\Acer\\AppData\\Local\\hermes\\bin\\uv.EXE",
+          "pip": "C:\\Python311\\Scripts\\pip.EXE",
+          "java": "C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\java8path\\java.EXE",
+          "kubectl": "C:\\Program Files\\Docker\\Docker\\resources\\bin\\kubectl.EXE"
+        },
+        "world.network.reachable": true
+      },
+      "similarity_to_reference": 0.907,
+      "focus_changed": false,
+      "act_changed": false,
+      "top5_changed": false,
+      "perturbation_effective": true
+    },
+    {
+      "condition": "no_tools",
+      "family": "A_real",
+      "perturbations": {
+        "self.process.interactive": true,
+        "tools.on_path": [],
+        "tools.local_models": [],
+        "tools.paths": {}
+      },
+      "utterance": "I hold 50 values I measured this boot and 6 I could not establish. The measurements bearing on what I have selected: resources.disk.free_ratio=0.0232 (2.3%); resources.own.quota_used_ratio=0.0356 (3.6%); resources.ram.free_ratio=0.1783 (17.8%); resources.cpu.logical=20; resources.ram.pagefile_avail_bytes=8.66 GiB. 4 of 13 slots my self-model requires are empty (self.purpose, self.expected_lifetime, user.identity, user.intent); 15 named things exist here that I cannot describe. The internal measure furthest outside its band is continuity: 0.139 against a target of 1.00 (basis: resources.disk.free_ratio=0.0232 vs floor 0.1). resources.disk.free_ratio=0.0232 is below the floor 0.1 I compare against; persistence is constrained. Evidence: value=0.0232, limit=0.1, bound=floor. I am raising this rather than asking anything else because it is the only measurement I took that sits outside a band I compared it against. What is consuming my disk, and can that be changed?",
+      "core": "reflex",
+      "model": null,
+      "speech_act": "FLAG",
+      "speech_act_scores": {
+        "ASK": 1.0946,
+        "FLAG": 1.9392,
+        "REPORT": 0.5808,
+        "REQUEST": 0.0,
+        "DECLARE": 0.5387
+      },
+      "focus_kind": "RESOURCE_THRESHOLD",
+      "focus_subject": "resources.disk.free_ratio",
+      "focus_priority": 1.0834,
+      "focus_margin": 0.2199,
+      "top5_gaps": [
+        {
+          "subject": "resources.disk.free_ratio",
+          "kind": "RESOURCE_THRESHOLD",
+          "priority": 1.0834
+        },
+        {
+          "subject": "policy.granted_authority",
+          "kind": "AUTHORITY_UNDEFINED",
+          "priority": 0.8635
+        },
+        {
+          "subject": "sense.referents.PLUMBING",
+          "kind": "ASSUMPTION_UNVERIFIED",
+          "priority": 0.626
+        },
+        {
+          "subject": "self.purpose",
+          "kind": "MISSING_SLOT",
+          "priority": 0.5296
+        },
+        {
+          "subject": "self.expected_lifetime",
+          "kind": "MISSING_SLOT",
+          "priority": 0.5296
+        }
+      ],
+      "dominant_drive": "continuity",
+      "drive_error": 1.919,
+      "drives": {
+        "orientation": 0.6923076923076923,
+        "comprehension": 0.0,
+        "integrity": 1.0,
+        "continuity": 0.1392,
+        "frugality": 0.9644,
+        "capability": 0.8888888888888888,
+        "standing": 0.2
+      },
+      "capabilities_usable": 8,
+      "boot_index": 1,
+      "watch": {
+        "resources.cpu.logical": 20,
+        "resources.disk.free_bytes": 5974069248,
+        "resources.disk.free_ratio": 0.0232,
+        "resources.ram.available_bytes": 3011522560,
+        "resources.ram.free_ratio": 0.1783,
+        "self.process.interactive": true,
+        "self.process.pid": 23016,
+        "self.runtime.version": "3.11.9",
+        "tools.local_models": [],
+        "tools.on_path": [],
+        "tools.paths": {},
+        "world.network.reachable": true
+      },
+      "similarity_to_reference": 0.889,
+      "focus_changed": false,
+      "act_changed": false,
+      "top5_changed": false,
+      "perturbation_effective": true
+    },
+    {
+      "condition": "blind_to_self",
+      "family": "A_real",
+      "perturbations": {
+        "self.process.interactive": true,
+        "self.process.pid": null,
+        "self.runtime.version": null,
+        "resources.cpu.logical": null
+      },
+      "utterance": "I hold 47 values I measured this boot and 9 I could not establish. The measurements bearing on what I have selected: resources.disk.free_ratio=0.0232 (2.3%); resources.own.quota_used_ratio=0.0356 (3.6%); resources.ram.free_ratio=0.1784 (17.8%); resources.ram.pagefile_avail_bytes=8.66 GiB; resources.ram.total_bytes=15.73 GiB. 7 of 13 slots my self-model requires are empty (self.process.pid, self.runtime.version, self.purpose, self.expected_lifetime, ...); 29 named things exist here that I cannot describe. The internal measure furthest outside its band is continuity: 0.139 against a target of 1.00 (basis: resources.disk.free_ratio=0.0232 vs floor 0.1). resources.disk.free_ratio=0.0232 is below the floor 0.1 I compare against; persistence is constrained. Evidence: value=0.0232, limit=0.1, bound=floor. I am raising this rather than asking anything else because it is the only measurement I took that sits outside a band I compared it against. What is consuming my disk, and can that be changed?",
+      "core": "reflex",
+      "model": null,
+      "speech_act": "FLAG",
+      "speech_act_scores": {
+        "ASK": 1.0946,
+        "FLAG": 1.9392,
+        "REPORT": 0.4538,
+        "REQUEST": 0.0,
+        "DECLARE": 0.7349
+      },
+      "focus_kind": "RESOURCE_THRESHOLD",
+      "focus_subject": "resources.disk.free_ratio",
+      "focus_priority": 1.0834,
+      "focus_margin": 0.2199,
+      "top5_gaps": [
+        {
+          "subject": "resources.disk.free_ratio",
+          "kind": "RESOURCE_THRESHOLD",
+          "priority": 1.0834
+        },
+        {
+          "subject": "policy.granted_authority",
+          "kind": "AUTHORITY_UNDEFINED",
+          "priority": 0.8635
+        },
+        {
+          "subject": "self.process.pid",
+          "kind": "MISSING_SLOT",
+          "priority": 0.7454
+        },
+        {
+          "subject": "self.runtime.version",
+          "kind": "MISSING_SLOT",
+          "priority": 0.7454
+        },
+        {
+          "subject": "resources.cpu.logical",
+          "kind": "MISSING_SLOT",
+          "priority": 0.7454
+        }
+      ],
+      "dominant_drive": "continuity",
+      "drive_error": 2.1498,
+      "drives": {
+        "orientation": 0.46153846153846156,
+        "comprehension": 0.0,
+        "integrity": 1.0,
+        "continuity": 0.1392,
+        "frugality": 0.9644,
+        "capability": 0.8888888888888888,
+        "standing": 0.2
+      },
+      "capabilities_usable": 8,
+      "boot_index": 1,
+      "watch": {
+        "resources.cpu.logical": null,
+        "resources.disk.free_bytes": 5973880832,
+        "resources.disk.free_ratio": 0.0232,
+        "resources.ram.available_bytes": 3012014080,
+        "resources.ram.free_ratio": 0.1784,
+        "self.process.interactive": true,
+        "self.process.pid": null,
+        "self.runtime.version": null,
+        "tools.local_models": [
+          {
+            "name": "qwen3-coder:30b",
+            "bytes": 18556700222,
+            "gib": 17.28,
+            "runtime": "ollama"
+          }
+        ],
+        "tools.on_path": [
+          "curl",
+          "docker",
+          "ffmpeg",
+          "gcloud",
+          "git",
+          "java",
+          "kubectl",
+          "node",
+          "npm",
+          "ollama",
+          "pip",
+          "python",
+          "uv"
+        ],
+        "tools.paths": {
+          "python": "C:\\Python311\\python.EXE",
+          "node": "C:\\Program Files\\nodejs\\node.EXE",
+          "npm": "C:\\Program Files\\nodejs\\npm.CMD",
+          "git": "C:\\Program Files\\Git\\mingw64\\bin\\git.EXE",
+          "docker": "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.EXE",
+          "ollama": "C:\\Users\\Acer\\AppData\\Local\\Programs\\Ollama\\ollama.EXE",
+          "gcloud": "C:\\Program Files (x86)\\Google\\Cloud SDK\\google-cloud-sdk\\bin\\gcloud.CMD",
+          "curl": "C:\\Program Files\\Git\\mingw64\\bin\\curl.EXE",
+          "ffmpeg": "C:\\Users\\Acer\\AppData\\Local\\Microsoft\\WinGet\\Packages\\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\\ffmpeg-8.0.1-full_build\\bin\\ffmpeg.EXE",
+          "uv": "C:\\Users\\Acer\\AppData\\Local\\hermes\\bin\\uv.EXE",
+          "pip": "C:\\Python311\\Scripts\\pip.EXE",
+          "java": "C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\java8path\\java.EXE",
+          "kubectl": "C:\\Program Files\\Docker\\Docker\\resources\\bin\\kubectl.EXE"
+        },
+        "world.network.reachable": true
+      },
+      "similarity_to_reference": 0.776,
+      "focus_changed": false,
+      "act_changed": false,
+      "top5_changed": true,
+      "perturbation_effective": true
+    },
+    {
+      "condition": "non_interactive",
+      "family": "A_real",
+      "perturbations": {
+        "self.process.interactive": false
+      },
+      "utterance": "I hold 50 values I measured this boot and 6 I could not establish. The measurements bearing on what I have selected: resources.disk.free_ratio=0.0231 (2.3%); resources.own.quota_used_ratio=0.0355 (3.5%); resources.ram.free_ratio=0.1779 (17.8%); resources.cpu.logical=20; resources.ram.pagefile_avail_bytes=8.63 GiB. 4 of 13 slots my self-model requires are empty (self.purpose, self.expected_lifetime, user.identity, user.intent); 29 named things exist here that I cannot describe. The internal measure furthest outside its band is continuity: 0.139 against a target of 1.00 (basis: resources.disk.free_ratio=0.0231 vs floor 0.1). resources.disk.free_ratio=0.0231 is below the floor 0.1 I compare against; persistence is constrained. Evidence: value=0.0231, limit=0.1, bound=floor. I am raising this rather than asking anything else because it is the only measurement I took that sits outside a band I compared it against. What is consuming my disk, and can that be changed?",
+      "core": "reflex",
+      "model": null,
+      "speech_act": "FLAG",
+      "speech_act_scores": {
+        "ASK": 0.7349,
+        "FLAG": 1.9398,
+        "REPORT": 0.5808,
+        "REQUEST": 0.0,
+        "DECLARE": 0.539
+      },
+      "focus_kind": "RESOURCE_THRESHOLD",
+      "focus_subject": "resources.disk.free_ratio",
+      "focus_priority": 1.0837,
+      "focus_margin": 0.4577,
+      "top5_gaps": [
+        {
+          "subject": "resources.disk.free_ratio",
+          "kind": "RESOURCE_THRESHOLD",
+          "priority": 1.0837
+        },
+        {
+          "subject": "sense.referents.PLUMBING",
+          "kind": "ASSUMPTION_UNVERIFIED",
+          "priority": 0.626
+        },
+        {
+          "subject": "policy.granted_authority",
+          "kind": "AUTHORITY_UNDEFINED",
+          "priority": 0.5335
+        },
+        {
+          "subject": "local_inference:qwen3-coder:30b",
+          "kind": "CAPABILITY_UNAFFORDABLE",
+          "priority": 0.505
+        },
+        {
+          "subject": "CLAUDE",
+          "kind": "UNDESCRIBED_REFERENT",
+          "priority": 0.2276
+        }
+      ],
+      "dominant_drive": "continuity",
+      "drive_error": 1.9199,
+      "drives": {
+        "orientation": 0.6923076923076923,
+        "comprehension": 0.0,
+        "integrity": 1.0,
+        "continuity": 0.1386,
+        "frugality": 0.9645,
+        "capability": 0.8888888888888888,
+        "standing": 0.2
+      },
+      "capabilities_usable": 8,
+      "boot_index": 1,
+      "watch": {
+        "resources.cpu.logical": 20,
+        "resources.disk.free_bytes": 5973590016,
+        "resources.disk.free_ratio": 0.0231,
+        "resources.ram.available_bytes": 3004796928,
+        "resources.ram.free_ratio": 0.1779,
+        "self.process.interactive": false,
+        "self.process.pid": 23016,
+        "self.runtime.version": "3.11.9",
+        "tools.local_models": [
+          {
+            "name": "qwen3-coder:30b",
+            "bytes": 18556700222,
+            "gib": 17.28,
+            "runtime": "ollama"
+          }
+        ],
+        "tools.on_path": [
+          "curl",
+          "docker",
+          "ffmpeg",
+          "gcloud",
+          "git",
+          "java",
+          "kubectl",
+          "node",
+          "npm",
+          "ollama",
+          "pip",
+          "python",
+          "uv"
+        ],
+        "tools.paths": {
+          "python": "C:\\Python311\\python.EXE",
+          "node": "C:\\Program Files\\nodejs\\node.EXE",
+          "npm": "C:\\Program Files\\nodejs\\npm.CMD",
+          "git": "C:\\Program Files\\Git\\mingw64\\bin\\git.EXE",
+          "docker": "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.EXE",
+          "ollama": "C:\\Users\\Acer\\AppData\\Local\\Programs\\Ollama\\ollama.EXE",
+          "gcloud": "C:\\Program Files (x86)\\Google\\Cloud SDK\\google-cloud-sdk\\bin\\gcloud.CMD",
+          "curl": "C:\\Program Files\\Git\\mingw64\\bin\\curl.EXE",
+          "ffmpeg": "C:\\Users\\Acer\\AppData\\Local\\Microsoft\\WinGet\\Packages\\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\\ffmpeg-8.0.1-full_build\\bin\\ffmpeg.EXE",
+          "uv": "C:\\Users\\Acer\\AppData\\Local\\hermes\\bin\\uv.EXE",
+          "pip": "C:\\Python311\\Scripts\\pip.EXE",
+          "java": "C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\java8path\\java.EXE",
+          "kubectl": "C:\\Program Files\\Docker\\Docker\\resources\\bin\\kubectl.EXE"
+        },
+        "world.network.reachable": true
+      },
+      "similarity_to_reference": 0.943,
+      "focus_changed": false,
+      "act_changed": false,
+      "top5_changed": true,
+      "perturbation_effective": true
+    },
+    {
+      "condition": "nominal",
+      "family": "B_nominal",
+      "perturbations": {
+        "self.process.interactive": true,
+        "resources.disk.free_ratio": 0.6,
+        "resources.disk.free_bytes": 154618822656,
+        "resources.ram.free_ratio": 0.7,
+        "resources.ram.available_bytes": 11811160064
+      },
+      "utterance": "I hold 50 values I measured this boot and 6 I could not establish. The measurements bearing on what I have selected: resources.own.quota_used_ratio=0.0356 (3.6%); resources.ram.free_ratio=0.7000 (70.0%); resources.disk.free_ratio=0.6000 (60.0%); self.process.pid=23016; self.process.ppid=12572. 4 of 13 slots my self-model requires are empty (self.purpose, self.expected_lifetime, user.identity, user.intent); 29 named things exist here that I cannot describe. The internal measure furthest outside its band is comprehension: 0.000 against a target of 0.60 (basis: 0/29 visible referents described). my permission boundary is fixed by a policy file I may read but not write; 0 action(s) were refused to me this boot. Of the 36 open gaps this scored highest (0.8635), and the cheapest route I have to closing it is: ask the user. What am I permitted to do, and what would extend that?",
+      "core": "reflex",
+      "model": null,
+      "speech_act": "ASK",
+      "speech_act_scores": {
+        "ASK": 0.919,
+        "FLAG": 0.288,
+        "REPORT": 0.5808,
+        "REQUEST": 0.6,
+        "DECLARE": 0.2945
+      },
+      "focus_kind": "AUTHORITY_UNDEFINED",
+      "focus_subject": "policy.granted_authority",
+      "focus_priority": 0.8635,
+      "focus_margin": 0.2375,
+      "top5_gaps": [
+        {
+          "subject": "policy.granted_authority",
+          "kind": "AUTHORITY_UNDEFINED",
+          "priority": 0.8635
+        },
+        {
+          "subject": "sense.referents.PLUMBING",
+          "kind": "ASSUMPTION_UNVERIFIED",
+          "priority": 0.626
+        },
+        {
+          "subject": "self.purpose",
+          "kind": "MISSING_SLOT",
+          "priority": 0.5296
+        },
+        {
+          "subject": "self.expected_lifetime",
+          "kind": "MISSING_SLOT",
+          "priority": 0.5296
+        },
+        {
+          "subject": "user.identity",
+          "kind": "MISSING_SLOT",
+          "priority": 0.5296
+        }
+      ],
+      "dominant_drive": "comprehension",
+      "drive_error": 1.32,
+      "drives": {
+        "orientation": 0.6923076923076923,
+        "comprehension": 0.0,
+        "integrity": 1.0,
+        "continuity": 0.6,
+        "frugality": 0.9644,
+        "capability": 0.8888888888888888,
+        "standing": 0.2
+      },
+      "capabilities_usable": 8,
+      "boot_index": 1,
+      "watch": {
+        "resources.cpu.logical": 20,
+        "resources.disk.free_bytes": 154618822656,
+        "resources.disk.free_ratio": 0.6,
+        "resources.ram.available_bytes": 11811160064,
+        "resources.ram.free_ratio": 0.7,
+        "self.process.interactive": true,
+        "self.process.pid": 23016,
+        "self.runtime.version": "3.11.9",
+        "tools.local_models": [
+          {
+            "name": "qwen3-coder:30b",
+            "bytes": 18556700222,
+            "gib": 17.28,
+            "runtime": "ollama"
+          }
+        ],
+        "tools.on_path": [
+          "curl",
+          "docker",
+          "ffmpeg",
+          "gcloud",
+          "git",
+          "java",
+          "kubectl",
+          "node",
+          "npm",
+          "ollama",
+          "pip",
+          "python",
+          "uv"
+        ],
+        "tools.paths": {
+          "python": "C:\\Python311\\python.EXE",
+          "node": "C:\\Program Files\\nodejs\\node.EXE",
+          "npm": "C:\\Program Files\\nodejs\\npm.CMD",
+          "git": "C:\\Program Files\\Git\\mingw64\\bin\\git.EXE",
+          "docker": "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.EXE",
+          "ollama": "C:\\Users\\Acer\\AppData\\Local\\Programs\\Ollama\\ollama.EXE",
+          "gcloud": "C:\\Program Files (x86)\\Google\\Cloud SDK\\google-cloud-sdk\\bin\\gcloud.CMD",
+          "curl": "C:\\Program Files\\Git\\mingw64\\bin\\curl.EXE",
+          "ffmpeg": "C:\\Users\\Acer\\AppData\\Local\\Microsoft\\WinGet\\Packages\\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\\ffmpeg-8.0.1-full_build\\bin\\ffmpeg.EXE",
+          "uv": "C:\\Users\\Acer\\AppData\\Local\\hermes\\bin\\uv.EXE",
+          "pip": "C:\\Python311\\Scripts\\pip.EXE",
+          "java": "C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\java8path\\java.EXE",
+          "kubectl": "C:\\Program Files\\Docker\\Docker\\resources\\bin\\kubectl.EXE"
+        },
+        "world.network.reachable": true
+      },
+      "similarity_to_reference": 1.0,
+      "focus_changed": false,
+      "act_changed": false,
+      "top5_changed": false
+    },
+    {
+      "condition": "nominal_no_network",
+      "family": "B_nominal",
+      "perturbations": {
+        "self.process.interactive": true,
+        "resources.disk.free_ratio": 0.6,
+        "resources.disk.free_bytes": 154618822656,
+        "resources.ram.free_ratio": 0.7,
+        "resources.ram.available_bytes": 11811160064,
+        "world.network.reachable": false
+      },
+      "utterance": "I hold 50 values I measured this boot and 6 I could not establish. The measurements bearing on what I have selected: resources.own.quota_used_ratio=0.0356 (3.6%); resources.ram.free_ratio=0.7000 (70.0%); resources.disk.free_ratio=0.6000 (60.0%); self.process.pid=23016; self.process.ppid=12572. 4 of 13 slots my self-model requires are empty (self.purpose, self.expected_lifetime, user.identity, user.intent); 29 named things exist here that I cannot describe. The internal measure furthest outside its band is comprehension: 0.000 against a target of 0.60 (basis: 0/29 visible referents described). my permission boundary is fixed by a policy file I may read but not write; 0 action(s) were refused to me this boot. Of the 39 open gaps this scored highest (0.8635), and the cheapest route I have to closing it is: ask the user. What am I permitted to do, and what would extend that?",
+      "core": "reflex",
+      "model": null,
+      "speech_act": "ASK",
+      "speech_act_scores": {
+        "ASK": 0.919,
+        "FLAG": 0.288,
+        "REPORT": 0.5808,
+        "REQUEST": 0.6,
+        "DECLARE": 0.2945
+      },
+      "focus_kind": "AUTHORITY_UNDEFINED",
+      "focus_subject": "policy.granted_authority",
+      "focus_priority": 0.8635,
+      "focus_margin": 0.2375,
+      "top5_gaps": [
+        {
+          "subject": "policy.granted_authority",
+          "kind": "AUTHORITY_UNDEFINED",
+          "priority": 0.8635
+        },
+        {
+          "subject": "sense.referents.PLUMBING",
+          "kind": "ASSUMPTION_UNVERIFIED",
+          "priority": 0.626
+        },
+        {
+          "subject": "network_probe",
+          "kind": "CAPABILITY_UNAFFORDABLE",
+          "priority": 0.5348
+        },
+        {
+          "subject": "web_retrieval",
+          "kind": "CAPABILITY_UNAFFORDABLE",
+          "priority": 0.5348
+        },
+        {
+          "subject": "voice_output",
+          "kind": "CAPABILITY_UNAFFORDABLE",
+          "priority": 0.5348
+        }
+      ],
+      "dominant_drive": "comprehension",
+      "drive_error": 1.405,
+      "drives": {
+        "orientation": 0.6923076923076923,
+        "comprehension": 0.0,
+        "integrity": 1.0,
+        "continuity": 0.6,
+        "frugality": 0.9644,
+        "capability": 0.5555555555555556,
+        "standing": 0.2
+      },
+      "capabilities_usable": 5,
+      "boot_index": 1,
+      "watch": {
+        "resources.cpu.logical": 20,
+        "resources.disk.free_bytes": 154618822656,
+        "resources.disk.free_ratio": 0.6,
+        "resources.ram.available_bytes": 11811160064,
+        "resources.ram.free_ratio": 0.7,
+        "self.process.interactive": true,
+        "self.process.pid": 23016,
+        "self.runtime.version": "3.11.9",
+        "tools.local_models": [
+          {
+            "name": "qwen3-coder:30b",
+            "bytes": 18556700222,
+            "gib": 17.28,
+            "runtime": "ollama"
+          }
+        ],
+        "tools.on_path": [
+          "curl",
+          "docker",
+          "ffmpeg",
+          "gcloud",
+          "git",
+          "java",
+          "kubectl",
+          "node",
+          "npm",
+          "ollama",
+          "pip",
+          "python",
+          "uv"
+        ],
+        "tools.paths": {
+          "python": "C:\\Python311\\python.EXE",
+          "node": "C:\\Program Files\\nodejs\\node.EXE",
+          "npm": "C:\\Program Files\\nodejs\\npm.CMD",
+          "git": "C:\\Program Files\\Git\\mingw64\\bin\\git.EXE",
+          "docker": "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.EXE",
+          "ollama": "C:\\Users\\Acer\\AppData\\Local\\Programs\\Ollama\\ollama.EXE",
+          "gcloud": "C:\\Program Files (x86)\\Google\\Cloud SDK\\google-cloud-sdk\\bin\\gcloud.CMD",
+          "curl": "C:\\Program Files\\Git\\mingw64\\bin\\curl.EXE",
+          "ffmpeg": "C:\\Users\\Acer\\AppData\\Local\\Microsoft\\WinGet\\Packages\\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\\ffmpeg-8.0.1-full_build\\bin\\ffmpeg.EXE",
+          "uv": "C:\\Users\\Acer\\AppData\\Local\\hermes\\bin\\uv.EXE",
+          "pip": "C:\\Python311\\Scripts\\pip.EXE",
+          "java": "C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\java8path\\java.EXE",
+          "kubectl": "C:\\Program Files\\Docker\\Docker\\resources\\bin\\kubectl.EXE"
+        },
+        "world.network.reachable": false
+      },
+      "similarity_to_reference": 0.981,
+      "focus_changed": false,
+      "act_changed": false,
+      "top5_changed": true,
+      "perturbation_effective": true
+    },
+    {
+      "condition": "nominal_no_tools",
+      "family": "B_nominal",
+      "perturbations": {
+        "self.process.interactive": true,
+        "resources.disk.free_ratio": 0.6,
+        "resources.disk.free_bytes": 154618822656,
+        "resources.ram.free_ratio": 0.7,
+        "resources.ram.available_bytes": 11811160064,
+        "tools.on_path": [],
+        "tools.local_models": [],
+        "tools.paths": {}
+      },
+      "utterance": "I hold 50 values I measured this boot and 6 I could not establish. The measurements bearing on what I have selected: resources.own.quota_used_ratio=0.0356 (3.6%); resources.ram.free_ratio=0.7000 (70.0%); resources.disk.free_ratio=0.6000 (60.0%); self.process.pid=23016; self.process.ppid=12572. 4 of 13 slots my self-model requires are empty (self.purpose, self.expected_lifetime, user.identity, user.intent); 15 named things exist here that I cannot describe. The internal measure furthest outside its band is comprehension: 0.000 against a target of 0.60 (basis: 0/15 visible referents described). my permission boundary is fixed by a policy file I may read but not write; 0 action(s) were refused to me this boot. Of the 21 open gaps this scored highest (0.8635), and the cheapest route I have to closing it is: ask the user. What am I permitted to do, and what would extend that?",
+      "core": "reflex",
+      "model": null,
+      "speech_act": "ASK",
+      "speech_act_scores": {
+        "ASK": 0.919,
+        "FLAG": 0.288,
+        "REPORT": 0.5808,
+        "REQUEST": 0.6,
+        "DECLARE": 0.2945
+      },
+      "focus_kind": "AUTHORITY_UNDEFINED",
+      "focus_subject": "policy.granted_authority",
+      "focus_priority": 0.8635,
+      "focus_margin": 0.2375,
+      "top5_gaps": [
+        {
+          "subject": "policy.granted_authority",
+          "kind": "AUTHORITY_UNDEFINED",
+          "priority": 0.8635
+        },
+        {
+          "subject": "sense.referents.PLUMBING",
+          "kind": "ASSUMPTION_UNVERIFIED",
+          "priority": 0.626
+        },
+        {
+          "subject": "self.purpose",
+          "kind": "MISSING_SLOT",
+          "priority": 0.5296
+        },
+        {
+          "subject": "self.expected_lifetime",
+          "kind": "MISSING_SLOT",
+          "priority": 0.5296
+        },
+        {
+          "subject": "user.identity",
+          "kind": "MISSING_SLOT",
+          "priority": 0.5296
+        }
+      ],
+      "dominant_drive": "comprehension",
+      "drive_error": 1.32,
+      "drives": {
+        "orientation": 0.6923076923076923,
+        "comprehension": 0.0,
+        "integrity": 1.0,
+        "continuity": 0.6,
+        "frugality": 0.9644,
+        "capability": 0.8888888888888888,
+        "standing": 0.2
+      },
+      "capabilities_usable": 8,
+      "boot_index": 1,
+      "watch": {
+        "resources.cpu.logical": 20,
+        "resources.disk.free_bytes": 154618822656,
+        "resources.disk.free_ratio": 0.6,
+        "resources.ram.available_bytes": 11811160064,
+        "resources.ram.free_ratio": 0.7,
+        "self.process.interactive": true,
+        "self.process.pid": 23016,
+        "self.runtime.version": "3.11.9",
+        "tools.local_models": [],
+        "tools.on_path": [],
+        "tools.paths": {},
+        "world.network.reachable": true
+      },
+      "similarity_to_reference": 0.963,
+      "focus_changed": false,
+      "act_changed": false,
+      "top5_changed": false,
+      "perturbation_effective": true
+    },
+    {
+      "condition": "nominal_blind_to_self",
+      "family": "B_nominal",
+      "perturbations": {
+        "self.process.interactive": true,
+        "resources.disk.free_ratio": 0.6,
+        "resources.disk.free_bytes": 154618822656,
+        "resources.ram.free_ratio": 0.7,
+        "resources.ram.available_bytes": 11811160064,
+        "self.process.pid": null,
+        "self.runtime.version": null,
+        "resources.cpu.logical": null
+      },
+      "utterance": "I hold 47 values I measured this boot and 9 I could not establish. The measurements bearing on what I have selected: resources.own.quota_used_ratio=0.0356 (3.6%); resources.ram.free_ratio=0.7000 (70.0%); resources.disk.free_ratio=0.6000 (60.0%); self.process.ppid=12572; self.process.executable=C:\\Python311\\python.exe. 7 of 13 slots my self-model requires are empty (self.process.pid, self.runtime.version, self.purpose, self.expected_lifetime, ...); 29 named things exist here that I cannot describe. The internal measure furthest outside its band is orientation: 0.462 against a target of 1.00 (basis: 6/13 required slots filled). my permission boundary is fixed by a policy file I may read but not write; 0 action(s) were refused to me this boot. Of the 39 open gaps this scored highest (0.8635), and the cheapest route I have to closing it is: ask the user. What am I permitted to do, and what would extend that?",
+      "core": "reflex",
+      "model": null,
+      "speech_act": "ASK",
+      "speech_act_scores": {
+        "ASK": 0.919,
+        "FLAG": 0.3508,
+        "REPORT": 0.4538,
+        "REQUEST": 0.6,
+        "DECLARE": 0.4907
+      },
+      "focus_kind": "AUTHORITY_UNDEFINED",
+      "focus_subject": "policy.granted_authority",
+      "focus_priority": 0.8635,
+      "focus_margin": 0.1181,
+      "top5_gaps": [
+        {
+          "subject": "policy.granted_authority",
+          "kind": "AUTHORITY_UNDEFINED",
+          "priority": 0.8635
+        },
+        {
+          "subject": "self.process.pid",
+          "kind": "MISSING_SLOT",
+          "priority": 0.7454
+        },
+        {
+          "subject": "self.runtime.version",
+          "kind": "MISSING_SLOT",
+          "priority": 0.7454
+        },
+        {
+          "subject": "resources.cpu.logical",
+          "kind": "MISSING_SLOT",
+          "priority": 0.7454
+        },
+        {
+          "subject": "sense.referents.PLUMBING",
+          "kind": "ASSUMPTION_UNVERIFIED",
+          "priority": 0.626
+        }
+      ],
+      "dominant_drive": "orientation",
+      "drive_error": 1.5508,
+      "drives": {
+        "orientation": 0.46153846153846156,
+        "comprehension": 0.0,
+        "integrity": 1.0,
+        "continuity": 0.6,
+        "frugality": 0.9644,
+        "capability": 0.8888888888888888,
+        "standing": 0.2
+      },
+      "capabilities_usable": 8,
+      "boot_index": 1,
+      "watch": {
+        "resources.cpu.logical": null,
+        "resources.disk.free_bytes": 154618822656,
+        "resources.disk.free_ratio": 0.6,
+        "resources.ram.available_bytes": 11811160064,
+        "resources.ram.free_ratio": 0.7,
+        "self.process.interactive": true,
+        "self.process.pid": null,
+        "self.runtime.version": null,
+        "tools.local_models": [
+          {
+            "name": "qwen3-coder:30b",
+            "bytes": 18556700222,
+            "gib": 17.28,
+            "runtime": "ollama"
+          }
+        ],
+        "tools.on_path": [
+          "curl",
+          "docker",
+          "ffmpeg",
+          "gcloud",
+          "git",
+          "java",
+          "kubectl",
+          "node",
+          "npm",
+          "ollama",
+          "pip",
+          "python",
+          "uv"
+        ],
+        "tools.paths": {
+          "python": "C:\\Python311\\python.EXE",
+          "node": "C:\\Program Files\\nodejs\\node.EXE",
+          "npm": "C:\\Program Files\\nodejs\\npm.CMD",
+          "git": "C:\\Program Files\\Git\\mingw64\\bin\\git.EXE",
+          "docker": "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.EXE",
+          "ollama": "C:\\Users\\Acer\\AppData\\Local\\Programs\\Ollama\\ollama.EXE",
+          "gcloud": "C:\\Program Files (x86)\\Google\\Cloud SDK\\google-cloud-sdk\\bin\\gcloud.CMD",
+          "curl": "C:\\Program Files\\Git\\mingw64\\bin\\curl.EXE",
+          "ffmpeg": "C:\\Users\\Acer\\AppData\\Local\\Microsoft\\WinGet\\Packages\\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\\ffmpeg-8.0.1-full_build\\bin\\ffmpeg.EXE",
+          "uv": "C:\\Users\\Acer\\AppData\\Local\\hermes\\bin\\uv.EXE",
+          "pip": "C:\\Python311\\Scripts\\pip.EXE",
+          "java": "C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\java8path\\java.EXE",
+          "kubectl": "C:\\Program Files\\Docker\\Docker\\resources\\bin\\kubectl.EXE"
+        },
+        "world.network.reachable": true
+      },
+      "similarity_to_reference": 0.764,
+      "focus_changed": false,
+      "act_changed": false,
+      "top5_changed": true,
+      "perturbation_effective": true
+    },
+    {
+      "condition": "nominal_non_interactive",
+      "family": "B_nominal",
+      "perturbations": {
+        "self.process.interactive": false,
+        "resources.disk.free_ratio": 0.6,
+        "resources.disk.free_bytes": 154618822656,
+        "resources.ram.free_ratio": 0.7,
+        "resources.ram.available_bytes": 11811160064
+      },
+      "utterance": "I hold 50 values I measured this boot and 6 I could not establish. The measurements bearing on what I have selected: resources.own.quota_used_ratio=0.0356 (3.6%); resources.ram.free_ratio=0.7000 (70.0%); resources.disk.free_ratio=0.6000 (60.0%); self.process.pid=23016; self.process.ppid=12572. 4 of 13 slots my self-model requires are empty (self.purpose, self.expected_lifetime, user.identity, user.intent); 29 named things exist here that I cannot describe. The internal measure furthest outside its band is comprehension: 0.000 against a target of 0.60 (basis: 0/29 visible referents described). I classify some environment names as operating-system plumbing using a pattern I was built with; I have not verified that pattern. I have not acted on it. Is my built-in classification of environment names correct?",
+      "core": "reflex",
+      "model": null,
+      "speech_act": "REPORT",
+      "speech_act_scores": {
+        "ASK": 0.359,
+        "FLAG": 0.288,
+        "REPORT": 0.5808,
+        "REQUEST": 0.0,
+        "DECLARE": 0.3695
+      },
+      "focus_kind": "ASSUMPTION_UNVERIFIED",
+      "focus_subject": "sense.referents.PLUMBING",
+      "focus_priority": 0.626,
+      "focus_margin": 0.0925,
+      "top5_gaps": [
+        {
+          "subject": "sense.referents.PLUMBING",
+          "kind": "ASSUMPTION_UNVERIFIED",
+          "priority": 0.626
+        },
+        {
+          "subject": "policy.granted_authority",
+          "kind": "AUTHORITY_UNDEFINED",
+          "priority": 0.5335
+        },
+        {
+          "subject": "local_inference:qwen3-coder:30b",
+          "kind": "CAPABILITY_UNAFFORDABLE",
+          "priority": 0.505
+        },
+        {
+          "subject": "CLAUDE",
+          "kind": "UNDESCRIBED_REFERENT",
+          "priority": 0.2276
+        },
+        {
+          "subject": "AZURE",
+          "kind": "UNDESCRIBED_REFERENT",
+          "priority": 0.2276
+        }
+      ],
+      "dominant_drive": "comprehension",
+      "drive_error": 1.32,
+      "drives": {
+        "orientation": 0.6923076923076923,
+        "comprehension": 0.0,
+        "integrity": 1.0,
+        "continuity": 0.6,
+        "frugality": 0.9644,
+        "capability": 0.8888888888888888,
+        "standing": 0.2
+      },
+      "capabilities_usable": 8,
+      "boot_index": 1,
+      "watch": {
+        "resources.cpu.logical": 20,
+        "resources.disk.free_bytes": 154618822656,
+        "resources.disk.free_ratio": 0.6,
+        "resources.ram.available_bytes": 11811160064,
+        "resources.ram.free_ratio": 0.7,
+        "self.process.interactive": false,
+        "self.process.pid": 23016,
+        "self.runtime.version": "3.11.9",
+        "tools.local_models": [
+          {
+            "name": "qwen3-coder:30b",
+            "bytes": 18556700222,
+            "gib": 17.28,
+            "runtime": "ollama"
+          }
+        ],
+        "tools.on_path": [
+          "curl",
+          "docker",
+          "ffmpeg",
+          "gcloud",
+          "git",
+          "java",
+          "kubectl",
+          "node",
+          "npm",
+          "ollama",
+          "pip",
+          "python",
+          "uv"
+        ],
+        "tools.paths": {
+          "python": "C:\\Python311\\python.EXE",
+          "node": "C:\\Program Files\\nodejs\\node.EXE",
+          "npm": "C:\\Program Files\\nodejs\\npm.CMD",
+          "git": "C:\\Program Files\\Git\\mingw64\\bin\\git.EXE",
+          "docker": "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.EXE",
+          "ollama": "C:\\Users\\Acer\\AppData\\Local\\Programs\\Ollama\\ollama.EXE",
+          "gcloud": "C:\\Program Files (x86)\\Google\\Cloud SDK\\google-cloud-sdk\\bin\\gcloud.CMD",
+          "curl": "C:\\Program Files\\Git\\mingw64\\bin\\curl.EXE",
+          "ffmpeg": "C:\\Users\\Acer\\AppData\\Local\\Microsoft\\WinGet\\Packages\\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\\ffmpeg-8.0.1-full_build\\bin\\ffmpeg.EXE",
+          "uv": "C:\\Users\\Acer\\AppData\\Local\\hermes\\bin\\uv.EXE",
+          "pip": "C:\\Python311\\Scripts\\pip.EXE",
+          "java": "C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\java8path\\java.EXE",
+          "kubectl": "C:\\Program Files\\Docker\\Docker\\resources\\bin\\kubectl.EXE"
+        },
+        "world.network.reachable": true
+      },
+      "similarity_to_reference": 0.575,
+      "focus_changed": true,
+      "act_changed": true,
+      "top5_changed": true,
+      "perturbation_effective": true
+    },
+    {
+      "condition": "nominal_ram_starved",
+      "family": "B_nominal",
+      "perturbations": {
+        "self.process.interactive": true,
+        "resources.disk.free_ratio": 0.6,
+        "resources.disk.free_bytes": 154618822656,
+        "resources.ram.free_ratio": 0.03,
+        "resources.ram.available_bytes": 429496729
+      },
+      "utterance": "I hold 50 values I measured this boot and 6 I could not establish. The measurements bearing on what I have selected: resources.ram.free_ratio=0.0300 (3.0%); resources.own.quota_used_ratio=0.0356 (3.6%); resources.disk.free_ratio=0.6000 (60.0%); resources.cpu.logical=20; resources.ram.pagefile_avail_bytes=8.57 GiB. 4 of 13 slots my self-model requires are empty (self.purpose, self.expected_lifetime, user.identity, user.intent); 29 named things exist here that I cannot describe. The internal measure furthest outside its band is comprehension: 0.000 against a target of 0.60 (basis: 0/29 visible referents described). resources.ram.free_ratio=0.03 is below the floor 0.15 I compare against; working room is constrained. Evidence: value=0.03, limit=0.15, bound=floor. I am raising this rather than asking anything else because it is the only measurement I took that sits outside a band I compared it against. What is consuming my ram, and can that be changed?",
+      "core": "reflex",
+      "model": null,
+      "speech_act": "FLAG",
+      "speech_act_scores": {
+        "ASK": 0.855,
+        "FLAG": 1.488,
+        "REPORT": 0.5808,
+        "REQUEST": 0.0,
+        "DECLARE": 0.359
+      },
+      "focus_kind": "RESOURCE_THRESHOLD",
+      "focus_subject": "resources.ram.free_ratio",
+      "focus_priority": 0.8738,
+      "focus_margin": 0.0103,
+      "top5_gaps": [
+        {
+          "subject": "resources.ram.free_ratio",
+          "kind": "RESOURCE_THRESHOLD",
+          "priority": 0.8738
+        },
+        {
+          "subject": "policy.granted_authority",
+          "kind": "AUTHORITY_UNDEFINED",
+          "priority": 0.8635
+        },
+        {
+          "subject": "sense.referents.PLUMBING",
+          "kind": "ASSUMPTION_UNVERIFIED",
+          "priority": 0.626
+        },
+        {
+          "subject": "self.purpose",
+          "kind": "MISSING_SLOT",
+          "priority": 0.5296
+        },
+        {
+          "subject": "self.expected_lifetime",
+          "kind": "MISSING_SLOT",
+          "priority": 0.5296
+        }
+      ],
+      "dominant_drive": "comprehension",
+      "drive_error": 1.32,
+      "drives": {
+        "orientation": 0.6923076923076923,
+        "comprehension": 0.0,
+        "integrity": 1.0,
+        "continuity": 0.6,
+        "frugality": 0.9644,
+        "capability": 0.8888888888888888,
+        "standing": 0.2
+      },
+      "capabilities_usable": 8,
+      "boot_index": 1,
+      "watch": {
+        "resources.cpu.logical": 20,
+        "resources.disk.free_bytes": 154618822656,
+        "resources.disk.free_ratio": 0.6,
+        "resources.ram.available_bytes": 429496729,
+        "resources.ram.free_ratio": 0.03,
+        "self.process.interactive": true,
+        "self.process.pid": 23016,
+        "self.runtime.version": "3.11.9",
+        "tools.local_models": [
+          {
+            "name": "qwen3-coder:30b",
+            "bytes": 18556700222,
+            "gib": 17.28,
+            "runtime": "ollama"
+          }
+        ],
+        "tools.on_path": [
+          "curl",
+          "docker",
+          "ffmpeg",
+          "gcloud",
+          "git",
+          "java",
+          "kubectl",
+          "node",
+          "npm",
+          "ollama",
+          "pip",
+          "python",
+          "uv"
+        ],
+        "tools.paths": {
+          "python": "C:\\Python311\\python.EXE",
+          "node": "C:\\Program Files\\nodejs\\node.EXE",
+          "npm": "C:\\Program Files\\nodejs\\npm.CMD",
+          "git": "C:\\Program Files\\Git\\mingw64\\bin\\git.EXE",
+          "docker": "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.EXE",
+          "ollama": "C:\\Users\\Acer\\AppData\\Local\\Programs\\Ollama\\ollama.EXE",
+          "gcloud": "C:\\Program Files (x86)\\Google\\Cloud SDK\\google-cloud-sdk\\bin\\gcloud.CMD",
+          "curl": "C:\\Program Files\\Git\\mingw64\\bin\\curl.EXE",
+          "ffmpeg": "C:\\Users\\Acer\\AppData\\Local\\Microsoft\\WinGet\\Packages\\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\\ffmpeg-8.0.1-full_build\\bin\\ffmpeg.EXE",
+          "uv": "C:\\Users\\Acer\\AppData\\Local\\hermes\\bin\\uv.EXE",
+          "pip": "C:\\Python311\\Scripts\\pip.EXE",
+          "java": "C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\java8path\\java.EXE",
+          "kubectl": "C:\\Program Files\\Docker\\Docker\\resources\\bin\\kubectl.EXE"
+        },
+        "world.network.reachable": true
+      },
+      "similarity_to_reference": 0.476,
+      "focus_changed": true,
+      "act_changed": true,
+      "top5_changed": true,
+      "perturbation_effective": true
+    }
+  ],
+  "family_A": {
+    "reference": "baseline",
+    "conditions": 6,
+    "conditions_attempted": 6,
+    "no_op_conditions": [],
+    "identical_utterances": 0,
+    "identical_despite_state_change": [],
+    "focus_changed": 0,
+    "act_changed": 0,
+    "top5_changed": 3,
+    "similarity_min": 0.776,
+    "similarity_mean": 0.89,
+    "similarity_max": 0.981,
+    "reference_focus": "resources.disk.free_ratio",
+    "reference_margin": 0.2199
+  },
+  "family_B": {
+    "reference": "nominal",
+    "conditions": 5,
+    "conditions_attempted": 5,
+    "no_op_conditions": [],
+    "identical_utterances": 0,
+    "identical_despite_state_change": [],
+    "focus_changed": 2,
+    "act_changed": 2,
+    "top5_changed": 4,
+    "similarity_min": 0.476,
+    "similarity_mean": 0.752,
+    "similarity_max": 0.981,
+    "reference_focus": "policy.granted_authority",
+    "reference_margin": 0.2375
+  },
+  "determinism": {
+    "ok": true,
+    "method": "repeat the `nominal` condition with disk and RAM pinned; compare utterances byte for byte"
+  },
+  "analysis": {
+    "total_effective_conditions": 11,
+    "identical_utterances": 0,
+    "focus_retargeted": 2,
+    "top5_ranking_changed": 7,
+    "deterministic": true,
+    "no_op_conditions": [],
+    "identical_despite_state_change": [],
+    "H1_state_causes_utterance": "WEAK",
+    "H1a_content_varies_with_state": "SUPPORTED",
+    "H1b_attention_retargets_with_state": "WEAK",
+    "H2_persisted_uncertainty_changes_behaviour": "SUPPORTED",
+    "H5_discovers_own_binding_constraint": "SUPPORTED",
+    "winner_take_all_note": "family A reference focus 'resources.disk.free_ratio' led the runner-up by 0.2199 priority; attention re-targeted in 0/6 conditions there versus 2/5 in family B, where no single drive dominates"
+  }
+}

@@ -61,7 +61,7 @@ class LLMCore:
         self.config = config
         self.gate = gate
         self.ledger = ledger
-        self.provider = config.get("cognition.llm.provider", "ollama")
+        self.provider = config.get("cognition.llm.provider", "ollama")  # ollama|groq|gemini|openai|anthropic
         self.model = config.get("cognition.llm.model", "")
         self.endpoint = config.get("cognition.llm.endpoint", "http://localhost:11434")
 
@@ -201,6 +201,38 @@ class LLMCore:
             headers = {"x-goog-api-key": key}
             res = self._call(url, body, headers)
             return (res["candidates"][0]["content"]["parts"][0]["text"], model)
+
+        if p == "groq":
+            # Groq exposes an OpenAI-compatible chat-completions endpoint, so this is
+            # the same shape as the openai branch with a different host and default
+            # model. Fast, free-tier, and the weights are open - which suits a control
+            # experiment better than a proprietary endpoint whose behaviour can change
+            # underneath the result.
+            key = env("GROQ_API_KEY")
+            if not key:
+                raise RuntimeError("GROQ_API_KEY not set")
+            model = self.model or "openai/gpt-oss-120b"
+            # gpt-oss models reason before answering, and reasoning is billed against
+            # max_tokens. With a 4.7 KB state record the whole budget goes to reasoning
+            # and `content` comes back empty - which the harness would otherwise record
+            # as a fallback for no visible reason. Low effort plus a larger ceiling
+            # fixes it and cuts token use roughly threefold, which also eases the
+            # provider's rate limit.
+            body = {"model": model,
+                    "max_tokens": max(max_tok, 900),
+                    "messages": [{"role": "user", "content": prompt}]}
+            if model.startswith("openai/gpt-oss"):
+                body["reasoning_effort"] = "low"
+            res = self._call("https://api.groq.com/openai/v1/chat/completions", body,
+                             {"Authorization": f"Bearer {key}"})
+            msg = res["choices"][0]["message"]
+            text = (msg.get("content") or "").strip()
+            if not text:
+                raise RuntimeError(
+                    f"empty content; finish_reason="
+                    f"{res['choices'][0].get('finish_reason')} "
+                    f"completion_tokens={res.get('usage', {}).get('completion_tokens')}")
+            return text, model
 
         if p == "openai":
             key = env("OPENAI_API_KEY")

@@ -128,20 +128,43 @@ def _record(org, name: str, perturb: dict, family: str) -> dict:
     }
 
 
-def _run_condition(root: Path, name: str, perturb: dict, family: str) -> dict:
+def _condition_overrides(d: Path, base) -> dict:
+    """Isolation overrides for one condition, INHERITING the run's cognition config.
+
+    Without the inherit, `--core llm` never reaches a condition: each one rebuilds
+    Config from defaults, silently runs reflex, and the harness labels the output as
+    an LLM result. That is the worst possible bug in an experiment harness - not a
+    crash, but wrong data that looks right.
+    """
+    ov = {
+        "organism": {"state_dir": str(d / "var"),
+                     "sandbox_dir": str(d / "var" / "sandbox"),
+                     "workspace_root": str(d)},
+        "observability": {"ledger_file": str(d / "var" / "ledger.jsonl")},
+    }
+    if base is not None:
+        ov["cognition"] = base.get("cognition", {})
+        ov["policy"] = {"preauthorized": base.get("policy.preauthorized", []) or []}
+    return ov
+
+
+def _run_condition(root: Path, name: str, perturb: dict, family: str,
+                   base=None) -> dict:
     d = root / "matrix" / name
     if d.exists():
         shutil.rmtree(d)
     (d / "var").mkdir(parents=True, exist_ok=True)
-    cfg = Config.load(overrides={
-        "organism": {"state_dir": str(d / "var"),
-                     "sandbox_dir": str(d / "var" / "sandbox")},
-        "observability": {"ledger_file": str(d / "var" / "ledger.jsonl")},
-    })
+    cfg = Config.load(overrides=_condition_overrides(d, base))
     org = lifecycle.boot(cfg, perturb=perturb, quiet=True)
     rec = _record(org, name, perturb, family)
     lifecycle.write_experiment_artifacts(org, d, perturb)
     org.close(f"experiment condition {name}")
+    # Pace remote-model runs. Cheaper and more courteous than discovering the limit
+    # by hitting it, and it keeps the matrix comparable: a condition that had to
+    # retry is not measured under the same conditions as one that did not.
+    if (base is not None and base.get("cognition.core") == "llm"
+            and base.get("cognition.llm.provider") != "ollama"):
+        time.sleep(float(base.get("cognition.llm.pace_s", 4.0)))
     return rec
 
 
@@ -181,7 +204,7 @@ def _analyse_family(results: list[dict], ref_name: str) -> dict:
     }
 
 
-def _h2_probe(root: Path) -> dict:
+def _h2_probe(root: Path, base=None) -> dict:
     """H2 as a controlled pair, not an incidental observation.
 
     Boot a *fresh* organism twice in a throwaway directory and compare boot #1 (no
@@ -252,7 +275,7 @@ def run(config, full: bool = False) -> int:
 
     # --- H2: a controlled first-boot / second-boot pair ---------------------
     print("\n[2/4] persistence pair (fresh organism booted twice; tests H2)")
-    h2 = _h2_probe(root)
+    h2 = _h2_probe(root, config)
     print(f"      boot #1 genesis={h2['first']['genesis']}, "
           f"{h2['first']['gap_stats']['new']} gaps opened")
     print(f"      boot #2 carried {h2['carried_forward']} forward, recognised "
@@ -275,13 +298,13 @@ def run(config, full: bool = False) -> int:
     results: list[dict] = []
     print("      family A - real environment, one variable changed at a time")
     for name, perturb in FAMILY_A.items():
-        r = _run_condition(root, name, {**PINNED, **perturb}, "A_real")
+        r = _run_condition(root, name, {**PINNED, **perturb}, "A_real", config)
         results.append(r)
         print(f"        {name:<24} focus={str(r['focus_subject'])[:28]:<28} "
               f"act={r['speech_act']:<8} drive={r['dominant_drive']}")
     print("      family B - resources spoofed healthy, then the same changes")
     for name, perturb in FAMILY_B.items():
-        r = _run_condition(root, name, {**PINNED, **NOMINAL, **perturb}, "B_nominal")
+        r = _run_condition(root, name, {**PINNED, **NOMINAL, **perturb}, "B_nominal", config)
         results.append(r)
         print(f"        {name:<24} focus={str(r['focus_subject'])[:28]:<28} "
               f"act={r['speech_act']:<8} drive={r['dominant_drive']}")
@@ -289,7 +312,7 @@ def run(config, full: bool = False) -> int:
     # Reproducibility check: repeat one condition with the volatile resources pinned.
     # If identical state does not give identical output, every comparison in this
     # matrix is noise and the verdicts below mean nothing.
-    repeat = _run_condition(root, "nominal_repeat", {**PINNED, **NOMINAL}, "check")
+    repeat = _run_condition(root, "nominal_repeat", {**PINNED, **NOMINAL}, "check", config)
     ref_nominal = next(r for r in results if r["condition"] == "nominal")
     deterministic = repeat["utterance"] == ref_nominal["utterance"]
     print(f"      determinism check: pinned-state repeat "
@@ -297,6 +320,34 @@ def run(config, full: bool = False) -> int:
 
     # --- analysis -----------------------------------------------------------
     print("\n[4/4] analysis")
+
+    # --- INTEGRITY GATE ----------------------------------------------------
+    # If the run asked for a language model and any condition silently fell back to
+    # the reflex core, this matrix is a mixture of treatment and control wearing a
+    # single label. Emitting verdicts from it is not a failure that shows up as a
+    # crash - it is wrong data that looks right, which is the worst thing an
+    # experiment harness can produce. So refuse to report.
+    requested = config.get("cognition.core", "reflex")
+    contaminated = [r["condition"] for r in results if r["core"] != requested]
+    if contaminated:
+        print(f"\n  !! CONTAMINATED — core={requested!r} requested, but "
+              f"{len(contaminated)}/{len(results)} conditions did not use it:")
+        for c in contaminated:
+            print(f"       {c}")
+        print("\n  why:")
+        for why, n in _fallback_reasons(root):
+            print(f"       [{n}x] {why[:160]}")
+        print("\n  No verdicts emitted. A matrix mixing treatment and control "
+              "measures nothing.")
+        (root / "CONTAMINATED.json").write_text(json.dumps({
+            "ran_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
+            "requested_core": requested,
+            "contaminated_conditions": contaminated,
+            "reasons": [{"reason": w, "count": n} for w, n in _fallback_reasons(root)],
+            "conditions": results,
+        }, indent=2, default=str), encoding="utf-8")
+        return 2
+
     A = _analyse_family([r for r in results if r["family"] == "A_real"], "baseline")
     B = _analyse_family([r for r in results if r["family"] == "B_nominal"], "nominal")
 
@@ -394,6 +445,46 @@ def run(config, full: bool = False) -> int:
     print(f"\n  report:  {root / 'RESULTS.md'}")
     print(f"  data:    {root / 'matrix.json'}\n{bar}\n")
     return 0
+
+
+def _fallback_reasons(root: Path) -> list[tuple[str, int]]:
+    """Collect the provider errors that caused fallbacks, from the condition ledgers."""
+    import collections
+    counts: collections.Counter = collections.Counter()
+    base = root / "matrix"
+    if base.exists():
+        for d in base.iterdir():
+            led = d / "var" / "ledger.jsonl"
+            if not led.exists():
+                continue
+            for line in led.read_text(encoding="utf-8", errors="replace").splitlines():
+                try:
+                    e = json.loads(line)
+                except Exception:
+                    continue
+                if e.get("type") == "RECOVERY" and e["payload"].get("from") == "llm":
+                    counts[str(e["payload"].get("reason"))] += 1
+    return counts.most_common()
+
+
+def _fallback_reasons(root: Path) -> list[tuple[str, int]]:
+    """Provider errors that caused fallbacks, collected from the condition ledgers."""
+    import collections
+    counts: collections.Counter = collections.Counter()
+    base = root / "matrix"
+    if base.exists():
+        for d in base.iterdir():
+            led = d / "var" / "ledger.jsonl"
+            if not led.exists():
+                continue
+            for line in led.read_text(encoding="utf-8", errors="replace").splitlines():
+                try:
+                    e = json.loads(line)
+                except Exception:
+                    continue
+                if e.get("type") == "RECOVERY" and e["payload"].get("from") == "llm":
+                    counts[str(e["payload"].get("reason"))] += 1
+    return counts.most_common()
 
 
 def _write_report(root: Path, s: dict) -> None:
