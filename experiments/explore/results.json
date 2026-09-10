@@ -1,0 +1,60 @@
+{
+  "ran_at": "2026-09-10T19:55:51",
+  "duration_s": 9.0,
+  "comprehension_before": 0.0,
+  "comprehension_after": 0.03225806451612903,
+  "referents_learned": 1,
+  "targets": 6,
+  "model_in_top_curiosities": false,
+  "narration": [
+    {
+      "term": "CLAUDE",
+      "question": "What is CLAUDE?",
+      "priority": 0.2252,
+      "found": true,
+      "title": "Claude (singer)",
+      "extract": "Claude Kiambe, known mononymously as Claude, is a Congolese-born Dutch singer-songwriter. His debut single \"Ladada \" topped the Dutch Singles Chart in 2022, followed by a further four charting singles. His debut album, Parler fran\u00e7ais, was released in 2024. He represented the Netherlands in the Eurovision Song Contest 2025 with the song \"C'est la vie\".",
+      "url": "https://en.wikipedia.org/api/rest_v1/page/summary/CLAUDE"
+    },
+    {
+      "term": "AZURE",
+      "question": "What is AZURE?",
+      "priority": 0.2252,
+      "found": false,
+      "reason": "RuntimeError: HTTP 404 Not Found: 404",
+      "url": "https://en.wikipedia.org/api/rest_v1/page/summary/AZURE"
+    },
+    {
+      "term": "EFC",
+      "question": "What is EFC?",
+      "priority": 0.2204,
+      "found": false,
+      "reason": "disambiguation",
+      "url": "https://en.wikipedia.org/api/rest_v1/page/summary/EFC"
+    },
+    {
+      "term": "VSCODE",
+      "question": "What is VSCODE?",
+      "priority": 0.2204,
+      "found": false,
+      "reason": "RuntimeError: HTTP 404 Not Found: 404",
+      "url": "https://en.wikipedia.org/api/rest_v1/page/summary/VSCODE"
+    },
+    {
+      "term": "ELEVENLABS",
+      "question": "What is ELEVENLABS?",
+      "priority": 0.2175,
+      "found": false,
+      "reason": "RuntimeError: HTTP 404 Not Found: 404",
+      "url": "https://en.wikipedia.org/api/rest_v1/page/summary/ELEVENLABS"
+    },
+    {
+      "term": "GROQ",
+      "question": "What is GROQ?",
+      "priority": 0.2175,
+      "found": false,
+      "reason": "RuntimeError: HTTP 404 Not Found: 404",
+      "url": "https://en.wikipedia.org/api/rest_v1/page/summary/GROQ"
+    }
+  ]
+}

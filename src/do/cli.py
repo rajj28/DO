@@ -15,6 +15,7 @@
     do experiment h4 [runs]             the H4 learning ablation
     do experiment fear                  the fear/mortality ablation
     do experiment live-internet         E1-E5 read-only internet perception
+    do experiment explore               investigate his own top unknowns online
     do experiment survival              the survival-loop protocol
 
 Global flags:
@@ -519,6 +520,9 @@ def main(argv: list[str] | None = None) -> int:
             from .experiments.h4_learning import run as h4run
             n = next((int(x) for x in rest if x.isdigit()), 5)
             return h4run(config, runs=n)
+        if which in ("explore", "curiosity"):
+            from .experiments.explore import run as erun
+            return erun(config)
         if which in ("live-internet", "internet", "live"):
             from .experiments.live_internet import run as lrun
             return lrun(config)
