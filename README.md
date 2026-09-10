@@ -48,7 +48,13 @@ closing the terminal does not end the organism's history.
 
 ```
 do boot              boot, print the utterance verbatim, then interact
-do chat              boot quietly, straight into the session
+do chat              talk to him interactively (real terminal only)
+do say [text]        speak a line aloud (free local voice by default)
+do serve             run him 24/7: budgeted, restart-safe, kill-switchable
+do install-service   register a Windows logon task for 24/7 operation
+do outbox [n]        notifications he has pushed to you
+do habitat           habitat model + single-point-of-failure assessment
+do experiment live-internet   E1-E5 read-only internet perception
 do tick [n]          run n metabolic cycles with no human in the loop
 do status            drives, capabilities, budget, memory counts
 do gaps [n]          the uncertainty register, highest priority first
@@ -188,6 +194,10 @@ spend.
 | `docs/SAFETY.md` | Controls, threat model, escalation gates |
 | `docs/FIRST_BOOT.md` | The experiment protocol, the result, and three flaws it found in itself |
 | `docs/ROADMAP.md` | Eleven phases, each with a falsification condition |
+| `docs/JOURNAL.md` | Chronological build log: every milestone, why, and what it returned |
+| `docs/DO_EXPERIMENTS.md` | All experiment results, honesty ledger, first live utterance |
+| `docs/DO_INTERNET_HABITAT.md` | Habitat model, world-states, zero-money resources |
+| `docs/DO_VOICE.md` | How to talk to him; voice/chat; the "Sir" relationship |
 
 ---
 
