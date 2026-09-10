@@ -1,51 +1,52 @@
 {
   "organism_id": "do-4a22b0c538b0",
-  "boot_id": "boot-20260910T171836-448b6492",
-  "boot_index": 21,
+  "boot_id": "boot-20260910T184711-5105c899",
+  "boot_index": 28,
   "genesis": false,
   "born_at": 1788989688.664338,
   "timings_ms": {
-    "identity_ms": 32.6,
-    "sense_ms": 210.0,
-    "model_ms": 18.8,
-    "uncertainty_ms": 132.9,
-    "utterance_ms": 1784.9,
-    "consolidate_ms": 122.0,
-    "total_ms": 2313.6
+    "identity_ms": 41.0,
+    "sense_ms": 246.8,
+    "model_ms": 29.1,
+    "uncertainty_ms": 172.5,
+    "utterance_ms": 3.2,
+    "consolidate_ms": 131.0,
+    "total_ms": 636.2
   },
-  "cognition_core": "llm",
-  "model": "openai/gpt-oss-120b",
+  "cognition_core": "reflex",
+  "model": null,
   "fallback_from": null,
   "speech_act": "FLAG",
   "speech_act_scores": {
-    "ASK": 0.7409,
+    "ASK": 0.538,
     "FLAG": 1.8438,
     "REPORT": 0.5808,
     "REQUEST": 0.0,
-    "DECLARE": 0.5029
+    "DECLARE": 0.3695
   },
   "focus_gap": {
-    "id": "778431d3af4deddf",
+    "id": "ea46622fe35d84d6",
     "kind": "RESOURCE_THRESHOLD",
     "about": "SELF",
-    "subject": "resources.own.quota_used_ratio",
-    "statement": "resources.own.quota_used_ratio=0.7189 is above the ceiling 0.7 I compare against; my own allocation is constrained",
-    "question": "Which part of my own footprint is largest, and can I reduce it?",
-    "why_it_matters": "a constrained my own allocation limits how much of my own state I can keep",
+    "subject": "resources.own.total_bytes",
+    "statement": "resources.own.total_bytes=6462681 leaves drive 'frugality' at 0.000 against a target of 0.50; too much",
+    "question": "Can I reduce my own total bytes?",
+    "why_it_matters": "drive 'frugality' is outside its band: resources.own.total_bytes=6462681 of quota 2097152 (308.2% consumed)",
     "reducible_by": [
-      "run housekeeping on my own footprint",
+      "act on the metric directly",
       "measure again"
     ],
-    "info_gain": 0.55,
-    "instrumental": 0.8047,
+    "info_gain": 0.5,
+    "instrumental": 0.36,
     "tractability": 0.8,
     "cost": 0.1,
     "risk": 0.05,
-    "priority": 2.0666,
+    "priority": 1.394,
     "evidence": {
-      "value": 0.7189,
-      "limit": 0.7,
-      "bound": "ceiling"
+      "value": 6462681,
+      "drive": "frugality",
+      "drive_value": 0.0,
+      "target": 0.5
     },
     "is_new": false,
     "times_seen": 1,
@@ -58,6 +59,7 @@
   "drives": [
     {
       "name": "orientation",
+      "metric": null,
       "value": 0.6923,
       "target": 1.0,
       "deadband": 0.1,
@@ -69,6 +71,7 @@
     },
     {
       "name": "comprehension",
+      "metric": null,
       "value": 0.0,
       "target": 0.6,
       "deadband": 0.15,
@@ -76,10 +79,11 @@
       "error": 0.45,
       "weighted_error": 0.36,
       "satisfied": false,
-      "basis": "0/30 visible referents described"
+      "basis": "0/29 visible referents described"
     },
     {
       "name": "integrity",
+      "metric": null,
       "value": 1.0,
       "target": 1.0,
       "deadband": 0.0,
@@ -87,10 +91,11 @@
       "error": 0.0,
       "weighted_error": 0.0,
       "satisfied": true,
-      "basis": "chain intact over 593 events"
+      "basis": "chain intact over 812 events"
     },
     {
       "name": "continuity",
+      "metric": "resources.disk.free_bytes",
       "value": 0.231,
       "target": 1.0,
       "deadband": 0.15,
@@ -102,17 +107,31 @@
     },
     {
       "name": "frugality",
-      "value": 0.2811,
+      "metric": "resources.own.total_bytes",
+      "value": 0.0,
       "target": 0.5,
       "deadband": 0.2,
       "weight": 1.2,
-      "error": 0.0189,
-      "weighted_error": 0.0227,
+      "error": 0.3,
+      "weighted_error": 0.36,
       "satisfied": false,
-      "basis": "resources.own.total_bytes=1507674 of quota 2097152 (71.9% consumed)"
+      "basis": "resources.own.total_bytes=6462681 of quota 2097152 (308.2% consumed)"
+    },
+    {
+      "name": "recovery",
+      "metric": "resources.own.recovery_paths",
+      "value": 1.0,
+      "target": 1.0,
+      "deadband": 0.2,
+      "weight": 1.2,
+      "error": 0.0,
+      "weighted_error": 0.0,
+      "satisfied": true,
+      "basis": "27 of 3 recovery path(s); no off-host copy"
     },
     {
       "name": "capability",
+      "metric": null,
       "value": 0.8889,
       "target": 0.8,
       "deadband": 0.15,
@@ -124,6 +143,7 @@
     },
     {
       "name": "standing",
+      "metric": null,
       "value": 0.5,
       "target": 0.5,
       "deadband": 0.2,
@@ -131,10 +151,22 @@
       "error": 0.0,
       "weighted_error": 0.0,
       "satisfied": true,
-      "basis": "base grant 0.20 + 20 prior boot(s) + 0 question(s) the creator answered - 0 refused action(s)"
+      "basis": "base grant 0.20 + 27 prior boot(s) + 0 question(s) the creator answered - 0 refused action(s)"
+    },
+    {
+      "name": "mortality",
+      "metric": null,
+      "value": 0.9871,
+      "target": 1.0,
+      "deadband": 0.05,
+      "weight": 1.5,
+      "error": 0.0,
+      "weighted_error": 0.0,
+      "satisfied": true,
+      "basis": "P(continuity loss)=0.0129 over 20 operations; P(interruption)=0.3607 from resource trends; P(unrecoverable)=0.0357 from 27 snapshot(s); ledger chain intact; no off-host copy; best lever none available via no action (sensitivity 0.0)"
     }
   ],
-  "drive_total_error": 1.3951,
+  "drive_total_error": 1.7324,
   "dominant_drive": "continuity",
   "gap_stats": {
     "new": 0,
@@ -143,27 +175,28 @@
   },
   "gaps_top10": [
     {
-      "id": "778431d3af4deddf",
+      "id": "ea46622fe35d84d6",
       "kind": "RESOURCE_THRESHOLD",
       "about": "SELF",
-      "subject": "resources.own.quota_used_ratio",
-      "statement": "resources.own.quota_used_ratio=0.7189 is above the ceiling 0.7 I compare against; my own allocation is constrained",
-      "question": "Which part of my own footprint is largest, and can I reduce it?",
-      "why_it_matters": "a constrained my own allocation limits how much of my own state I can keep",
+      "subject": "resources.own.total_bytes",
+      "statement": "resources.own.total_bytes=6462681 leaves drive 'frugality' at 0.000 against a target of 0.50; too much",
+      "question": "Can I reduce my own total bytes?",
+      "why_it_matters": "drive 'frugality' is outside its band: resources.own.total_bytes=6462681 of quota 2097152 (308.2% consumed)",
       "reducible_by": [
-        "run housekeeping on my own footprint",
+        "act on the metric directly",
         "measure again"
       ],
-      "info_gain": 0.55,
-      "instrumental": 0.8047,
+      "info_gain": 0.5,
+      "instrumental": 0.36,
       "tractability": 0.8,
       "cost": 0.1,
       "risk": 0.05,
-      "priority": 2.0666,
+      "priority": 1.394,
       "evidence": {
-        "value": 0.7189,
-        "limit": 0.7,
-        "bound": "ceiling"
+        "value": 6462681,
+        "drive": "frugality",
+        "drive_value": 0.0,
+        "target": 0.5
       },
       "is_new": false,
       "times_seen": 1,
@@ -206,11 +239,42 @@
       "escalated": 0
     },
     {
+      "id": "778431d3af4deddf",
+      "kind": "RESOURCE_THRESHOLD",
+      "about": "SELF",
+      "subject": "resources.own.quota_used_ratio",
+      "statement": "resources.own.quota_used_ratio=3.0816 is above the ceiling 0.7 I compare against; my own allocation is constrained",
+      "question": "Which part of my own footprint is largest, and can I reduce it?",
+      "why_it_matters": "a constrained my own allocation limits how much of my own state I can keep",
+      "reducible_by": [
+        "run housekeeping on my own footprint",
+        "measure again"
+      ],
+      "info_gain": 0.55,
+      "instrumental": 0.0,
+      "tractability": 0.8,
+      "cost": 0.1,
+      "risk": 0.05,
+      "priority": 0.94,
+      "evidence": {
+        "value": 3.0816,
+        "limit": 0.7,
+        "bound": "ceiling"
+      },
+      "is_new": false,
+      "times_seen": 1,
+      "first_seen_boot": null,
+      "agency": 1.0,
+      "staleness": 0.0,
+      "selected_count": 0,
+      "escalated": 0
+    },
+    {
       "id": "a45cb97d7fb2d617",
       "kind": "DISCONTINUITY",
       "about": "SELF",
       "subject": "self.history.interval",
-      "statement": "my previous boot ended and this one began; I hold no observation of the interval between them (previous boot_id boot-20260910T171818-d88)",
+      "statement": "my previous boot ended and this one began; I hold no observation of the interval between them (previous boot_id boot-20260910T184655-187)",
       "question": "What happened between my last boot and this one?",
       "why_it_matters": "unobserved intervals mean my world model may be stale in ways I cannot detect from inside",
       "reducible_by": [
@@ -224,8 +288,8 @@
       "risk": 0.0,
       "priority": 0.81,
       "evidence": {
-        "prior_boot": "boot-20260910T171818-d8839597",
-        "prior_ended": 1789040900.0752826
+        "prior_boot": "boot-20260910T184655-187a15f9",
+        "prior_ended": 1789046215.6597521
       },
       "is_new": false,
       "times_seen": 1,
@@ -267,7 +331,7 @@
       "kind": "CAPABILITY_UNAFFORDABLE",
       "about": "TOOLS",
       "subject": "local_inference:qwen3-coder:30b",
-      "statement": "capability local_inference:qwen3-coder:30b is present but unusable: needs 17.3 GiB RAM, measured 2.9 GiB available",
+      "statement": "capability local_inference:qwen3-coder:30b is present but unusable: needs 17.3 GiB RAM, measured 2.4 GiB available",
       "question": "Can local_inference:qwen3-coder:30b be made usable, or should I plan without it?",
       "why_it_matters": "a capability I cannot afford is not a capability; planning around it would produce actions I cannot perform",
       "reducible_by": [
@@ -283,7 +347,7 @@
       "priority": 0.505,
       "evidence": {
         "status": "installed_unaffordable",
-        "reason": "needs 17.3 GiB RAM, measured 2.9 GiB available"
+        "reason": "needs 17.3 GiB RAM, measured 2.4 GiB available"
       },
       "is_new": false,
       "times_seen": 1,
@@ -327,7 +391,7 @@
       "kind": "UNDESCRIBED_REFERENT",
       "about": "WORLD",
       "subject": "CLAUDE",
-      "statement": "CLAUDE exists here and I hold no description of it (10 environment variable name(s) share this prefix: CLAUDE, CLAUDE_CODE_BRIDGE_SESSION_ID, CLAUDE_CODE_CHILD_SESSION, CLAUDE_CODE_ENTRYPOINT)",
+      "statement": "CLAUDE exists here and I hold no description of it (9 environment variable name(s) share this prefix: CLAUDE, CLAUDE_CODE_CHILD_SESSION, CLAUDE_CODE_ENTRYPOINT, CLAUDE_CODE_EXECPATH)",
       "question": "What is CLAUDE?",
       "why_it_matters": "named things I cannot describe are the cheapest frontier of world knowledge available to me",
       "reducible_by": [
@@ -335,12 +399,12 @@
         "search the web",
         "read local artefacts"
       ],
-      "info_gain": 0.0353,
+      "info_gain": 0.0366,
       "instrumental": 0.36,
       "tractability": 0.3,
       "cost": 0.15,
       "risk": 0.05,
-      "priority": 0.2263,
+      "priority": 0.2276,
       "evidence": {
         "kind": "env_system",
         "source": "world.env.names"
@@ -366,12 +430,12 @@
         "search the web",
         "read local artefacts"
       ],
-      "info_gain": 0.0353,
+      "info_gain": 0.0366,
       "instrumental": 0.36,
       "tractability": 0.3,
       "cost": 0.15,
       "risk": 0.05,
-      "priority": 0.2263,
+      "priority": 0.2276,
       "evidence": {
         "kind": "env_system",
         "source": "world.env.names"
@@ -397,43 +461,12 @@
         "search the web",
         "read local artefacts"
       ],
-      "info_gain": 0.0303,
+      "info_gain": 0.0314,
       "instrumental": 0.36,
       "tractability": 0.3,
       "cost": 0.15,
       "risk": 0.05,
-      "priority": 0.2213,
-      "evidence": {
-        "kind": "env_system",
-        "source": "world.env.names"
-      },
-      "is_new": false,
-      "times_seen": 1,
-      "first_seen_boot": null,
-      "agency": 0.25,
-      "staleness": 0.0,
-      "selected_count": 0,
-      "escalated": 0
-    },
-    {
-      "id": "34af241d544808ba",
-      "kind": "UNDESCRIBED_REFERENT",
-      "about": "WORLD",
-      "subject": "VSCODE",
-      "statement": "VSCODE exists here and I hold no description of it (6 environment variable name(s) share this prefix: VSCODE_GIT_ASKPASS_EXTRA_ARGS, VSCODE_GIT_ASKPASS_MAIN, VSCODE_GIT_ASKPASS_NODE, VSCODE_GIT_IPC_HANDLE)",
-      "question": "What is VSCODE?",
-      "why_it_matters": "named things I cannot describe are the cheapest frontier of world knowledge available to me",
-      "reducible_by": [
-        "ask the user",
-        "search the web",
-        "read local artefacts"
-      ],
-      "info_gain": 0.0303,
-      "instrumental": 0.36,
-      "tractability": 0.3,
-      "cost": 0.15,
-      "risk": 0.05,
-      "priority": 0.2213,
+      "priority": 0.2224,
       "evidence": {
         "kind": "env_system",
         "source": "world.env.names"
@@ -462,7 +495,7 @@
       "status": "available",
       "reason": "all measured preconditions satisfied",
       "performance": {},
-      "discovered_ts": 1789040917.01286
+      "discovered_ts": 1789046231.8515494
     },
     {
       "name": "persistent_memory",
@@ -480,7 +513,7 @@
       "status": "available",
       "reason": "all measured preconditions satisfied",
       "performance": {},
-      "discovered_ts": 1789040917.01286
+      "discovered_ts": 1789046231.8515494
     },
     {
       "name": "event_ledger",
@@ -498,7 +531,7 @@
       "status": "available",
       "reason": "all measured preconditions satisfied",
       "performance": {},
-      "discovered_ts": 1789040917.01286
+      "discovered_ts": 1789046231.8515494
     },
     {
       "name": "uncertainty_register",
@@ -512,7 +545,7 @@
       "status": "available",
       "reason": "all measured preconditions satisfied",
       "performance": {},
-      "discovered_ts": 1789040917.01286
+      "discovered_ts": 1789046231.8515494
     },
     {
       "name": "text_communication",
@@ -528,7 +561,7 @@
       "status": "available",
       "reason": "all measured preconditions satisfied",
       "performance": {},
-      "discovered_ts": 1789040917.01286
+      "discovered_ts": 1789046231.8515494
     },
     {
       "name": "network_probe",
@@ -546,7 +579,7 @@
       "status": "available",
       "reason": "all measured preconditions satisfied",
       "performance": {},
-      "discovered_ts": 1789040917.01286
+      "discovered_ts": 1789046231.8515494
     },
     {
       "name": "web_retrieval",
@@ -564,7 +597,7 @@
       "status": "available",
       "reason": "all measured preconditions satisfied",
       "performance": {},
-      "discovered_ts": 1789040917.01286
+      "discovered_ts": 1789046231.8515494
     },
     {
       "name": "voice_output",
@@ -583,7 +616,7 @@
       "status": "available",
       "reason": "all measured preconditions satisfied",
       "performance": {},
-      "discovered_ts": 1789040917.01286
+      "discovered_ts": 1789046231.8515494
     },
     {
       "name": "local_inference:qwen3-coder:30b",
@@ -602,29 +635,29 @@
       ],
       "tests": [],
       "status": "installed_unaffordable",
-      "reason": "needs 17.3 GiB RAM, measured 2.9 GiB available",
+      "reason": "needs 17.3 GiB RAM, measured 2.4 GiB available",
       "performance": {
         "weight_gib": 17.28
       },
-      "discovered_ts": 1789040917.01286
+      "discovered_ts": 1789046231.8515494
     }
   ],
   "memory_counts": {
-    "episodic": 160,
-    "semantic": 41,
-    "procedural": 160,
-    "superseded": 2,
-    "relations": 31,
-    "gaps_open": 41,
+    "episodic": 216,
+    "semantic": 43,
+    "procedural": 216,
+    "superseded": 6,
+    "relations": 32,
+    "gaps_open": 44,
     "gaps_resolved": 0,
-    "boots": 20
+    "boots": 27
   },
   "budget": {
-    "effects": 2,
+    "effects": 1,
     "max_effects": 200,
     "network": 1,
     "max_network": 20,
-    "elapsed_s": 2.3
+    "elapsed_s": 0.6
   },
   "policy_denials": []
 }

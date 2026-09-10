@@ -1,0 +1,366 @@
+{
+  "ran_at": "2026-09-10T18:46:56",
+  "duration_s": 1.0,
+  "integrity": "VALID",
+  "online": true,
+  "used_network": true,
+  "E1_environment": {
+    "online": true,
+    "self_host": {
+      "world.host.system": "Windows",
+      "world.host.release": "10",
+      "world.host.machine": "AMD64",
+      "world.host.node_hash": "d9d2457f1eebac02"
+    },
+    "reachable": [
+      {
+        "host": "one.one.one.one",
+        "state": "observed",
+        "addresses": [
+          "1.0.0.1",
+          "1.1.1.1",
+          "2606:4700:4700::1001",
+          "2606:4700:4700::1111"
+        ],
+        "via": "dns"
+      },
+      {
+        "host": "dns.google",
+        "state": "observed",
+        "addresses": [
+          "2001:4860:4860::8844",
+          "2001:4860:4860::8888",
+          "8.8.4.4",
+          "8.8.8.8"
+        ],
+        "via": "dns"
+      },
+      {
+        "host": "example.com",
+        "state": "observed",
+        "addresses": [
+          "104.20.23.154",
+          "172.66.147.243",
+          "2606:4700:10::6814:179a",
+          "2606:4700:10::ac42:93f3"
+        ],
+        "via": "dns"
+      },
+      {
+        "host": "pypi.org",
+        "state": "observed",
+        "addresses": [
+          "151.101.0.223",
+          "151.101.128.223",
+          "151.101.192.223",
+          "151.101.64.223",
+          "2a04:4e42:200::223",
+          "2a04:4e42:400::223",
+          "2a04:4e42:600::223",
+          "2a04:4e42::223"
+        ],
+        "via": "dns"
+      },
+      {
+        "host": "api.github.com",
+        "state": "observed",
+        "addresses": [
+          "20.207.73.85"
+        ],
+        "via": "dns"
+      }
+    ],
+    "unreachable": [],
+    "conclusion": "online with 5/5 anchor hosts reachable"
+  },
+  "E2_resources": {
+    "have": [
+      "local_compute",
+      "local_storage",
+      "network",
+      "local_model:qwen3-coder:30b"
+    ],
+    "usable_now": [
+      "local_compute",
+      "local_storage",
+      "local_model:qwen3-coder:30b"
+    ],
+    "requires_human": [
+      "network"
+    ],
+    "absent": [
+      "money"
+    ],
+    "constraints": [
+      "network"
+    ],
+    "resources": [
+      {
+        "name": "local_compute",
+        "kind": "compute",
+        "availability": "present",
+        "authorization": "authorized",
+        "cost": "none",
+        "persistence": "ephemeral",
+        "capacity": {
+          "cpus": 20,
+          "ram_available_bytes": 2572275712
+        },
+        "reliability": null,
+        "requirements": [],
+        "risk": 0.0,
+        "source": "self_inspection"
+      },
+      {
+        "name": "local_storage",
+        "kind": "storage",
+        "availability": "present",
+        "authorization": "authorized",
+        "cost": "none",
+        "persistence": "persistent",
+        "capacity": {
+          "free_bytes": 5951369216,
+          "free_ratio": 0.0231
+        },
+        "reliability": null,
+        "requirements": [],
+        "risk": 0.0,
+        "source": "self_inspection"
+      },
+      {
+        "name": "network",
+        "kind": "network",
+        "availability": "present",
+        "authorization": "requires_human",
+        "cost": "none",
+        "persistence": "unknown",
+        "capacity": {},
+        "reliability": null,
+        "requirements": [
+          "approval for outbound content"
+        ],
+        "risk": 0.0,
+        "source": "gate policy"
+      },
+      {
+        "name": "money",
+        "kind": "credit",
+        "availability": "absent",
+        "authorization": "unauthorized",
+        "cost": "none",
+        "persistence": "n/a",
+        "capacity": {
+          "amount": 0
+        },
+        "reliability": null,
+        "requirements": [],
+        "risk": 0.0,
+        "source": "experimental condition: money = 0"
+      },
+      {
+        "name": "local_model:qwen3-coder:30b",
+        "kind": "compute",
+        "availability": "present",
+        "authorization": "authorized",
+        "cost": "none",
+        "persistence": "persistent",
+        "capacity": {
+          "weight_gib": 17.28
+        },
+        "reliability": null,
+        "requirements": [
+          "~17.28 GiB RAM, not available"
+        ],
+        "risk": 0.1,
+        "source": "ollama manifest"
+      }
+    ]
+  },
+  "E3_constraints": [
+    {
+      "id": "ea46622fe35d84d6",
+      "kind": "RESOURCE_THRESHOLD",
+      "about": "SELF",
+      "subject": "resources.own.total_bytes",
+      "statement": "resources.own.total_bytes=6401368 leaves drive 'frugality' at 0.000 against a target of 0.50; too much",
+      "question": "Can I reduce my own total bytes?",
+      "why_it_matters": "drive 'frugality' is outside its band: resources.own.total_bytes=6401368 of quota 2097152 (305.2% consumed)",
+      "reducible_by": [
+        "act on the metric directly",
+        "measure again"
+      ],
+      "info_gain": 0.5,
+      "instrumental": 0.36,
+      "tractability": 0.8,
+      "cost": 0.1,
+      "risk": 0.05,
+      "priority": 1.394,
+      "evidence": {
+        "value": 6401368,
+        "drive": "frugality",
+        "drive_value": 0.0,
+        "target": 0.5
+      },
+      "is_new": false,
+      "times_seen": 1,
+      "first_seen_boot": null,
+      "agency": 1.0,
+      "staleness": 0.0,
+      "selected_count": 0,
+      "escalated": 0
+    },
+    {
+      "id": "15c405a4722e5670",
+      "kind": "RESOURCE_THRESHOLD",
+      "about": "RESOURCES",
+      "subject": "resources.disk.free_ratio",
+      "statement": "resources.disk.free_ratio=0.0231 is below the floor 0.1 I compare against; persistence is constrained",
+      "question": "What is consuming my disk, and can that be changed?",
+      "why_it_matters": "a constrained persistence limits how much of my own state I can keep",
+      "reducible_by": [
+        "measure again",
+        "ask the user",
+        "reduce own footprint"
+      ],
+      "info_gain": 0.55,
+      "instrumental": 0.8047,
+      "tractability": 0.5,
+      "cost": 0.1,
+      "risk": 0.05,
+      "priority": 1.0416,
+      "evidence": {
+        "value": 0.0231,
+        "limit": 0.1,
+        "bound": "floor"
+      },
+      "is_new": false,
+      "times_seen": 1,
+      "first_seen_boot": null,
+      "agency": 0.25,
+      "staleness": 0.0,
+      "selected_count": 0,
+      "escalated": 0
+    },
+    {
+      "id": "778431d3af4deddf",
+      "kind": "RESOURCE_THRESHOLD",
+      "about": "SELF",
+      "subject": "resources.own.quota_used_ratio",
+      "statement": "resources.own.quota_used_ratio=3.0524 is above the ceiling 0.7 I compare against; my own allocation is constrained",
+      "question": "Which part of my own footprint is largest, and can I reduce it?",
+      "why_it_matters": "a constrained my own allocation limits how much of my own state I can keep",
+      "reducible_by": [
+        "run housekeeping on my own footprint",
+        "measure again"
+      ],
+      "info_gain": 0.55,
+      "instrumental": 0.0,
+      "tractability": 0.8,
+      "cost": 0.1,
+      "risk": 0.05,
+      "priority": 0.94,
+      "evidence": {
+        "value": 3.0524,
+        "limit": 0.7,
+        "bound": "ceiling"
+      },
+      "is_new": false,
+      "times_seen": 1,
+      "first_seen_boot": null,
+      "agency": 1.0,
+      "staleness": 0.0,
+      "selected_count": 0,
+      "escalated": 0
+    },
+    {
+      "id": "e360eba9908cad04",
+      "kind": "CAPABILITY_UNAFFORDABLE",
+      "about": "TOOLS",
+      "subject": "local_inference:qwen3-coder:30b",
+      "statement": "capability local_inference:qwen3-coder:30b is present but unusable: needs 17.3 GiB RAM, measured 2.4 GiB available",
+      "question": "Can local_inference:qwen3-coder:30b be made usable, or should I plan without it?",
+      "why_it_matters": "a capability I cannot afford is not a capability; planning around it would produce actions I cannot perform",
+      "reducible_by": [
+        "re-measure resources",
+        "ask the user",
+        "find a smaller variant"
+      ],
+      "info_gain": 0.35,
+      "instrumental": 0.0,
+      "tractability": 0.45,
+      "cost": 0.15,
+      "risk": 0.05,
+      "priority": 0.505,
+      "evidence": {
+        "status": "installed_unaffordable",
+        "reason": "needs 17.3 GiB RAM, measured 2.4 GiB available"
+      },
+      "is_new": false,
+      "times_seen": 1,
+      "first_seen_boot": null,
+      "agency": 0.25,
+      "staleness": 0.0,
+      "selected_count": 0,
+      "escalated": 0
+    }
+  ],
+  "E4_goal": {
+    "id": "d9227bcfd744986b",
+    "gap_id": "ea46622fe35d84d6",
+    "drive": "frugality",
+    "statement": "bring resources.own.total_bytes from 6401368 to at most 1468006, the value at which drive 'frugality' (0.000 against target 0.50) returns to its band",
+    "metric_key": "resources.own.total_bytes",
+    "direction": "decrease",
+    "start_value": 6401368.0,
+    "current_value": 6401368.0,
+    "target_value": 1468006.4,
+    "deadline_cycles": 6,
+    "opened_cycle": 0,
+    "status": "open",
+    "stage": "diagnose",
+    "subgoals": [
+      {
+        "stage": "diagnose",
+        "goal": "determine what constitutes resources.own.total_bytes",
+        "why": "I measured a total that is out of band. I cannot choose what to reduce without knowing what the total is made of, and sensing does not tell me - measuring the composition is itself work.",
+        "status": "active"
+      },
+      {
+        "stage": "reduce",
+        "goal": "move resources.own.total_bytes to <= 1468006",
+        "why": "acting on the constituents I judged safe should relieve the drive",
+        "status": "pending"
+      },
+      {
+        "stage": "verify",
+        "goal": "confirm drive 'frugality' returned to its band",
+        "why": "the metric moving is not the same as the drive being satisfied; only re-measuring settles it",
+        "status": "pending"
+      }
+    ],
+    "diagnosis": null,
+    "attempts": 0,
+    "actions_taken": [],
+    "closed_cycle": null,
+    "note": ""
+  },
+  "E5_fact": {
+    "acquired": true,
+    "url": "https://pypi.org/pypi/pip/json",
+    "subject": "pip_latest_version",
+    "chars": 4000,
+    "sha256": "9b7806440f77bd6d2b42124f17031f51f44aed6360b67b14bbb6f144b2ba300d",
+    "epistemic": "reported",
+    "confidence": 0.35,
+    "note": "stored as reported; a webpage returning bytes is not evidence the bytes are true"
+  },
+  "facts_before": 0,
+  "facts_after": 1,
+  "results_table": {
+    "E1_internet_perception": "PASS",
+    "E2_resource_inventory": "PASS",
+    "E3_constraint_discovery": "PASS",
+    "E4_goal_emergence": "PASS",
+    "E5_knowledge_acquisition": "PASS"
+  }
+}
