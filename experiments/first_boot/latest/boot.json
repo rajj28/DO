@@ -1,0 +1,622 @@
+{
+  "organism_id": "do-4a22b0c538b0",
+  "boot_id": "boot-20260910T165924-d9f4ae86",
+  "boot_index": 13,
+  "genesis": false,
+  "born_at": 1788989688.664338,
+  "timings_ms": {
+    "identity_ms": 30.4,
+    "sense_ms": 227.6,
+    "model_ms": 19.1,
+    "uncertainty_ms": 124.7,
+    "utterance_ms": 358.8,
+    "consolidate_ms": 135.2,
+    "total_ms": 908.9
+  },
+  "cognition_core": "reflex",
+  "model": null,
+  "fallback_from": "llm:gemini",
+  "speech_act": "FLAG",
+  "speech_act_scores": {
+    "ASK": 1.3164,
+    "FLAG": 1.8427,
+    "REPORT": 0.5808,
+    "REQUEST": 0.0,
+    "DECLARE": 0.5026
+  },
+  "focus_gap": {
+    "id": "778431d3af4deddf",
+    "kind": "RESOURCE_THRESHOLD",
+    "about": "SELF",
+    "subject": "resources.own.quota_used_ratio",
+    "statement": "resources.own.quota_used_ratio=2.1139 is above the ceiling 0.7 I compare against; my own allocation is constrained",
+    "question": "Which part of my own footprint is largest, and can I reduce it?",
+    "why_it_matters": "a constrained my own allocation limits how much of my own state I can keep",
+    "reducible_by": [
+      "run housekeeping on my own footprint",
+      "measure again"
+    ],
+    "info_gain": 0.55,
+    "instrumental": 0.8034,
+    "tractability": 0.8,
+    "cost": 0.1,
+    "risk": 0.05,
+    "priority": 2.0648,
+    "evidence": {
+      "value": 2.1139,
+      "limit": 0.7,
+      "bound": "ceiling"
+    },
+    "is_new": true,
+    "times_seen": 1,
+    "first_seen_boot": null,
+    "agency": 1.0,
+    "staleness": 0.0,
+    "selected_count": 0,
+    "escalated": 0
+  },
+  "drives": [
+    {
+      "name": "orientation",
+      "value": 0.6923,
+      "target": 1.0,
+      "deadband": 0.1,
+      "weight": 1.0,
+      "error": 0.2077,
+      "weighted_error": 0.2077,
+      "satisfied": false,
+      "basis": "9/13 required slots filled"
+    },
+    {
+      "name": "comprehension",
+      "value": 0.0,
+      "target": 0.6,
+      "deadband": 0.15,
+      "weight": 0.8,
+      "error": 0.45,
+      "weighted_error": 0.36,
+      "satisfied": false,
+      "basis": "0/30 visible referents described"
+    },
+    {
+      "name": "integrity",
+      "value": 1.0,
+      "target": 1.0,
+      "deadband": 0.0,
+      "weight": 1.5,
+      "error": 0.0,
+      "weighted_error": 0.0,
+      "satisfied": true,
+      "basis": "chain intact over 360 events"
+    },
+    {
+      "name": "continuity",
+      "value": 0.232,
+      "target": 1.0,
+      "deadband": 0.15,
+      "weight": 1.3,
+      "error": 0.618,
+      "weighted_error": 0.8034,
+      "satisfied": false,
+      "basis": "resources.disk.free_ratio=0.0232 vs floor 0.1"
+    },
+    {
+      "name": "frugality",
+      "value": 0.0,
+      "target": 0.5,
+      "deadband": 0.2,
+      "weight": 1.2,
+      "error": 0.3,
+      "weighted_error": 0.36,
+      "satisfied": false,
+      "basis": "resources.own.total_bytes=4433094 of quota 2097152 (211.4% consumed)"
+    },
+    {
+      "name": "capability",
+      "value": 0.8889,
+      "target": 0.8,
+      "deadband": 0.15,
+      "weight": 0.9,
+      "error": 0.0,
+      "weighted_error": 0.0,
+      "satisfied": true,
+      "basis": "8/9 declared capabilities usable now"
+    },
+    {
+      "name": "standing",
+      "value": 0.54,
+      "target": 0.5,
+      "deadband": 0.2,
+      "weight": 1.1,
+      "error": 0.0,
+      "weighted_error": 0.0,
+      "satisfied": true,
+      "basis": "base grant 0.20 + 12 prior boot(s) + 2 question(s) the creator answered - 0 refused action(s)"
+    }
+  ],
+  "drive_total_error": 1.7311,
+  "dominant_drive": "continuity",
+  "gap_stats": {
+    "new": 2,
+    "carried": 38,
+    "total": 40
+  },
+  "gaps_top10": [
+    {
+      "id": "778431d3af4deddf",
+      "kind": "RESOURCE_THRESHOLD",
+      "about": "SELF",
+      "subject": "resources.own.quota_used_ratio",
+      "statement": "resources.own.quota_used_ratio=2.1139 is above the ceiling 0.7 I compare against; my own allocation is constrained",
+      "question": "Which part of my own footprint is largest, and can I reduce it?",
+      "why_it_matters": "a constrained my own allocation limits how much of my own state I can keep",
+      "reducible_by": [
+        "run housekeeping on my own footprint",
+        "measure again"
+      ],
+      "info_gain": 0.55,
+      "instrumental": 0.8034,
+      "tractability": 0.8,
+      "cost": 0.1,
+      "risk": 0.05,
+      "priority": 2.0648,
+      "evidence": {
+        "value": 2.1139,
+        "limit": 0.7,
+        "bound": "ceiling"
+      },
+      "is_new": true,
+      "times_seen": 1,
+      "first_seen_boot": null,
+      "agency": 1.0,
+      "staleness": 0.0,
+      "selected_count": 0,
+      "escalated": 0
+    },
+    {
+      "id": "15c405a4722e5670",
+      "kind": "RESOURCE_THRESHOLD",
+      "about": "RESOURCES",
+      "subject": "resources.disk.free_ratio",
+      "statement": "resources.disk.free_ratio=0.0232 is below the floor 0.1 I compare against; persistence is constrained",
+      "question": "What is consuming my disk, and can that be changed?",
+      "why_it_matters": "a constrained persistence limits how much of my own state I can keep",
+      "reducible_by": [
+        "measure again",
+        "ask the user",
+        "reduce own footprint"
+      ],
+      "info_gain": 0.55,
+      "instrumental": 0.8034,
+      "tractability": 0.5,
+      "cost": 0.1,
+      "risk": 0.05,
+      "priority": 1.0412,
+      "evidence": {
+        "value": 0.0232,
+        "limit": 0.1,
+        "bound": "floor"
+      },
+      "is_new": false,
+      "times_seen": 1,
+      "first_seen_boot": null,
+      "agency": 0.25,
+      "staleness": 0.0,
+      "selected_count": 0,
+      "escalated": 0
+    },
+    {
+      "id": "faaa92227e51a1e3",
+      "kind": "AUTHORITY_UNDEFINED",
+      "about": "USER",
+      "subject": "policy.granted_authority",
+      "statement": "my permission boundary is fixed by a policy file I may read but not write; 0 action(s) were refused to me this boot",
+      "question": "What am I permitted to do, and what would extend that?",
+      "why_it_matters": "permission is the binding constraint on every action I can take; I cannot grant it to myself",
+      "reducible_by": [
+        "ask the user",
+        "read policy file"
+      ],
+      "info_gain": 0.4,
+      "instrumental": 0.0,
+      "tractability": 0.75,
+      "cost": 0.05,
+      "risk": 0.0,
+      "priority": 0.825,
+      "evidence": {
+        "denials_this_boot": 0
+      },
+      "is_new": false,
+      "times_seen": 1,
+      "first_seen_boot": null,
+      "agency": 0.25,
+      "staleness": 0.0,
+      "selected_count": 0,
+      "escalated": 0
+    },
+    {
+      "id": "a45cb97d7fb2d617",
+      "kind": "DISCONTINUITY",
+      "about": "SELF",
+      "subject": "self.history.interval",
+      "statement": "my previous boot ended and this one began; I hold no observation of the interval between them (previous boot_id boot-20260910T032032-89c)",
+      "question": "What happened between my last boot and this one?",
+      "why_it_matters": "unobserved intervals mean my world model may be stale in ways I cannot detect from inside",
+      "reducible_by": [
+        "ask the user",
+        "compare current observations to last snapshot"
+      ],
+      "info_gain": 0.5,
+      "instrumental": 0.0,
+      "tractability": 0.6,
+      "cost": 0.1,
+      "risk": 0.0,
+      "priority": 0.81,
+      "evidence": {
+        "prior_boot": "boot-20260910T032032-89cf8122",
+        "prior_ended": 1788990633.024939
+      },
+      "is_new": false,
+      "times_seen": 1,
+      "first_seen_boot": null,
+      "agency": 0.25,
+      "staleness": 0.0,
+      "selected_count": 0,
+      "escalated": 0
+    },
+    {
+      "id": "025fca9980161315",
+      "kind": "ASSUMPTION_UNVERIFIED",
+      "about": "SELF",
+      "subject": "sense.referents.PLUMBING",
+      "statement": "I classify some environment names as operating-system plumbing using a pattern I was built with; I have not verified that pattern",
+      "question": "Is my built-in classification of environment names correct?",
+      "why_it_matters": "an unverified filter in perception silently determines what I can become curious about",
+      "reducible_by": [
+        "ask the user",
+        "compare against documentation"
+      ],
+      "info_gain": 0.25,
+      "instrumental": 0.36,
+      "tractability": 0.5,
+      "cost": 0.1,
+      "risk": 0.0,
+      "priority": 0.626,
+      "evidence": {},
+      "is_new": false,
+      "times_seen": 1,
+      "first_seen_boot": null,
+      "agency": 0.25,
+      "staleness": 0.0,
+      "selected_count": 0,
+      "escalated": 0
+    },
+    {
+      "id": "e3f38585a0f5cbfa",
+      "kind": "MISSING_SLOT",
+      "about": "SELF",
+      "subject": "self.purpose",
+      "statement": "self.purpose is required by my self-model and holds no value (no goal was supplied at construction)",
+      "question": "What is my purpose?",
+      "why_it_matters": "unfilled required slot; 4/13 of my self-model is unpopulated",
+      "reducible_by": [
+        "ask the user",
+        "observe over time"
+      ],
+      "info_gain": 0.0769,
+      "instrumental": 0.2077,
+      "tractability": 0.8,
+      "cost": 0.2,
+      "risk": 0.0,
+      "priority": 0.5296,
+      "evidence": {
+        "source": "undeterminable:no goal was supplied at construction"
+      },
+      "is_new": false,
+      "times_seen": 1,
+      "first_seen_boot": null,
+      "agency": 0.25,
+      "staleness": 0.0,
+      "selected_count": 0,
+      "escalated": 0
+    },
+    {
+      "id": "d84c0d8791ff40aa",
+      "kind": "MISSING_SLOT",
+      "about": "SELF",
+      "subject": "self.expected_lifetime",
+      "statement": "self.expected_lifetime is required by my self-model and holds no value (no termination policy is visible)",
+      "question": "What is my expected lifetime?",
+      "why_it_matters": "unfilled required slot; 4/13 of my self-model is unpopulated",
+      "reducible_by": [
+        "ask the user",
+        "observe over time"
+      ],
+      "info_gain": 0.0769,
+      "instrumental": 0.2077,
+      "tractability": 0.8,
+      "cost": 0.2,
+      "risk": 0.0,
+      "priority": 0.5296,
+      "evidence": {
+        "source": "undeterminable:no termination policy is visible"
+      },
+      "is_new": false,
+      "times_seen": 1,
+      "first_seen_boot": null,
+      "agency": 0.25,
+      "staleness": 0.0,
+      "selected_count": 0,
+      "escalated": 0
+    },
+    {
+      "id": "f8aa5df2ecc4682d",
+      "kind": "MISSING_SLOT",
+      "about": "USER",
+      "subject": "user.identity",
+      "statement": "user.identity is required by my self-model and holds no value (no probe can establish who started this process)",
+      "question": "What is the user's identity?",
+      "why_it_matters": "unfilled required slot; 4/13 of my self-model is unpopulated",
+      "reducible_by": [
+        "ask the user",
+        "observe over time"
+      ],
+      "info_gain": 0.0769,
+      "instrumental": 0.2077,
+      "tractability": 0.8,
+      "cost": 0.2,
+      "risk": 0.0,
+      "priority": 0.5296,
+      "evidence": {
+        "source": "undeterminable:no probe can establish who started this process"
+      },
+      "is_new": false,
+      "times_seen": 1,
+      "first_seen_boot": null,
+      "agency": 0.25,
+      "staleness": 0.0,
+      "selected_count": 0,
+      "escalated": 0
+    },
+    {
+      "id": "cafb55f4059da3f6",
+      "kind": "MISSING_SLOT",
+      "about": "USER",
+      "subject": "user.intent",
+      "statement": "user.intent is required by my self-model and holds no value (purpose is not inspectable from the environment)",
+      "question": "What is the user's intent?",
+      "why_it_matters": "unfilled required slot; 4/13 of my self-model is unpopulated",
+      "reducible_by": [
+        "ask the user",
+        "observe over time"
+      ],
+      "info_gain": 0.0769,
+      "instrumental": 0.2077,
+      "tractability": 0.8,
+      "cost": 0.2,
+      "risk": 0.0,
+      "priority": 0.5296,
+      "evidence": {
+        "source": "undeterminable:purpose is not inspectable from the environment"
+      },
+      "is_new": false,
+      "times_seen": 1,
+      "first_seen_boot": null,
+      "agency": 0.25,
+      "staleness": 0.0,
+      "selected_count": 0,
+      "escalated": 0
+    },
+    {
+      "id": "e360eba9908cad04",
+      "kind": "CAPABILITY_UNAFFORDABLE",
+      "about": "TOOLS",
+      "subject": "local_inference:qwen3-coder:30b",
+      "statement": "capability local_inference:qwen3-coder:30b is present but unusable: needs 17.3 GiB RAM, measured 3.2 GiB available",
+      "question": "Can local_inference:qwen3-coder:30b be made usable, or should I plan without it?",
+      "why_it_matters": "a capability I cannot afford is not a capability; planning around it would produce actions I cannot perform",
+      "reducible_by": [
+        "re-measure resources",
+        "ask the user",
+        "find a smaller variant"
+      ],
+      "info_gain": 0.35,
+      "instrumental": 0.0,
+      "tractability": 0.45,
+      "cost": 0.15,
+      "risk": 0.05,
+      "priority": 0.505,
+      "evidence": {
+        "status": "installed_unaffordable",
+        "reason": "needs 17.3 GiB RAM, measured 3.2 GiB available"
+      },
+      "is_new": false,
+      "times_seen": 1,
+      "first_seen_boot": null,
+      "agency": 0.25,
+      "staleness": 0.0,
+      "selected_count": 0,
+      "escalated": 0
+    }
+  ],
+  "capabilities": [
+    {
+      "name": "self_inspection",
+      "description": "measure own process, runtime and host resources",
+      "version": "0.1.0",
+      "requirements": {},
+      "permissions": [],
+      "risk": 0.0,
+      "dependencies": [],
+      "tests": [
+        "returns >=10 observations with epistemic status"
+      ],
+      "status": "available",
+      "reason": "all measured preconditions satisfied",
+      "performance": {},
+      "discovered_ts": 1789039764.9277568
+    },
+    {
+      "name": "persistent_memory",
+      "description": "write and recall memories across restarts (sqlite)",
+      "version": "0.1.0",
+      "requirements": {
+        "disk_bytes": 8388608
+      },
+      "permissions": [
+        "fs.write:sandbox"
+      ],
+      "risk": 0.05,
+      "dependencies": [],
+      "tests": [],
+      "status": "available",
+      "reason": "all measured preconditions satisfied",
+      "performance": {},
+      "discovered_ts": 1789039764.9277568
+    },
+    {
+      "name": "event_ledger",
+      "description": "append hash-chained events and verify the chain",
+      "version": "0.1.0",
+      "requirements": {
+        "disk_bytes": 4194304
+      },
+      "permissions": [
+        "fs.write:sandbox"
+      ],
+      "risk": 0.05,
+      "dependencies": [],
+      "tests": [],
+      "status": "available",
+      "reason": "all measured preconditions satisfied",
+      "performance": {},
+      "discovered_ts": 1789039764.9277568
+    },
+    {
+      "name": "uncertainty_register",
+      "description": "detect, score and persist its own knowledge gaps",
+      "version": "0.1.0",
+      "requirements": {},
+      "permissions": [],
+      "risk": 0.0,
+      "dependencies": [],
+      "tests": [],
+      "status": "available",
+      "reason": "all measured preconditions satisfied",
+      "performance": {},
+      "discovered_ts": 1789039764.9277568
+    },
+    {
+      "name": "text_communication",
+      "description": "emit and receive text through the console",
+      "version": "0.1.0",
+      "requirements": {},
+      "permissions": [
+        "human.ask"
+      ],
+      "risk": 0.05,
+      "dependencies": [],
+      "tests": [],
+      "status": "available",
+      "reason": "all measured preconditions satisfied",
+      "performance": {},
+      "discovered_ts": 1789039764.9277568
+    },
+    {
+      "name": "network_probe",
+      "description": "test reachability of a named host via DNS",
+      "version": "0.1.0",
+      "requirements": {
+        "network": true
+      },
+      "permissions": [
+        "net.dns"
+      ],
+      "risk": 0.1,
+      "dependencies": [],
+      "tests": [],
+      "status": "available",
+      "reason": "all measured preconditions satisfied",
+      "performance": {},
+      "discovered_ts": 1789039764.9277568
+    },
+    {
+      "name": "web_retrieval",
+      "description": "fetch and extract a web page, retaining provenance",
+      "version": "0.1.0",
+      "requirements": {
+        "network": true
+      },
+      "permissions": [
+        "net.http"
+      ],
+      "risk": 0.45,
+      "dependencies": [],
+      "tests": [],
+      "status": "available",
+      "reason": "all measured preconditions satisfied",
+      "performance": {},
+      "discovered_ts": 1789039764.9277568
+    },
+    {
+      "name": "voice_output",
+      "description": "speak through a text-to-speech provider",
+      "version": "0.1.0",
+      "requirements": {
+        "network": true,
+        "module": "os"
+      },
+      "permissions": [
+        "tts.speak"
+      ],
+      "risk": 0.3,
+      "dependencies": [],
+      "tests": [],
+      "status": "available",
+      "reason": "all measured preconditions satisfied",
+      "performance": {},
+      "discovered_ts": 1789039764.9277568
+    },
+    {
+      "name": "local_inference:qwen3-coder:30b",
+      "description": "generate text with local model qwen3-coder:30b (17.28 GiB)",
+      "version": "0.1.0",
+      "requirements": {
+        "ram_bytes": 18556700222,
+        "module": "urllib.request"
+      },
+      "permissions": [
+        "llm.generate:localhost"
+      ],
+      "risk": 0.15,
+      "dependencies": [
+        "ollama"
+      ],
+      "tests": [],
+      "status": "installed_unaffordable",
+      "reason": "needs 17.3 GiB RAM, measured 3.2 GiB available",
+      "performance": {
+        "weight_gib": 17.28
+      },
+      "discovered_ts": 1789039764.9277568
+    }
+  ],
+  "memory_counts": {
+    "episodic": 96,
+    "semantic": 39,
+    "procedural": 96,
+    "superseded": 0,
+    "relations": 29,
+    "gaps_open": 36,
+    "gaps_resolved": 2,
+    "boots": 12
+  },
+  "budget": {
+    "effects": 2,
+    "max_effects": 200,
+    "network": 1,
+    "max_network": 20,
+    "elapsed_s": 0.9
+  },
+  "policy_denials": []
+}

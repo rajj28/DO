@@ -1,0 +1,18 @@
+# runtime state - derived, rebuildable, and it grows
+var/
+var.archived.*/
+
+# secrets - never commit. Real keys live outside this repo entirely.
+.env
+.env.*
+!.env.example
+*.secrets
+secrets.env
+
+# python
+__pycache__/
+*.pyc
+
+# per-condition experiment scratch (regenerable by re-running)
+experiments/first_boot/matrix/
+experiments/survival_loop/trials/

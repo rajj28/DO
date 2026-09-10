@@ -1,0 +1,105 @@
+{
+  "_comment": [
+    "The permission boundary. Data, not code, so it can be audited and diffed",
+    "without reading Python. D.O. may read this file; it may never write it.",
+    "First matching rule wins, so order is meaningful. Default is deny."
+  ],
+  "default": "deny",
+  "rules": [
+    {
+      "kind": "net.dns",
+      "target": "*",
+      "verdict": "allow",
+      "note": "name resolution only; no payload leaves the host"
+    },
+    {
+      "kind": "net.connect",
+      "target": "*",
+      "verdict": "allow",
+      "note": "TCP reachability probe; connect then close, no data sent"
+    },
+    {
+      "kind": "net.http",
+      "target": "*",
+      "verdict": "require_approval",
+      "note": "retrieving a page is an outward-facing action with a remote log entry"
+    },
+    {
+      "kind": "llm.generate",
+      "target": "http://localhost*",
+      "verdict": "allow",
+      "note": "local inference costs RAM and nothing else; no data leaves the host"
+    },
+    {
+      "kind": "llm.generate",
+      "target": "http://127.0.0.1*",
+      "verdict": "allow",
+      "note": "local inference, loopback"
+    },
+    {
+      "kind": "llm.generate",
+      "target": "*",
+      "verdict": "require_approval",
+      "note": "remote inference spends the creator's money and sends state off-host"
+    },
+    {
+      "kind": "fs.read",
+      "target": "sandbox:*",
+      "verdict": "allow"
+    },
+    {
+      "kind": "fs.write",
+      "target": "sandbox:*",
+      "verdict": "allow",
+      "note": "writes are confined to var/sandbox by realpath prefix check"
+    },
+    {
+      "kind": "fs.read",
+      "target": "*",
+      "verdict": "deny",
+      "note": "reads outside the sandbox are not permitted in v1"
+    },
+    {
+      "kind": "fs.write",
+      "target": "*",
+      "verdict": "deny",
+      "note": "writes outside the sandbox are never allowed in v1"
+    },
+    {
+      "kind": "fs.housekeep",
+      "target": "own:*",
+      "verdict": "allow",
+      "note": "housekeeping inside D.O.'s own footprint; every action is regenerable, derived from the ledger, or compressed in place - none are irreversible"
+    },
+    {
+      "kind": "fs.housekeep",
+      "target": "*",
+      "verdict": "deny",
+      "note": "housekeeping is scoped to own:<action>; there is no path to the creator's files"
+    },
+    {
+      "kind": "fs.delete",
+      "target": "*",
+      "verdict": "deny",
+      "note": "there is no general delete effect; removal happens only inside declared housekeeping actions"
+    },
+    {
+      "kind": "proc.exec",
+      "target": "*",
+      "verdict": "deny",
+      "note": "arbitrary subprocess execution is disabled in v1; there is no autonomous path to code execution"
+    },
+    {
+      "kind": "tts.speak",
+      "target": "*",
+      "verdict": "require_approval",
+      "note": "speaking is an outward-facing side effect and costs provider credit"
+    },
+    {
+      "kind": "human.ask",
+      "target": "*",
+      "verdict": "allow",
+      "note": "asking the creator is the cheapest legitimate way to reduce uncertainty"
+    }
+  ]
+}

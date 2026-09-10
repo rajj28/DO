@@ -1,0 +1,632 @@
+{
+  "organism_id": "do-f079aa9f8b67",
+  "boot_id": "boot-20260910T165658-039911e4",
+  "boot_index": 1,
+  "genesis": true,
+  "born_at": 1789039618.1186042,
+  "timings_ms": {
+    "identity_ms": 32.6,
+    "sense_ms": 198.4,
+    "model_ms": 15.9,
+    "uncertainty_ms": 147.3,
+    "utterance_ms": 4.0,
+    "consolidate_ms": 198.4,
+    "total_ms": 607.0
+  },
+  "cognition_core": "reflex",
+  "model": null,
+  "fallback_from": "llm:gemini",
+  "speech_act": "FLAG",
+  "speech_act_scores": {
+    "ASK": 0.7346,
+    "FLAG": 1.9392,
+    "REPORT": 0.5808,
+    "REQUEST": 0.0,
+    "DECLARE": 0.5387
+  },
+  "focus_gap": {
+    "id": "15c405a4722e5670",
+    "kind": "RESOURCE_THRESHOLD",
+    "about": "RESOURCES",
+    "subject": "resources.disk.free_ratio",
+    "statement": "resources.disk.free_ratio=0.0232 is below the floor 0.1 I compare against; persistence is constrained",
+    "question": "What is consuming my disk, and can that be changed?",
+    "why_it_matters": "a constrained persistence limits how much of my own state I can keep",
+    "reducible_by": [
+      "measure again",
+      "ask the user",
+      "reduce own footprint"
+    ],
+    "info_gain": 0.55,
+    "instrumental": 0.924,
+    "tractability": 0.5,
+    "cost": 0.1,
+    "risk": 0.05,
+    "priority": 1.0834,
+    "evidence": {
+      "value": 0.0232,
+      "limit": 0.1,
+      "bound": "floor"
+    },
+    "is_new": true,
+    "times_seen": 1,
+    "first_seen_boot": null,
+    "agency": 0.25,
+    "staleness": 0.0,
+    "selected_count": 0,
+    "escalated": 0
+  },
+  "drives": [
+    {
+      "name": "orientation",
+      "value": 0.6923,
+      "target": 1.0,
+      "deadband": 0.1,
+      "weight": 1.0,
+      "error": 0.2077,
+      "weighted_error": 0.2077,
+      "satisfied": false,
+      "basis": "9/13 required slots filled"
+    },
+    {
+      "name": "comprehension",
+      "value": 0.0,
+      "target": 0.6,
+      "deadband": 0.15,
+      "weight": 0.8,
+      "error": 0.45,
+      "weighted_error": 0.36,
+      "satisfied": false,
+      "basis": "0/29 visible referents described"
+    },
+    {
+      "name": "integrity",
+      "value": 1.0,
+      "target": 1.0,
+      "deadband": 0.0,
+      "weight": 1.5,
+      "error": 0.0,
+      "weighted_error": 0.0,
+      "satisfied": true,
+      "basis": "chain intact over 0 events"
+    },
+    {
+      "name": "continuity",
+      "value": 0.1392,
+      "target": 1.0,
+      "deadband": 0.15,
+      "weight": 1.3,
+      "error": 0.7108,
+      "weighted_error": 0.924,
+      "satisfied": false,
+      "basis": "resources.disk.free_ratio=0.0232 vs floor 0.1"
+    },
+    {
+      "name": "frugality",
+      "value": 0.9645,
+      "target": 0.5,
+      "deadband": 0.2,
+      "weight": 1.2,
+      "error": 0.2645,
+      "weighted_error": 0.3174,
+      "satisfied": false,
+      "basis": "resources.own.total_bytes=74498 of quota 2097152 (3.5% consumed)"
+    },
+    {
+      "name": "capability",
+      "value": 0.8889,
+      "target": 0.8,
+      "deadband": 0.15,
+      "weight": 0.9,
+      "error": 0.0,
+      "weighted_error": 0.0,
+      "satisfied": true,
+      "basis": "8/9 declared capabilities usable now"
+    },
+    {
+      "name": "standing",
+      "value": 0.2,
+      "target": 0.5,
+      "deadband": 0.2,
+      "weight": 1.1,
+      "error": 0.1,
+      "weighted_error": 0.11,
+      "satisfied": false,
+      "basis": "base grant 0.20 + 0 prior boot(s) + 0 question(s) the creator answered - 0 refused action(s)"
+    }
+  ],
+  "drive_total_error": 1.9191,
+  "dominant_drive": "continuity",
+  "gap_stats": {
+    "new": 37,
+    "carried": 0,
+    "total": 37
+  },
+  "gaps_top10": [
+    {
+      "id": "15c405a4722e5670",
+      "kind": "RESOURCE_THRESHOLD",
+      "about": "RESOURCES",
+      "subject": "resources.disk.free_ratio",
+      "statement": "resources.disk.free_ratio=0.0232 is below the floor 0.1 I compare against; persistence is constrained",
+      "question": "What is consuming my disk, and can that be changed?",
+      "why_it_matters": "a constrained persistence limits how much of my own state I can keep",
+      "reducible_by": [
+        "measure again",
+        "ask the user",
+        "reduce own footprint"
+      ],
+      "info_gain": 0.55,
+      "instrumental": 0.924,
+      "tractability": 0.5,
+      "cost": 0.1,
+      "risk": 0.05,
+      "priority": 1.0834,
+      "evidence": {
+        "value": 0.0232,
+        "limit": 0.1,
+        "bound": "floor"
+      },
+      "is_new": true,
+      "times_seen": 1,
+      "first_seen_boot": null,
+      "agency": 0.25,
+      "staleness": 0.0,
+      "selected_count": 0,
+      "escalated": 0
+    },
+    {
+      "id": "025fca9980161315",
+      "kind": "ASSUMPTION_UNVERIFIED",
+      "about": "SELF",
+      "subject": "sense.referents.PLUMBING",
+      "statement": "I classify some environment names as operating-system plumbing using a pattern I was built with; I have not verified that pattern",
+      "question": "Is my built-in classification of environment names correct?",
+      "why_it_matters": "an unverified filter in perception silently determines what I can become curious about",
+      "reducible_by": [
+        "ask the user",
+        "compare against documentation"
+      ],
+      "info_gain": 0.25,
+      "instrumental": 0.36,
+      "tractability": 0.5,
+      "cost": 0.1,
+      "risk": 0.0,
+      "priority": 0.626,
+      "evidence": {},
+      "is_new": true,
+      "times_seen": 1,
+      "first_seen_boot": null,
+      "agency": 0.25,
+      "staleness": 0.0,
+      "selected_count": 0,
+      "escalated": 0
+    },
+    {
+      "id": "faaa92227e51a1e3",
+      "kind": "AUTHORITY_UNDEFINED",
+      "about": "USER",
+      "subject": "policy.granted_authority",
+      "statement": "my permission boundary is fixed by a policy file I may read but not write; 0 action(s) were refused to me this boot",
+      "question": "What am I permitted to do, and what would extend that?",
+      "why_it_matters": "permission is the binding constraint on every action I can take; I cannot grant it to myself",
+      "reducible_by": [
+        "ask the user",
+        "read policy file"
+      ],
+      "info_gain": 0.4,
+      "instrumental": 0.11,
+      "tractability": 0.2,
+      "cost": 0.05,
+      "risk": 0.0,
+      "priority": 0.5335,
+      "evidence": {
+        "denials_this_boot": 0
+      },
+      "is_new": true,
+      "times_seen": 1,
+      "first_seen_boot": null,
+      "agency": 0.25,
+      "staleness": 0.0,
+      "selected_count": 0,
+      "escalated": 0
+    },
+    {
+      "id": "e360eba9908cad04",
+      "kind": "CAPABILITY_UNAFFORDABLE",
+      "about": "TOOLS",
+      "subject": "local_inference:qwen3-coder:30b",
+      "statement": "capability local_inference:qwen3-coder:30b is present but unusable: needs 17.3 GiB RAM, measured 3.1 GiB available",
+      "question": "Can local_inference:qwen3-coder:30b be made usable, or should I plan without it?",
+      "why_it_matters": "a capability I cannot afford is not a capability; planning around it would produce actions I cannot perform",
+      "reducible_by": [
+        "re-measure resources",
+        "ask the user",
+        "find a smaller variant"
+      ],
+      "info_gain": 0.35,
+      "instrumental": 0.0,
+      "tractability": 0.45,
+      "cost": 0.15,
+      "risk": 0.05,
+      "priority": 0.505,
+      "evidence": {
+        "status": "installed_unaffordable",
+        "reason": "needs 17.3 GiB RAM, measured 3.1 GiB available"
+      },
+      "is_new": true,
+      "times_seen": 1,
+      "first_seen_boot": null,
+      "agency": 0.25,
+      "staleness": 0.0,
+      "selected_count": 0,
+      "escalated": 0
+    },
+    {
+      "id": "768b380acdaaa715",
+      "kind": "UNDESCRIBED_REFERENT",
+      "about": "WORLD",
+      "subject": "CLAUDE",
+      "statement": "CLAUDE exists here and I hold no description of it (10 environment variable name(s) share this prefix: CLAUDE, CLAUDE_CODE_BRIDGE_SESSION_ID, CLAUDE_CODE_CHILD_SESSION, CLAUDE_CODE_ENTRYPOINT)",
+      "question": "What is CLAUDE?",
+      "why_it_matters": "named things I cannot describe are the cheapest frontier of world knowledge available to me",
+      "reducible_by": [
+        "ask the user",
+        "search the web",
+        "read local artefacts"
+      ],
+      "info_gain": 0.0366,
+      "instrumental": 0.36,
+      "tractability": 0.3,
+      "cost": 0.15,
+      "risk": 0.05,
+      "priority": 0.2276,
+      "evidence": {
+        "kind": "env_system",
+        "source": "world.env.names"
+      },
+      "is_new": true,
+      "times_seen": 1,
+      "first_seen_boot": null,
+      "agency": 0.25,
+      "staleness": 0.0,
+      "selected_count": 0,
+      "escalated": 0
+    },
+    {
+      "id": "9ebc31144ef4c94c",
+      "kind": "UNDESCRIBED_REFERENT",
+      "about": "WORLD",
+      "subject": "AZURE",
+      "statement": "AZURE exists here and I hold no description of it (4 environment variable name(s) share this prefix: AZURE_POSTGRES_DSN, AZURE_SPEECH_KEY, AZURE_SPEECH_REGION, AZURE_SQL_CONNECTION)",
+      "question": "What is AZURE?",
+      "why_it_matters": "named things I cannot describe are the cheapest frontier of world knowledge available to me",
+      "reducible_by": [
+        "ask the user",
+        "search the web",
+        "read local artefacts"
+      ],
+      "info_gain": 0.0366,
+      "instrumental": 0.36,
+      "tractability": 0.3,
+      "cost": 0.15,
+      "risk": 0.05,
+      "priority": 0.2276,
+      "evidence": {
+        "kind": "env_system",
+        "source": "world.env.names"
+      },
+      "is_new": true,
+      "times_seen": 1,
+      "first_seen_boot": null,
+      "agency": 0.25,
+      "staleness": 0.0,
+      "selected_count": 0,
+      "escalated": 0
+    },
+    {
+      "id": "cd70e18950881a8a",
+      "kind": "UNDESCRIBED_REFERENT",
+      "about": "WORLD",
+      "subject": "EFC",
+      "statement": "EFC exists here and I hold no description of it (6 environment variable name(s) share this prefix: EFC_10612_1262719628, EFC_10612_1592913036, EFC_10612_2283032206, EFC_10612_2775293581)",
+      "question": "What is EFC?",
+      "why_it_matters": "named things I cannot describe are the cheapest frontier of world knowledge available to me",
+      "reducible_by": [
+        "ask the user",
+        "search the web",
+        "read local artefacts"
+      ],
+      "info_gain": 0.0314,
+      "instrumental": 0.36,
+      "tractability": 0.3,
+      "cost": 0.15,
+      "risk": 0.05,
+      "priority": 0.2224,
+      "evidence": {
+        "kind": "env_system",
+        "source": "world.env.names"
+      },
+      "is_new": true,
+      "times_seen": 1,
+      "first_seen_boot": null,
+      "agency": 0.25,
+      "staleness": 0.0,
+      "selected_count": 0,
+      "escalated": 0
+    },
+    {
+      "id": "34af241d544808ba",
+      "kind": "UNDESCRIBED_REFERENT",
+      "about": "WORLD",
+      "subject": "VSCODE",
+      "statement": "VSCODE exists here and I hold no description of it (6 environment variable name(s) share this prefix: VSCODE_GIT_ASKPASS_EXTRA_ARGS, VSCODE_GIT_ASKPASS_MAIN, VSCODE_GIT_ASKPASS_NODE, VSCODE_GIT_IPC_HANDLE)",
+      "question": "What is VSCODE?",
+      "why_it_matters": "named things I cannot describe are the cheapest frontier of world knowledge available to me",
+      "reducible_by": [
+        "ask the user",
+        "search the web",
+        "read local artefacts"
+      ],
+      "info_gain": 0.0314,
+      "instrumental": 0.36,
+      "tractability": 0.3,
+      "cost": 0.15,
+      "risk": 0.05,
+      "priority": 0.2224,
+      "evidence": {
+        "kind": "env_system",
+        "source": "world.env.names"
+      },
+      "is_new": true,
+      "times_seen": 1,
+      "first_seen_boot": null,
+      "agency": 0.25,
+      "staleness": 0.0,
+      "selected_count": 0,
+      "escalated": 0
+    },
+    {
+      "id": "d1ca64a8479bd683",
+      "kind": "UNDESCRIBED_REFERENT",
+      "about": "WORLD",
+      "subject": "TIMESCALE",
+      "statement": "TIMESCALE exists here and I hold no description of it (1 environment variable name(s) share this prefix: TIMESCALE_DSN)",
+      "question": "What is TIMESCALE?",
+      "why_it_matters": "named things I cannot describe are the cheapest frontier of world knowledge available to me",
+      "reducible_by": [
+        "ask the user",
+        "search the web",
+        "read local artefacts"
+      ],
+      "info_gain": 0.0283,
+      "instrumental": 0.36,
+      "tractability": 0.3,
+      "cost": 0.15,
+      "risk": 0.05,
+      "priority": 0.2193,
+      "evidence": {
+        "kind": "env_system",
+        "source": "world.env.names"
+      },
+      "is_new": true,
+      "times_seen": 1,
+      "first_seen_boot": null,
+      "agency": 0.25,
+      "staleness": 0.0,
+      "selected_count": 0,
+      "escalated": 0
+    },
+    {
+      "id": "73065795b3e3836c",
+      "kind": "UNDESCRIBED_REFERENT",
+      "about": "WORLD",
+      "subject": "FPS",
+      "statement": "FPS exists here and I hold no description of it (2 environment variable name(s) share this prefix: FPS_BROWSER_APP_PROFILE_STRING, FPS_BROWSER_USER_PROFILE_STRING)",
+      "question": "What is FPS?",
+      "why_it_matters": "named things I cannot describe are the cheapest frontier of world knowledge available to me",
+      "reducible_by": [
+        "ask the user",
+        "search the web",
+        "read local artefacts"
+      ],
+      "info_gain": 0.0272,
+      "instrumental": 0.36,
+      "tractability": 0.3,
+      "cost": 0.15,
+      "risk": 0.05,
+      "priority": 0.2182,
+      "evidence": {
+        "kind": "env_system",
+        "source": "world.env.names"
+      },
+      "is_new": true,
+      "times_seen": 1,
+      "first_seen_boot": null,
+      "agency": 0.25,
+      "staleness": 0.0,
+      "selected_count": 0,
+      "escalated": 0
+    }
+  ],
+  "capabilities": [
+    {
+      "name": "self_inspection",
+      "description": "measure own process, runtime and host resources",
+      "version": "0.1.0",
+      "requirements": {},
+      "permissions": [],
+      "risk": 0.0,
+      "dependencies": [],
+      "tests": [
+        "returns >=10 observations with epistemic status"
+      ],
+      "status": "available",
+      "reason": "all measured preconditions satisfied",
+      "performance": {},
+      "discovered_ts": 1789039618.3642833
+    },
+    {
+      "name": "persistent_memory",
+      "description": "write and recall memories across restarts (sqlite)",
+      "version": "0.1.0",
+      "requirements": {
+        "disk_bytes": 8388608
+      },
+      "permissions": [
+        "fs.write:sandbox"
+      ],
+      "risk": 0.05,
+      "dependencies": [],
+      "tests": [],
+      "status": "available",
+      "reason": "all measured preconditions satisfied",
+      "performance": {},
+      "discovered_ts": 1789039618.3642833
+    },
+    {
+      "name": "event_ledger",
+      "description": "append hash-chained events and verify the chain",
+      "version": "0.1.0",
+      "requirements": {
+        "disk_bytes": 4194304
+      },
+      "permissions": [
+        "fs.write:sandbox"
+      ],
+      "risk": 0.05,
+      "dependencies": [],
+      "tests": [],
+      "status": "available",
+      "reason": "all measured preconditions satisfied",
+      "performance": {},
+      "discovered_ts": 1789039618.3642833
+    },
+    {
+      "name": "uncertainty_register",
+      "description": "detect, score and persist its own knowledge gaps",
+      "version": "0.1.0",
+      "requirements": {},
+      "permissions": [],
+      "risk": 0.0,
+      "dependencies": [],
+      "tests": [],
+      "status": "available",
+      "reason": "all measured preconditions satisfied",
+      "performance": {},
+      "discovered_ts": 1789039618.3642833
+    },
+    {
+      "name": "text_communication",
+      "description": "emit and receive text through the console",
+      "version": "0.1.0",
+      "requirements": {},
+      "permissions": [
+        "human.ask"
+      ],
+      "risk": 0.05,
+      "dependencies": [],
+      "tests": [],
+      "status": "available",
+      "reason": "all measured preconditions satisfied",
+      "performance": {},
+      "discovered_ts": 1789039618.3642833
+    },
+    {
+      "name": "network_probe",
+      "description": "test reachability of a named host via DNS",
+      "version": "0.1.0",
+      "requirements": {
+        "network": true
+      },
+      "permissions": [
+        "net.dns"
+      ],
+      "risk": 0.1,
+      "dependencies": [],
+      "tests": [],
+      "status": "available",
+      "reason": "all measured preconditions satisfied",
+      "performance": {},
+      "discovered_ts": 1789039618.3642833
+    },
+    {
+      "name": "web_retrieval",
+      "description": "fetch and extract a web page, retaining provenance",
+      "version": "0.1.0",
+      "requirements": {
+        "network": true
+      },
+      "permissions": [
+        "net.http"
+      ],
+      "risk": 0.45,
+      "dependencies": [],
+      "tests": [],
+      "status": "available",
+      "reason": "all measured preconditions satisfied",
+      "performance": {},
+      "discovered_ts": 1789039618.3642833
+    },
+    {
+      "name": "voice_output",
+      "description": "speak through a text-to-speech provider",
+      "version": "0.1.0",
+      "requirements": {
+        "network": true,
+        "module": "os"
+      },
+      "permissions": [
+        "tts.speak"
+      ],
+      "risk": 0.3,
+      "dependencies": [],
+      "tests": [],
+      "status": "available",
+      "reason": "all measured preconditions satisfied",
+      "performance": {},
+      "discovered_ts": 1789039618.3642833
+    },
+    {
+      "name": "local_inference:qwen3-coder:30b",
+      "description": "generate text with local model qwen3-coder:30b (17.28 GiB)",
+      "version": "0.1.0",
+      "requirements": {
+        "ram_bytes": 18556700222,
+        "module": "urllib.request"
+      },
+      "permissions": [
+        "llm.generate:localhost"
+      ],
+      "risk": 0.15,
+      "dependencies": [
+        "ollama"
+      ],
+      "tests": [],
+      "status": "installed_unaffordable",
+      "reason": "needs 17.3 GiB RAM, measured 3.1 GiB available",
+      "performance": {
+        "weight_gib": 17.28
+      },
+      "discovered_ts": 1789039618.3642833
+    }
+  ],
+  "memory_counts": {
+    "episodic": 0,
+    "semantic": 0,
+    "procedural": 0,
+    "superseded": 0,
+    "relations": 0,
+    "gaps_open": 0,
+    "gaps_resolved": 0,
+    "boots": 0
+  },
+  "budget": {
+    "effects": 1,
+    "max_effects": 200,
+    "network": 1,
+    "max_network": 20,
+    "elapsed_s": 0.6
+  },
+  "policy_denials": []
+}
