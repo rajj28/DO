@@ -80,7 +80,7 @@ def cmd_boot(config, args, quiet=False, repl=True) -> int:
     return 0
 
 
-def session(org) -> int:
+def session(org, speak: bool = False) -> int:
     """Interactive session. State lives in sqlite and the ledger, not in this loop -
     closing the terminal does not end the organism's history."""
     print(f"\n{BAR}\nsession open. state persists outside this conversation.")
@@ -128,6 +128,12 @@ def session(org) -> int:
         else:
             print(f"  [{res.get('note')}]")
         org.io.say(utt.text)
+        if speak:
+            from .comms import address, build_voice, play_audio
+            s = build_voice(org.config).speak(address(utt.text, org.config),
+                                               org.gate, org.config)
+            if s.ok:
+                play_audio(s.file)
         print()
     org.close("session ended")
     return 0
@@ -381,6 +387,64 @@ def main(argv: list[str] | None = None) -> int:
             print("  and no action it has creates a second. This is a standing")
             print("  escalation to the creator, not a goal it can pursue alone.")
         org.close()
+        return 0
+
+    if cmd == "talk":
+        # Live two-way: you type, he replies in text AND speaks it aloud. Needs a real
+        # terminal (a session with no human attached declines, by the same rule the
+        # unattended loop follows).
+        org = lifecycle.boot(config, quiet=True, approver=cli_approver)
+        if not sys.stdin.isatty():
+            print("  `do talk` needs a real terminal - run it directly, not piped.")
+            org.close(); return 1
+        print()
+        print(BAR)
+        print("  Talking to D.O. He hears nothing; he SPEAKS his replies.")
+        print("  Type to him. /status /gaps /why /quit")
+        print()
+        # greet aloud from current state
+        from .comms import address, build_voice, play_audio
+        greet = address("I am online and listening.", config)
+        print(f"D.O.: {greet}")
+        s = build_voice(config).speak(greet, org.gate, config)
+        if s.ok:
+            play_audio(s.file)
+        return session(org, speak=True)
+
+    if cmd == "reply":
+        # One conversational turn, usable without a TTY: record the message, re-derive
+        # state, verbalize, print (and speak if a voice is configured). State persists
+        # on disk, so successive `reply` calls are one continuous conversation.
+        from .cognition import attention, gaps as gapmod
+        from .cognition.cores import build_core
+        from .drives import compute as compute_drives, error_map
+        from .comms import address, build_voice, play_audio
+        msg = " ".join(rest).strip()
+        org = lifecycle.boot(config, quiet=True, approver=cli_approver)
+        note = ""
+        if msg:
+            res = lifecycle.answer(org, msg)
+            note = (f"[recorded about {res['matched']}]" if res.get("matched")
+                    else f"[{res.get('note')}]")
+        org.view.memory_counts.update(org.store.counts())
+        org.drives = compute_drives(org.view, org.config, org.ledger)
+        org.view.drives = org.drives
+        lifecycle._mark_described(org.view, org.store)
+        found = gapmod.score(gapmod.detect(org.view, error_map(org.drives),
+                             lifecycle._ns_to_drive(org.drives), org.drives), org.config)
+        plan = attention.plan(org.view, found, org.drives, org.ledger)
+        utt = build_core(org.config, org.gate, org.ledger).verbalize(plan, org.view)
+        spoken = address(utt.text, config)
+        if msg:
+            print(f"You:  {msg}")
+        if note:
+            print(f"      {note}")
+        print(f"D.O.: {spoken}")
+        if "--speak" in rest:
+            s = build_voice(config).speak(spoken, org.gate, config)
+            if s.ok:
+                play_audio(s.file)
+        org.close("reply turn")
         return 0
 
     if cmd == "say":

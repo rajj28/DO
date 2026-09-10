@@ -88,6 +88,52 @@ def _heartbeat(lock: Path, cycle: int) -> None:
     lock.write_text(json.dumps(d), encoding="utf-8")
 
 
+def _drain_inbox(org, notifier, state_dir) -> None:
+    """Read and clear the inbox, answering each line and speaking the reply.
+
+    The inbox is a plain text file - one message per line - so anything can write to
+    it: a one-click prompt, `echo >> inbox.txt`, an editor. The organism polls it on
+    its own cycle; you never invoke him. State persists as always, so a message left
+    while he was down is answered when he next runs.
+    """
+    from ..kernel import lifecycle
+    from ..cognition import attention, gaps as gapmod
+    from ..cognition.cores import build_core
+    from ..drives import compute as compute_drives, error_map
+    from ..comms import address, build_voice, play_audio
+    from ..comms import notify as notify_mod
+
+    inbox = state_dir / "inbox.txt"
+    if not inbox.exists():
+        return
+    try:
+        lines = [l.strip() for l in inbox.read_text(encoding="utf-8").splitlines()
+                 if l.strip()]
+        inbox.write_text("", encoding="utf-8")   # clear atomically-enough for one writer
+    except Exception:
+        return
+    for msg in lines:
+        res = lifecycle.answer(org, msg)
+        org.view.memory_counts.update(org.store.counts())
+        org.drives = compute_drives(org.view, org.config, org.ledger)
+        org.view.drives = org.drives
+        lifecycle._mark_described(org.view, org.store)
+        found = gapmod.score(gapmod.detect(org.view, error_map(org.drives),
+                             lifecycle._ns_to_drive(org.drives), org.drives), org.config)
+        plan = attention.plan(org.view, found, org.drives, org.ledger)
+        utt = build_core(org.config, org.gate, org.ledger).verbalize(plan, org.view)
+        reply = address(utt.text, org.config)
+        # Record the exchange to the outbox, and speak the reply - he is talking to
+        # you, so this speaks regardless of the CRITICAL-only rule for alerts.
+        notifier.notify(notify_mod.NOTABLE, "reply", reply, {"to_message": msg})
+        try:
+            s = build_voice(org.config).speak(reply, org.gate, org.config)
+            if s.ok:
+                play_audio(s.file)
+        except Exception:
+            pass
+
+
 def serve(config, once: bool = False, quiet: bool = False) -> int:
     from . import lifecycle
     from ..policy import KillSwitch
@@ -154,6 +200,11 @@ def serve(config, once: bool = False, quiet: bool = False) -> int:
                 lifecycle.cycle(org, quiet=True)
                 continue
             notified_backoff = False
+
+            # Anything you dropped in the inbox since last cycle: he answers it and
+            # speaks the reply aloud. This is how you talk to a LIVE organism without
+            # a terminal - he is already running; you just leave him a message.
+            _drain_inbox(org, notifier, state_dir)
 
             r = lifecycle.cycle(org, quiet=True)
             for level, title, msg, data in notify_mod.assess(org, config):
