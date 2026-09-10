@@ -123,6 +123,8 @@ class Gate:
             "tts.local": self._tts_local,
             "os.task": self._os_task,
             "web.investigate": self._web_investigate,
+            "audio.capture": self._audio_capture,
+            "stt.transcribe": self._stt_transcribe,
             "human.ask": self._human_ask,
             **self.extra,
         }.get(req.kind)
@@ -191,6 +193,76 @@ class Gate:
                 raise RuntimeError(
                     f"{_http_error(e)} | request_bytes={len(payload)} "
                     f"| attempts={attempt}") from None
+
+    def _audio_capture(self, req: EffectRequest):
+        """Record from the microphone via ffmpeg (already on the host) to a wav in the
+        sandbox. subprocess lives inside the gate by design; ffmpeg is allowlisted and
+        args are a list, never a shell string. Windows dshow only for now."""
+        import platform
+        if platform.system() != "Windows":
+            raise NotImplementedError("mic capture is wired for Windows dshow only")
+        device = req.payload.get("device") or ""
+        seconds = int(req.payload.get("seconds", 5))
+        out = self.sandbox / "voice"
+        out.mkdir(parents=True, exist_ok=True)
+        wav = out / f"heard-{int(time.time()*1000)}.wav"
+        # If no device is configured, ask ffmpeg what audio inputs exist. Decode its
+        # output as UTF-8 explicitly - the default locale codec mangles characters
+        # like (R) in device names and then the name will not open. Prefer the ASCII
+        # "Alternative name" (@device_...), which sidesteps special-character issues
+        # entirely.
+        if not device:
+            probe = subprocess.run(
+                ["ffmpeg", "-hide_banner", "-list_devices", "true", "-f", "dshow",
+                 "-i", "dummy"], capture_output=True,
+                encoding="utf-8", errors="replace", timeout=20)
+            import re as _re
+            err = probe.stderr or ""
+            # ffmpeg prints each device as a "Name" (audio) line FOLLOWED by its
+            # Alternative name line. Walk the lines and, at the first audio device,
+            # take the alternative name on the next matching line - it is ASCII and
+            # opens reliably where the friendly name (with special chars) does not.
+            device, want_alt = "", False
+            for line in err.splitlines():
+                if _re.search(r'"[^"]+"\s*\(audio\)', line):
+                    m = _re.search(r'"([^"]+)"', line)
+                    device = m.group(1) if m else device   # friendly fallback
+                    want_alt = True
+                    continue
+                if want_alt:
+                    a = _re.search(r'Alternative name\s+"([^"]+)"', line)
+                    if a:
+                        device = a.group(1)
+                        break
+            if not device:
+                raise RuntimeError("no audio input device found by ffmpeg dshow")
+        r = subprocess.run(
+            ["ffmpeg", "-hide_banner", "-y", "-f", "dshow", "-i", f"audio={device}",
+             "-t", str(seconds), "-ar", "16000", "-ac", "1", str(wav)],
+            capture_output=True, encoding="utf-8", errors="replace",
+            timeout=seconds + 30)
+        if not wav.exists() or wav.stat().st_size < 1000:
+            raise RuntimeError(f"capture produced no audio: {(r.stderr or '')[-160:]}")
+        return {"wav": str(wav), "device": device, "seconds": seconds,
+                "bytes": wav.stat().st_size}
+
+    def _stt_transcribe(self, req: EffectRequest):
+        """Transcribe a wav using the faster-whisper model in the D: venv. Runs the
+        venv python (allowlisted) on the standalone helper; no network."""
+        venv = req.payload.get("venv_python", "")
+        script = req.payload.get("script", "")
+        wav = req.payload.get("wav", "")
+        model_dir = req.payload.get("model_dir", "")
+        if not (venv and script and wav):
+            raise RuntimeError("stt.transcribe needs venv_python, script, wav")
+        r = subprocess.run([venv, script, wav, model_dir],
+                           capture_output=True, text=True,
+                           timeout=float(req.payload.get("timeout", 180)))
+        line = (r.stdout or "").strip().splitlines()[-1] if r.stdout.strip() else ""
+        try:
+            return json.loads(line)
+        except Exception:
+            raise RuntimeError(f"transcriber gave no JSON: {(r.stderr or r.stdout)[-160:]}")
 
     def _os_task(self, req: EffectRequest):
         """Run one allowlisted OS task command (schtasks). Installing a supervised

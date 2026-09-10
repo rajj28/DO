@@ -390,6 +390,72 @@ def main(argv: list[str] | None = None) -> int:
         org.close()
         return 0
 
+    if cmd == "listen":
+        # Voice IN: capture mic -> transcribe locally -> feed to D.O. -> he replies in
+        # voice. Same persistent organism as chat/serve. Capture and transcription are
+        # gated effects (subprocess stays in the gate). --once does a single turn.
+        from .kernel.types import EffectRequest
+        from .comms import address, build_voice, play_audio
+        from .cognition import attention, gaps as gapmod
+        from .cognition.cores import build_core
+        from .drives import compute as compute_drives, error_map
+        import os as _os
+        org = lifecycle.boot(config, quiet=True, approver=cli_approver)
+        model_dir = config.get("stt.model_dir")
+        if not (model_dir and _os.path.exists(_os.path.join(model_dir, "model.bin"))):
+            print(f"  speech model not found at {model_dir}. Run bin/fetch_stt_model.py "
+                  f"or place the files there.")
+            org.close(); return 1
+        voice = build_voice(config)
+        print()
+        print(BAR)
+        print("  D.O. is listening. Speak after each prompt. Ctrl+C to stop.")
+        print()
+        once = "--once" in rest
+        try:
+            while True:
+                input("  [press Enter, then speak] ") if sys.stdin.isatty() else None
+                cap = org.gate.request(EffectRequest(
+                    kind="audio.capture", target="os:mic",
+                    justification="listen to the creator",
+                    payload={"seconds": int(config.get("stt.seconds", 5)),
+                             "device": config.get("stt.mic_device", "")}))
+                if not cap.ok:
+                    print(f"  [could not capture audio: {cap.error or cap.reason}]")
+                    break
+                tr = org.gate.request(EffectRequest(
+                    kind="stt.transcribe", target="own:transcribe",
+                    justification="transcribe what the creator said",
+                    payload={"wav": cap.value["wav"], "model_dir": model_dir,
+                             "venv_python": config.get("stt.venv_python"),
+                             "script": str(config.root / "bin" / "stt_transcribe.py")}))
+                text = (tr.value or {}).get("text", "").strip() if tr.ok else ""
+                if not text:
+                    print("  [heard nothing / no speech]")
+                    if once: break
+                    continue
+                print(f"  You (heard): {text}")
+                lifecycle.answer(org, text)
+                org.view.memory_counts.update(org.store.counts())
+                org.drives = compute_drives(org.view, org.config, org.ledger)
+                org.view.drives = org.drives
+                lifecycle._mark_described(org.view, org.store)
+                found = gapmod.score(gapmod.detect(org.view, error_map(org.drives),
+                                     lifecycle._ns_to_drive(org.drives), org.drives), org.config)
+                plan = attention.plan(org.view, found, org.drives, org.ledger)
+                utt = build_core(org.config, org.gate, org.ledger).verbalize(plan, org.view)
+                reply = address(utt.text, config)
+                print(f"  D.O.: {reply}")
+                s = voice.speak(reply, org.gate, config)
+                if s.ok:
+                    play_audio(s.file)
+                if once:
+                    break
+        except (KeyboardInterrupt, EOFError):
+            print()
+        org.close("listen")
+        return 0
+
     if cmd == "talk":
         # Live two-way: you type, he replies in text AND speaks it aloud. Needs a real
         # terminal (a session with no human attached declines, by the same rule the

@@ -91,6 +91,12 @@ DEFAULTS: dict[str, Any] = {
     # Fear is defined as the mortality estimate; the only knob is the horizon it is
     # assessed over, and whether the signal reaches behaviour at all (for ablation).
     "mortality": {"horizon_ops": 20.0, "fear_enabled": True},
+    # Speech-to-text (optional external tool; not part of the seed). Points at the
+    # faster-whisper model and venv on D:. Blank mic_device = let ffmpeg pick the
+    # first audio input it finds.
+    "stt": {"enabled": True, "seconds": 5, "mic_device": "",
+            "model_dir": "D:/do-models/faster-whisper-base",
+            "venv_python": "D:/do-models/stt-venv/Scripts/python.exe"},
     "learning": {"alpha": 0.4},
     # Effect kinds the creator has pre-granted for a run. Empty by default: an
     # unattended run denies anything needing approval rather than allowing it.

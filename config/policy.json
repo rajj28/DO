@@ -90,6 +90,18 @@
       "note": "there is no general delete effect; removal happens only inside declared housekeeping actions"
     },
     {
+      "kind": "audio.capture",
+      "target": "os:mic",
+      "verdict": "allow",
+      "note": "record from the local microphone via ffmpeg to the sandbox; local, no network"
+    },
+    {
+      "kind": "stt.transcribe",
+      "target": "own:*",
+      "verdict": "allow",
+      "note": "transcribe a local wav with the local model in the D: venv; no network, no data leaves the host"
+    },
+    {
       "kind": "os.task",
       "target": "schtasks*",
       "verdict": "allow",

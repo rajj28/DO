@@ -108,5 +108,12 @@
     "name": null,
     "channel": "text",
     "present": true
+  },
+  "stt": {
+    "enabled": true,
+    "seconds": 5,
+    "mic_device": "",
+    "model_dir": "D:/do-models/faster-whisper-base",
+    "venv_python": "D:/do-models/stt-venv/Scripts/python.exe"
   }
 }
