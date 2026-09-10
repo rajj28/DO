@@ -169,6 +169,7 @@ def serve(config, once: bool = False, quiet: bool = False) -> int:
               f"kill with `do kill`. Ctrl+C to stop.\n")
 
     started, cycle, notified_backoff = time.time(), 0, False
+    window = int(config.get("serve.budget_window_cycles", 120))
     reason = "stopped"
     try:
         while True:
@@ -184,6 +185,17 @@ def serve(config, once: bool = False, quiet: bool = False) -> int:
 
             cycle += 1
             _heartbeat(lock, cycle)
+
+            # Reset the metered budget each window. The per-boot cap is a safety limit
+            # for a single run; a 24/7 process needs it as a RATE limit instead, or
+            # curiosity and housekeeping would stop after ~200 effects and never
+            # resume. The cap still bounds each window - it is a rate, not a removal.
+            if window and cycle % window == 0:
+                org.gate.budget.effects = 0
+                org.gate.budget.network = 0
+                org.gate.budget.started = time.time()
+                org.ledger.append(EventType.HEARTBEAT,
+                                  {"event": "budget_window_reset", "cycle": cycle})
 
             # Hard floor: below this the loop cannot safely keep writing state.
             free = org.view.val("resources.disk.free_ratio")
@@ -209,6 +221,17 @@ def serve(config, once: bool = False, quiet: bool = False) -> int:
             r = lifecycle.cycle(org, quiet=True)
             for level, title, msg, data in notify_mod.assess(org, config):
                 notifier.notify(level, title, msg, data)
+
+            # Curiosity: when he investigated one of his own unknowns this cycle, tell
+            # you what he learned. This is how curiosity shows up in the live loop -
+            # not narrated by a harness, but pushed by the running organism itself.
+            out = r.get("outcome") or {}
+            if out.get("action") == "investigate_referent":
+                det = out.get("detail") or {}
+                if det.get("described"):
+                    notifier.notify(notify_mod.NOTABLE, "learned something",
+                                    f"I looked up {det.get('referent')} and now hold: "
+                                    f"{str(det.get('learned',''))[:160]}", det)
 
             if not quiet:
                 m = r.get("mortality") or {}

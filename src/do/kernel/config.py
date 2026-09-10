@@ -85,6 +85,7 @@ DEFAULTS: dict[str, Any] = {
     # max_cycles and max_seconds so a supervised task can never spin unbounded.
     "serve": {"interval_s": 30, "max_cycles": 0, "max_seconds": 0,
               "min_disk_free_ratio": 0.005, "backoff_s": 300,
+              "budget_window_cycles": 120,
               "voice_min_level": "critical",
               "fear_warning": 0.4, "fear_critical": 0.7, "drive_warning": 0.9},
     # Fear is defined as the mortality estimate; the only knob is the horizon it is
