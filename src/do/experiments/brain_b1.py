@@ -87,6 +87,56 @@ def run_one(world_name: str, model: str, seed: int, T: int) -> dict:
             "stats": {k: v for k, v in m.stats().items() if k != "fertility"}}
 
 
+def ideal_filter_bound(seed: int, T: int) -> dict:
+    """The best any observer of hidden_mode could do: the TRUE rules, with the hidden
+    mode inferred from all history by exact Bayesian filtering. The oracle sees the
+    mode itself, which no learner can, so this - not the oracle - is the ceiling for
+    learning. Returns excess bits/tick over the oracle, whole life and last 30%."""
+    w = WORLDS["hidden_mode"](seed)
+    belief, total, tail = 0.5, 0.0, 0.0
+    for t in range(T):
+        a = w.policy()
+        truth = w.oracle(a)
+        pm = belief * (1 - w.FLIP) + (1 - belief) * w.FLIP
+        po = pm * w.FID + (1 - pm) * (1 - w.FID)
+        nxt = w.step(a)
+        e = 0.0
+        for o in ("o1", "o2", "o3"):
+            q = po if nxt[o] == 1 else 1 - po
+            e += -math.log2(q) + math.log2(truth[o][nxt[o]])
+        total += e
+        if t >= 0.7 * T:
+            tail += e
+        l1, l0 = pm, 1 - pm
+        for o in ("o1", "o2", "o3"):
+            l1 *= w.FID if nxt[o] == 1 else 1 - w.FID
+            l0 *= (1 - w.FID) if nxt[o] == 1 else w.FID
+        belief = l1 / (l1 + l0)
+    return {"excess": round(total / T, 4), "excess_tail": round(tail / (T - int(0.7 * T)), 4)}
+
+
+def verdicts(summary: dict) -> dict:
+    """Apply B1's own falsifier per world: the brain must beat the best non-brain model
+    (every baseline plus brain_flat, i.e. logistic regression) on excess bits."""
+    out = {}
+    for w, ms in summary.items():
+        if "brain" not in ms:
+            continue
+        rivals = {m: s for m, s in ms.items() if not m.startswith("brain") or m == "brain_flat"}
+        if not rivals:
+            continue
+        b = ms["brain"]
+        best_all = min(rivals, key=lambda m: rivals[m]["excess"])
+        best_tail = min(rivals, key=lambda m: rivals[m]["excess_tail"])
+        out[w] = {
+            "whole_life": "SUPPORTED" if b["excess"] < rivals[best_all]["excess"]
+            else f"FALSIFIED (best rival {best_all} {rivals[best_all]['excess']} vs brain {b['excess']})",
+            "after_learning": "SUPPORTED" if b["excess_tail"] < rivals[best_tail]["excess_tail"]
+            else f"FALSIFIED (best rival {best_tail} {rivals[best_tail]['excess_tail']} vs brain {b['excess_tail']})",
+        }
+    return out
+
+
 def run(config=None, T: int = 3000, seeds=(0, 1, 2, 3, 4), models=None, worlds=None,
         out: Path | None = None) -> int:
     models = models or list(BASELINES) + list(BRAINS)
@@ -108,10 +158,19 @@ def run(config=None, T: int = 3000, seeds=(0, 1, 2, 3, 4), models=None, worlds=N
 def write_report(rows: list[dict], T: int, seeds: list, out: Path | None) -> dict:
     summary = summarize(rows)
     print_table(summary)
+    verdict = verdicts(summary)
+    bound = {s: ideal_filter_bound(s, T) for s in seeds}
+    print("\nB1 falsifier (brain must beat every non-brain model, incl. logistic):")
+    for w, v in verdict.items():
+        print(f"   {w:12s} whole life: {v['whole_life']}\n   {'':12s} after learning: "
+              f"{v['after_learning']}")
+    print("hidden_mode ideal-filter bound (excess, last 30%):",
+          [b["excess_tail"] for b in bound.values()])
     if out is not None:
         out.mkdir(parents=True, exist_ok=True)
         (out / "results.json").write_text(json.dumps(
             {"protocol": __doc__.strip(), "T": T, "seeds": seeds,
+             "verdicts": verdict, "hidden_mode_ideal_filter": bound,
              "summary": summary, "runs": rows}, indent=1))
     return summary
 

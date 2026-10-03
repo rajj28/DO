@@ -133,8 +133,9 @@ unlock the same values. Consequences:
 - storage cost is proportional to surprise;
 - the record only decodes with the brain that wrote it (tested: a brain with one
   different parameter reads garbage);
-- **frugality and intelligence become one objective.** A smarter brain keeps a smaller
-  record of its life.
+- **frugality and intelligence could become one objective.** If D.O.'s ledger were
+  stored this way (milestone B6, not built), a smarter brain would keep a smaller record
+  of its life. Today the organism's frugality drive still measures plain bytes on disk.
 
 This depends on determinism: the cortex makes no decision that depends on set iteration
 order or wall-clock time.
@@ -223,17 +224,28 @@ regression over every lagged symbol (the brain with growth, rent and recall swit
 
 Brain size versus flat, in units: conjunction 213 vs 648 · delayed 128 vs 192 ·
 distractors 440 vs 1,848 · hidden_mode 164 vs 306 · rule_change 125 vs 255 ·
-habitat 199 vs 1,200. **The brain is 1.5–9× smaller.**
+habitat 199 vs 1,200. **The brain is 1.5–6× smaller.**
 
 **Reading it honestly:**
 
-- **Against all five classic baselines, the brain wins in every world**, usually by
-  2–25×. The v1 design (Hebbian / Rescorla–Wagner, with its readout tuned in its
-  favour) is worse than counting frequencies in four of six worlds.
+- **Against all five classic baselines, the brain wins in every world**: by 1.2–9.6×
+  over the whole life (hidden_mode is the narrowest at 1.2×), and by more after
+  learning. The v1 design (Hebbian / Rescorla–Wagner, with its readout tuned in its
+  favour) is worse than plain frequency counting on XOR and worse than Markov-1 in three
+  of six worlds.
 - **Against logistic regression, the brain wins where structure is conjunctive or
-  delayed**, by 13× on XOR and 2.6× on delay after learning, and ties on distractors and
-  rule change. **It loses on hidden_mode** (0.36 vs 0.23) and loses on habitat over the
-  whole life (it learns slower early) while winning after learning (0.51 vs 0.56).
+  delayed**, by 13× on XOR and 2.6× on delay after learning, and narrowly on
+  distractors. **It loses on hidden_mode** (0.36 vs 0.23), loses on habitat over the
+  whole life (it learns slower early) while winning after learning (0.51 vs 0.56), and
+  loses rule_change by a hair (0.124 vs 0.111 whole life, 0.0244 vs 0.0233 after
+  learning).
+- **B1's own falsifier, applied in code** (`verdicts` in `results.json`: the brain must
+  beat every non-brain model, logistic regression included): **SUPPORTED in 3 of 6
+  worlds over the whole life** (conjunction, delayed, distractors) and **4 of 6 after
+  learning** (plus habitat); **FALSIFIED on hidden_mode and rule_change** in both, and
+  on habitat over the whole life. Several ablations also match the full brain within
+  noise (rupture and generalization on most worlds), so those two mechanisms are only
+  shown to matter where §4.2 says they do.
 - **Discovered structure, read straight out of `explain()`:**
   - `{a=0@0, b=0@0} → y=0` (p 0.92): the XOR rule, found exactly.
   - `clock=0@2 → cpu=high`: the timing of a backup it cannot see.
@@ -281,8 +293,9 @@ the hidden state (oracle bits plus the action entropy). No method can beat it.
 **D.O.'s life, stored as its brain's residuals, lands within 0.7–11.6% of the
 theoretical minimum.** The best general-purpose compressor sits 24–111% above it. The
 brain's record is 1.2–1.9× smaller than the best general compressor even with the fair
-packed input, and 48–96× smaller than raw JSON. Encode and decode each run at about
-1,000 ticks/s in pure Python.
+packed input, and 48–96× smaller than raw JSON. The floor and both percentages are
+computed by the harness and stored in `results.json`. Encode and decode run at roughly
+550–3,300 ticks/s in pure Python, depending on the world and machine load.
 
 ---
 
@@ -290,9 +303,11 @@ packed input, and 48–96× smaller than raw JSON. Encode and decode each run at
 
 Stated as plainly as the wins.
 
-1. **Hidden causes are not solved.** On hidden_mode the brain reaches 0.36 bits/tick
-   after learning. Logistic regression reaches 0.23. The *ideal Bayesian filter* (the true
-   rules, with the mode inferred from all history) reaches **~0.09**. A 3-tick window of
+1. **Hidden causes are not solved.** On hidden_mode the brain reaches 0.36 excess
+   bits/tick after learning. Logistic regression reaches 0.23. The *ideal Bayesian
+   filter* (the true rules, with the mode inferred from all history) reaches **~0.09**
+   (mean of the 5 seeds, computed by `brain_b1.ideal_filter_bound` and stored in
+   `results.json` as `hidden_mode_ideal_filter`). A 3-tick window of
    conjunctions is not a belief state. This is the main open problem, and the next
    milestone targets it directly (§7, B3).
 2. **Inner senses did not work.** Feeding the brain's own discretized expectations back

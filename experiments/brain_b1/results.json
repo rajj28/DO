@@ -8,6 +8,54 @@
   3,
   4
  ],
+ "verdicts": {
+  "conjunction": {
+   "whole_life": "SUPPORTED",
+   "after_learning": "SUPPORTED"
+  },
+  "delayed": {
+   "whole_life": "SUPPORTED",
+   "after_learning": "SUPPORTED"
+  },
+  "distractors": {
+   "whole_life": "SUPPORTED",
+   "after_learning": "SUPPORTED"
+  },
+  "hidden_mode": {
+   "whole_life": "FALSIFIED (best rival brain_flat 0.3041 vs brain 0.3992)",
+   "after_learning": "FALSIFIED (best rival brain_flat 0.2302 vs brain 0.3602)"
+  },
+  "rule_change": {
+   "whole_life": "FALSIFIED (best rival brain_flat 0.111 vs brain 0.1237)",
+   "after_learning": "FALSIFIED (best rival brain_flat 0.0233 vs brain 0.0244)"
+  },
+  "habitat": {
+   "whole_life": "FALSIFIED (best rival brain_flat 0.8355 vs brain 0.9201)",
+   "after_learning": "SUPPORTED"
+  }
+ },
+ "hidden_mode_ideal_filter": {
+  "0": {
+   "excess": 0.1004,
+   "excess_tail": 0.1048
+  },
+  "1": {
+   "excess": 0.0948,
+   "excess_tail": 0.1139
+  },
+  "2": {
+   "excess": 0.078,
+   "excess_tail": 0.0537
+  },
+  "3": {
+   "excess": 0.0865,
+   "excess_tail": 0.0741
+  },
+  "4": {
+   "excess": 0.1034,
+   "excess_tail": 0.1022
+  }
+ },
  "summary": {
   "conjunction": {
    "marginal": {

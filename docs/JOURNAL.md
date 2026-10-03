@@ -362,17 +362,24 @@ and die when they stop paying.
    rent, and fertility as a measured success rate made the brain 5–15× smaller at equal
    accuracy. Rupture detection cut rule-change excess 3×.
 5. *Hidden mode stayed bad.* The hypothesis that rupture was misfiring was wrong (it
-   never fired there). The ideal Bayesian filter bound was computed (0.09), and inner
+   never fired there). The ideal Bayesian filter bound was computed (0.09; now in code as
+   `brain_b1.ideal_filter_bound`), and inner
    senses (feeding expectations back as input) were tried twice: **worse.** Switching
    rent from a tax to a mortgage helped a little; a dense innate first-order layer fixes
    it at 2–7× the units. Neither closes the gap. Reported as the open problem.
 
 **Results** (5 seeds × 3,000 ticks × 6 worlds):
 
-- B1: the brain beats all five classic baselines in every world, usually by 2–25×.
-  It beats logistic regression by 13× on XOR and 2.6× on delayed effects after
-  learning, ties on distractors and rule change, and **loses on hidden_mode** (0.36 vs
-  0.23). It is 1.5–9× smaller than logistic regression.
+- B1: the brain beats all five classic baselines in every world (1.2–9.6× over the
+  whole life). It beats logistic regression by 13× on XOR and 2.6× on delayed effects
+  after learning, and **loses on hidden_mode** (0.36 vs 0.23). Applied in code, B1's own
+  falsifier is SUPPORTED in 3/6 worlds over the whole life and 4/6 after learning, and
+  FALSIFIED on hidden_mode and (by a hair) rule_change. It is 1.5–6× smaller than
+  logistic regression.
+- *Correction:* the first write-up said "1.5–9× smaller", "usually by 2–25×" and "v1 is
+  worse than counting frequencies in four of six worlds". The README review recomputed
+  them from `results.json`: 1.5–6×, 1.2–9.6×, and v1 is worse than frequency counting
+  only on XOR (worse than Markov-1 in three of six).
 - B2: the life stored as arithmetic-coded residuals of the brain is **0.7–11.6% above
   the entropy floor**. The best general compressor is 24–111% above it, even when given
   one byte per value. Replay is bit-exact in all six worlds.

@@ -21,6 +21,7 @@ import bz2
 import gzip
 import json
 import lzma
+import math
 import time
 from pathlib import Path
 
@@ -28,18 +29,26 @@ from ..brain import codec
 from ..brain.worlds import WORLDS
 
 
-def record(world_name: str, seed: int, T: int) -> tuple[list[dict], list, object]:
+def record(world_name: str, seed: int, T: int) -> tuple[list[dict], list, object, float]:
+    """Returns the life plus its entropy floor in bits: the oracle's code length for
+    every frame (it sees the hidden state) plus the entropy of the action policy. No
+    codec can beat this on average."""
     w = WORLDS[world_name](seed)
     frames, actions = [w.observe()], []
+    h_act = -sum(p * math.log2(p) for p in w.action_probs if p > 0)
+    floor = 0.0
     for _ in range(T):
         a = w.policy()
+        truth = w.oracle(a)
         actions.append(a)
         frames.append(w.step(a))
-    return frames, actions, w
+        floor += h_act + sum(-math.log2(truth[v][vals.index(frames[-1][v])])
+                             for v, vals in w.variables.items())
+    return frames, actions, w, floor
 
 
 def measure(world_name: str, seed: int = 0, T: int = 3000) -> dict:
-    frames, actions, w = record(world_name, seed, T)
+    frames, actions, w, floor_bits = record(world_name, seed, T)
     lines = [json.dumps({"t": t, "act": actions[t - 1] if t else None, **f},
                         separators=(",", ":")) for t, f in enumerate(frames)]
     raw = ("\n".join(lines) + "\n").encode()
@@ -62,7 +71,11 @@ def measure(world_name: str, seed: int = 0, T: int = 3000) -> dict:
              "packed_xz_9e": len(lzma.compress(packed, preset=9 | lzma.PRESET_EXTREME)),
              "brain": len(blob)}
     best_general = min(v for k, v in sizes.items() if k not in ("raw_jsonl", "brain"))
+    floor = floor_bits / 8
     return {"world": world_name, "seed": seed, "ticks": T, "bytes": sizes,
+            "floor_bytes": round(floor),
+            "brain_above_floor_pct": round(100 * (sizes["brain"] / floor - 1), 1),
+            "best_general_above_floor_pct": round(100 * (best_general / floor - 1), 1),
             "exact_replay": f2 == frames and a2 == actions,
             "ratio_vs_raw": round(sizes["raw_jsonl"] / sizes["brain"], 1),
             "ratio_vs_best_general": round(best_general / sizes["brain"], 2),
@@ -79,7 +92,9 @@ def run(config=None, T: int = 3000, seed: int = 0, out: Path | None = None) -> i
         b = r["bytes"]
         print(f"{name:12s} {b['raw_jsonl']:8d} {b['gzip_9']:7d} {b['xz_9e']:7d} "
               f"{b['packed_bz2_9']:7d} {b['packed_xz_9e']:7d} {b['brain']:7d}  "
-              f"{r['ratio_vs_best_general']:5.2f}x  {r['exact_replay']}", flush=True)
+              f"{r['ratio_vs_best_general']:5.2f}x  {r['exact_replay']}  floor "
+              f"{r['floor_bytes']} (+{r['brain_above_floor_pct']}% vs "
+              f"+{r['best_general_above_floor_pct']}%)", flush=True)
     if out is None and config is not None:
         out = config.root / "experiments" / "brain_memory"
     if out is not None:

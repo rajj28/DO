@@ -2,7 +2,9 @@
 
 D.O. is a research prototype: a long-lived Python process with a persistent identity,
 nine homeostatic drives, an explicit register of what he does not know, and exactly one
-gated path to any side effect. What he says comes from what he measures, through a fixed
+gated path to the network, to subprocesses and to sandboxed file effects (his own
+bookkeeping writes under `var/` and `experiments/` are ordinary file I/O and are not
+gated). What he says comes from what he measures, through a fixed
 chain (measurement → drive error → gap priority → attention → speech act → utterance) in
 which every step is written to a hash-chained ledger. A separate research component, the
 brain in `src/do/brain/`, predicts the next frame of a world and is scored in bits. It
@@ -110,8 +112,10 @@ artifacts: <repo>/experiments/first_boot  (99 events this boot)
 ```
 
 On that container the binding constraint was his own lack of recovery paths, because no
-snapshot existed yet. On the author's Windows host, with about 2.3% free disk, boots
-flagged the disk instead (see [Experiments and results](#experiments-and-results)).
+snapshot existed yet. On the author's Windows host (about 2.3% free disk) the genesis
+boot flagged the disk; later boots on the same host, for example boot #28 in
+`experiments/first_boot/latest/`, flagged his own footprint instead (see
+[Experiments and results](#experiments-and-results)).
 Later boots print `D.O. UTTERANCE (boot #N)` instead of `FIRST UTTERANCE`.
 
 After the utterance, the interactive session opens, but only if stdin is a terminal and
@@ -127,14 +131,17 @@ come after the command.
   **Both locations are tracked in git**, so the first `do boot` on a fresh clone
   overwrites the committed genesis record. `git checkout -- experiments/first_boot`
   restores it. `do chat` boots without writing artifacts.
-- **Every command that boots is a new life.** These commands boot: `boot`, `chat`,
-  `tick`, `status`, `gaps`, `memory`, `capabilities`, `habitat`, `listen`, `talk`,
-  `reply`, `say`, `serve`, `install-service` and `uninstall-service`. Each one
-  increments the boot index, appends BOOT … SHUTDOWN events to the ledger, writes a
-  snapshot, and makes two DNS lookups (`one.one.one.one`, then `example.com`) through
-  the gate. `help`, `why`, `events`, `verify`, `outbox`, `kill`, `resume` and `reset`
-  do not boot. As a result, `do why` shows the decisions of whichever command booted
-  last.
+- **Every command that boots is a new boot of the same organism.** These commands
+  boot: `boot`, `chat`, `tick`, `status`, `gaps`, `memory`, `capabilities`, `habitat`,
+  `listen`, `talk`, `reply`, `say`, `serve`, `install-service` (except with `--dry-run`
+  or when the y/N prompt is declined) and `uninstall-service`. Each one increments the
+  boot index, appends BOOT … SHUTDOWN events to the ledger, writes a snapshot, and makes
+  one `net.dns` lookup through the gate (`one.one.one.one`; `example.com` is tried only
+  if that fails). `help`, `why`, `events`, `verify`, `outbox`, `kill`, `resume` and
+  `reset` do not boot. `do experiment` boots the real organism for `first-boot` (twice),
+  `live-internet`, `explore` and `survival`; `h4` and `fear` boot only isolated
+  organisms under their own `trials/` directories; `brain` and `brain-memory` do not
+  boot. As a result, `do why` shows the decisions of whichever command booted last.
 
 ### Where state lives
 
@@ -147,7 +154,7 @@ Everything below is under `organism.state_dir` (default `var/`). Both `var/` and
 | `var/ledger.jsonl` | The live, append-only, hash-chained event log |
 | `var/ledger.segNNN.jsonl.gz` | Sealed, gzipped ledger segments created by the `rotate_ledger` action |
 | `var/memory.db` | sqlite: memories, relations, gaps, drives, objectives, boots, habitats, calibration, action outcomes, capability roster and census |
-| `var/snapshots/<boot_id>.json` | Self-model and world-model snapshot, one per boot (these are his recovery paths) |
+| `var/snapshots/` | `<boot_id>.json` (self- and world-model snapshot, one per boot) and `recovery-<unix_ts>.json` (written by `write_recovery_snapshot`). Every `*.json` here counts as a recovery path. |
 | `var/sandbox/` | The only place `fs.read`/`fs.write` effects may touch. `var/sandbox/voice/` holds synthesized and captured audio. |
 | `var/KILL` | The kill-switch file, if engaged |
 | `var/serve.lock` | Single-instance lock for `do serve` (`{pid, heartbeat, started, cycle}`) |
@@ -172,7 +179,7 @@ memory. Closing a session does not end him. The next boot resumes the same histo
 | One turn | `do reply <message> [--speak]` | no | with `--speak` | all; speech on Windows only |
 | Inbox | append a line to `var/inbox.txt`, or double-click `bin/talk-to-do.vbs` | no | yes, by a running `do serve` | inbox: all; `.vbs`: Windows |
 | Voice in | `do listen [--once]` | Enter prompt when on a terminal | yes | Windows only |
-| Speak a line | `do say [text]` | no | yes (it speaks the text as written; it does not answer it) | Windows only |
+| Speak a line | `do say [text]` | no | yes (it speaks the given text, prefixed with `creator.title`; it does not answer it) | Windows only |
 
 ### The interactive session
 
@@ -308,7 +315,8 @@ What it does:
    logged. This turns the per-boot cap into a rate limit.
 5. **Disk floor.** If host free disk falls below `serve.min_disk_free_ratio` (0.005), it
    sends one CRITICAL "disk critically low" notification, sleeps `serve.backoff_s`
-   (300 s), re-observes, and continues.
+   (300 s), then runs one full `cycle()` (which may act) without draining the inbox,
+   sending notifications or printing, and repeats.
 6. **Inbox.** At the start of each normal cycle it drains `var/inbox.txt`. Each line is
    answered (answer → re-derive → verbalize → conversation layer), written to the outbox
    as a NOTABLE `reply`, and spoken regardless of the voice threshold. Messages left
@@ -444,7 +452,7 @@ and exits with code 2.
 | Command | Boots | What it does |
 |---|---|---|
 | `do serve [--interval S] [--max-cycles N] [--once]` | yes (once) | The always-on `cycle()` loop. |
-| `do install-service [--dry-run]` | yes | Windows logon task `D.O.` running `serve`. |
+| `do install-service [--dry-run]` | yes (not with `--dry-run`) | Windows logon task `D.O.` running `serve`. |
 | `do uninstall-service` | yes | `schtasks /Delete /TN D.O. /F` through the gate. |
 
 ### Safety and state
@@ -467,6 +475,10 @@ and exits with code 2.
 | `do experiment survival` | `survival-loop` | survival-loop protocol (H3′, H7, MAPE-based H4, live run) |
 | `do experiment brain` | `brain-b1`, `b1` | B1: brain vs traditional predictors |
 | `do experiment brain-memory` | `memory`, `b2` | B2: a life stored as the brain's residuals |
+
+`--full` is accepted but currently unused: `first_boot.run()` ignores it. Note that
+`do experiment memory` runs B2, not the `do memory` command, and that an unrecognised
+experiment name silently runs the first-boot protocol.
 
 A typo such as `do experiment fera` silently runs the first-boot protocol.
 `do experiment memory` runs B2, not the `do memory` command.
@@ -616,7 +628,11 @@ he cannot affect. Frugality is his own consumption, which he can.
 − 0.05·denials, 0, 1). It rises by 0.05 when a creator's statement resolves a gap and by
 0.05 when an objective is met. The docstring says he cannot raise it himself, but the
 formula counts every resolved gap and `cycle()` adds 0.05 when he meets an objective by
-his own action.
+his own action. `docs/DO_CONCEPT.md` §D says standing falls on false claims and wasted
+budget and that he suspends himself at zero; neither is implemented. Standing rises by
+itself with each boot and only this boot's denials lower it. The other survival pressure
+§D adopts, a budget that is never refilled, is refilled every 120 cycles under
+`do serve`.
 
 ### Salience: how gaps are ranked
 
@@ -776,8 +792,6 @@ new code. D.O. has never written code.
 - `docs/DO_EXPERIMENTS.md` reports one composed procedure,
   `resolve:frugality:diagnose_footprint+clear_experiment_matrix`. No committed results
   file shows it.
-- In the 3-cycle scratch `do serve` run above, `do capabilities` then listed
-  `resolve:comprehension:investigate_referent` as acquired.
 - `growth.py`'s docstring still says acquisition "is 0 and will stay 0".
 
 ---
@@ -842,8 +856,8 @@ unlock identical values. Consequences:
 - storage cost is proportional to surprise;
 - the record decodes only with the brain that wrote it (tested: a different `half_life`
   reads garbage);
-- a better predictor keeps a smaller record, so frugality and intelligence become one
-  objective;
+- if D.O.'s ledger were stored this way (milestone B6, not built), a better predictor
+  would keep a smaller record, making frugality and prediction one objective;
 - it depends on determinism. The cortex makes no decision that depends on set iteration
   order or wall-clock time.
 
@@ -855,6 +869,17 @@ before the outcome is seen, and every model sees the identical stream. The metri
 including hidden state. The run covers 13 models × 6 synthetic worlds × 5 seeds × 3,000
 ticks (390 runs, 861.7 s ≈ 14.4 min serial in `results.json`). B1 is falsified if the
 brain does not beat the best baseline, or if its ablations match it.
+
+**B1's falsifier, applied in code** (`verdicts` in `results.json`; the rivals are every
+baseline plus flat pooling, i.e. online logistic regression): **SUPPORTED** over the whole
+life in 3 of 6 worlds (conjunction, delayed, distractors) and after learning in 4 of 6
+(plus habitat). **FALSIFIED** on hidden_mode (0.399 vs flat 0.304 whole life; 0.360 vs
+0.230 after learning), on rule_change by a hair (0.124 vs 0.111; 0.0244 vs 0.0233), and
+on habitat over the whole life (0.920 vs 0.836). Against every counting baseline and v1
+it is supported in all six worlds. Several ablations match the full brain within noise
+(removing generalization is identical on rule_change; removing rupture or generalization
+barely moves distractors), so those mechanisms are only shown to matter where the
+ablation table says they do.
 
 | World | Hidden structure |
 |---|---|
@@ -883,8 +908,7 @@ joint table.
 
 Units held, brain vs flat: conjunction 213 vs 648 · delayed 128 vs 192 · distractors 440
 vs 1,848 · hidden_mode 164 vs 306 · rule_change 125 vs 255 · habitat 199 vs 1,200. That is
-1.5–6.0× fewer units. (`docs/BRAIN.md` says "1.5–9×". The stored unit counts support
-1.5–6.0×.)
+1.5–6.0× fewer units.
 
 Reading it honestly:
 
@@ -926,9 +950,10 @@ input of one byte per value. B2 is falsified if the brain's record is not smalle
 the best general compressor, or if replay is not exact. The command exits 1 on any
 inexact replay.
 
-Bytes, from `experiments/brain_memory/results.json`. "Floor" is the seed-0 oracle bits
-plus the true action-policy entropy. It comes from `docs/BRAIN.md`, is not stored in
-`results.json`, and is a lower bound for per-variable (factored) coders.
+Bytes, from `experiments/brain_memory/results.json`. "Floor" is the oracle's code length for
+every frame (it sees the hidden state) plus the true action-policy entropy, computed by
+the harness and stored per world as `floor_bytes`. It is a lower bound for per-variable
+(factored) coders.
 
 | World | raw JSON | gzip −9 | xz −9e | best packed (bz2/xz) | **brain** | floor | brain above floor | best general above floor | exact replay |
 |---|---|---|---|---|---|---|---|---|---|
@@ -942,13 +967,16 @@ plus the true action-policy entropy. It comes from `docs/BRAIN.md`, is not store
 Stored as the brain's residuals, the life lands 0.7–11.6% above the floor. The best
 general-purpose compressor lands 24–111% above it. The brain's record is 1.23–1.89×
 smaller than the best general compressor and 47.5–95.9× smaller than raw JSON. Encode and
-decode timings in `results.json` imply about 580–3,260 ticks/s in pure Python.
+decode timings in `results.json` imply roughly 550–3,300 ticks/s in pure Python (across two
+runs; timings vary with machine load).
 
 ### Negative results and open problems
 
-1. **Hidden causes are not solved.** On hidden_mode the brain reaches 0.36 bits/tick
-   after learning and flat pooling reaches 0.23. `docs/BRAIN.md` gives about 0.09 for an
-   ideal Bayesian filter; no code in the repo computes that bound. A 3-tick window of
+1. **Hidden causes are not solved.** On hidden_mode the brain reaches 0.36 excess
+   bits/tick over the oracle after learning, and flat pooling reaches 0.23. An ideal
+   Bayesian filter (true rules, mode inferred from all history) reaches about 0.09
+   (mean of 0.105, 0.114, 0.054, 0.074, 0.102 over the 5 seeds, computed by
+   `brain_b1.ideal_filter_bound` and stored as `hidden_mode_ideal_filter`). A 3-tick window of
    conjunctions is not a belief state.
 2. **Inner senses did not work.** Feeding the brain's own discretized expectations back as
    input made hidden_mode worse (0.440 vs 0.399). The code is kept as `beliefs=True`,
@@ -1001,7 +1029,8 @@ The brain imports only `math`, `random` and `collections`. It cannot reach the w
 the existing invariant tests check that. Prior art it builds on, credited in
 `docs/BRAIN.md` §3: MC-AIXI-CTW, context mixing / PAQ, compression progress, predictive
 state representations, clone-structured cognitive graphs, latent-cause inference, MDL,
-and emerging patterns. The claimed novelty is the combination, and it is stated as what a
+emerging patterns, and the Artificial Agency Program (Csaky, Feb 2026), which
+`docs/BRAIN.md` describes as the same spirit without an implementation of this kind. The claimed novelty is the combination, and it is stated as what a
 search found, not as proof that nobody has done it.
 
 ---
@@ -1027,8 +1056,9 @@ under `probe.<name>`: a failed probe is data, not a crash.
   (REPORTED, "a number a human chose"), snapshot count and recovery paths. The breakdown
   into 8 components is UNKNOWN until `diagnose_footprint` runs.
 - **Habitat** (`self.habitat.*`).
-- **Network**: `probe_network` resolves `one.one.one.one`, then `example.com`, through the
-  gate as `net.dns` (timeout 3 s) and records `world.network.reachable`.
+- **Network**: `probe_network` resolves `one.one.one.one` through the gate as `net.dns`
+  (timeout 3 s), falls back to `example.com` only if that fails, and records
+  `world.network.reachable`.
 - **Five structural unknowns** that no local probe can fill are declared UNKNOWN:
   `user.identity`, `user.intent`, `self.purpose`, `self.expected_lifetime`, and
   `world.network.reachable` until it is probed.
@@ -1302,7 +1332,8 @@ example `var/sandbox_x/`) passes it. The test tries only `../../escaped.txt`.
   `secrets.env`.
 - `docs/JOURNAL.md` records two past incidents in which keys reached a session transcript
   and `.env.example` before any commit, and says both keys need rotating. A scan of the
-  working tree and all 23 commits with the hook's patterns found no credential values.
+  working tree and the full git history (24 commits as of 2026-10-03) with the hook's
+  patterns found no credential values.
 - `experiments/first_boot/environment.json` and `…/latest/environment.json` are committed.
   They contain environment variable **names** (no values) and local paths.
   `docs/JOURNAL.md` says these names must be scrubbed before anything is made public.
@@ -1324,30 +1355,41 @@ chmod +x .githooks/pre-commit
 
 Not present, by design: self-modification of running code (he cannot write to `src/`),
 arbitrary process execution, replication, economic agency (no payment credentials, no
-purchases, no accounts), and credential acquisition. Escalation gates G1–G5 in
-`docs/SAFETY.md` §6 state what must be demonstrated before autonomy widens.
+purchases, no accounts), and credential acquisition. One exception to "no spending":
+`tts.speak` (ElevenLabs, paid) is allowed without approval, so with that provider
+configured an unattended `do serve` spends the creator's credits on every inbox reply and
+on every CRITICAL alert (which repeats each cycle), bounded only by the effect budget.
+
+Escalation gates G1–G5 in `docs/SAFETY.md` §6 state what must be demonstrated before
+autonomy widens. **None has been passed.** Two capabilities already exceed what those
+gates allow: unattended operation (`do serve`, `install-service`), which G4 covers, and
+autonomous web reads (`investigate_referent` via `web.investigate`, allowed without
+approval and with no per-domain rate limit), which G2 covers. The Phase 4 SOURCE_TRUST
+injection gate has not been run either.
 
 ---
 
 ## Experiments and results
 
-Every experiment states a falsification condition. The first-boot harness (including its
+Every experiment except `explore` (which calls itself exposure) states a falsification
+condition. The B1 harness now applies its own falsifier in code; the E1–E5 pass bars are
+minimal (for example, E3 passes if any constraint is found). The first-boot harness (including its
 LLM arm) and the live-internet harness also run integrity gates in code that refuse to
 emit a verdict from a contaminated or offline run (exit code 2). Failures are reported as
 prominently as successes.
 
 | Command | Question | Verdict / headline | Results |
 |---|---|---|---|
-| `do experiment first-boot` (reflex core) | H1a: does utterance content vary with state? H1b: does attention re-target? H2: does persisted uncertainty change behaviour? H5: does he find his own binding constraint? | H1a **SUPPORTED** (0/11 identical) · H1b **WEAK** (0/6 family A, 2/5 family B) · H2 **SUPPORTED** (boot #2 carries 37 gaps) · H5 **SUPPORTED** · deterministic | `experiments/first_boot/matrix_reflex.json` |
+| `do experiment first-boot` (reflex core) | H1a: does utterance content vary with state? H1b: does attention re-target? H2: does persisted uncertainty change behaviour? H5: does he find his own binding constraint? | H1a **SUPPORTED** (0/11 identical) · H1b **WEAK** (0/6 family A, 2/5 family B) · H1 overall (H1a ∧ H1b) **WEAK**: `docs/FIRST_BOOT.md` reports "H1 is not supported" · H2 **SUPPORTED** (boot #2 carries 36 gaps forward and opens 1 new) · H5 **SUPPORTED** · deterministic | `experiments/first_boot/matrix_reflex.json` (committed copy of a reflex run; the command itself writes `matrix.json` and `RESULTS.md`) |
 | `do experiment first-boot --core llm --provider groq --approve llm.generate` | Same matrix, with an LLM as the surface realizer | H1a **WEAK** (2/11 identical) · H1b **WEAK** · H2, H5 **SUPPORTED** · determinism **DIVERGED** | `experiments/first_boot/RESULTS.md`, `matrix.json`, `matrix_llm.json`; `docs/LLM_COMPARISON.md` |
-| (no command; observed with `do tick 4`) | H3: do drives generate goals with no human present? | **FALSIFIED** in v0.1 (the loop re-selected an unactionable gap), then **fixed** in v0.2 by agency, escalation and derived objectives | `docs/JOURNAL.md` M3, M4, M6 |
+| (no command; observed with `do tick 4`) | H3: do drives generate goals with no human present? | **FALSIFIED** in v0.1 (the loop re-selected an unactionable gap), then addressed in v0.2 by agency, escalation and derived objectives. One controlled run met its goal in 2 cycles (M6); the H3′ re-test (`do experiment survival`) has no committed results, and blocked or idle cycles still occur | `docs/JOURNAL.md` M3, M4, M6 |
 | `python -m unittest tests.test_invariants` | H6: is the effector gate unbypassable? | **SUPPORTED** (static AST test) | `tests/test_invariants.py` |
 | `do experiment h4 [runs]` | H4a: does experience change the decision? H4b: does that improve the outcome? | **PARTIAL**: H4a **SUPPORTED** (`rotate_ledger` rank 2 → 1 in the learning arm only) · H4b **NOT SUPPORTED** (3 actions and goal unmet in every run of both arms) | `experiments/h4_learning/results.json` |
-| `do experiment fear` | Does the continuity signal change decisions, or only language? | **SUPPORTED** (second pass; the first pass was COSMETIC) | `experiments/fear_ablation/results.json` (+ `trials/`) |
+| `do experiment fear` | Does the continuity signal change decisions, or only language? | **SUPPORTED** (second pass; the first pass was COSMETIC) | `experiments/fear_ablation/results.json` |
 | `do experiment live-internet --approve net.http` | E1–E5: perceive, inventory, constrain, form a goal, acquire a fact | **all PASS**, integrity VALID | `experiments/live_internet/results.json`, `first_live_utterance.txt` |
 | `do experiment explore --approve net.http` | Driven by his own curiosity, can he describe his unknowns online? | 1 of 6 referents described, and that hit was an unrelated article (below). Comprehension 0.0 → 0.032. | `experiments/explore/results.json` |
 | `do experiment survival` | H3′ (`tick()` vs `cycle()`), H7 (does acting relieve the drive?), H4 by prediction error with a calibration wipe; its last step runs 6 `cycle()`s on the real organism | **no committed results** | `experiments/survival_loop/results.json`, `RESULTS.md` (written when run) |
-| `do experiment brain` | B1: does the brain predict better than traditional methods? | beats all counting baselines and v1 everywhere; beats flat pooling on conjunctive and delayed structure; ties on 2 worlds; **loses on hidden_mode** | `experiments/brain_b1/results.json` |
+| `do experiment brain` | B1: does the brain predict better than traditional methods? | beats all counting baselines and v1 in all six worlds; against flat pooling (logistic regression) its falsifier is **SUPPORTED** in 3/6 worlds over the whole life and 4/6 after learning, **FALSIFIED** on hidden_mode and (by a hair) rule_change, and on habitat over the whole life only | `experiments/brain_b1/results.json` |
 | `do experiment brain-memory` | B2: is a brain-coded life smaller than the best compressors? | 0.7–11.6% above the floor vs 24–111% for the best general compressor; exact replay 6/6 | `experiments/brain_memory/results.json` |
 
 ### Notes
@@ -1368,7 +1410,12 @@ reflex-core genesis on the same host (2.4% free disk, priority 2.046). The state
 to have been reset between the two, and the repo does not say which one counts as the
 first utterance. The H5 causal-chain figures in `RESULTS.md` (0.0239, priority 2.046)
 are a hard-coded literal in `first_boot.py` and do not match the record quoted above.
-`do experiment first-boot` also boots the real organism once.
+`do experiment first-boot` also boots the real organism twice (a canonical boot and a
+warm second boot). The canonical boot writes artifacts like `do boot`, so on a fresh clone
+it overwrites the committed genesis record. It also overwrites the tracked `RESULTS.md`
+and `matrix.json`, which currently hold the LLM run (`matrix.json` = `matrix_llm.json`);
+nothing updates `matrix_reflex.json`. `git checkout -- experiments/first_boot` restores
+all of them.
 
 **Reflex vs LLM.** Both cores received the identical plan, and only the verbalizer
 differed (Groq, `openai/gpt-oss-120b`).
@@ -1380,6 +1427,9 @@ differed (Groq, `openai/gpt-oss-120b`).
 | own condition's value carried | 13/13 | 9/13 |
 | identical text despite changed state | 0/11 | 2/11 |
 | H1a | SUPPORTED | WEAK |
+
+Noise-floor and value-carried figures are from `docs/LLM_COMPARISON.md`; the committed
+matrices do not store them (the LLM determinism check is recorded only as DIVERGED).
 
 "A language model makes D.O. sound better and say less." In `nominal_no_network`, the
 LLM produced text byte-identical to the nominal condition, although network reachability
@@ -1400,7 +1450,11 @@ frugality 0.421 against a target of 0.5), with the host disk escalated throughou
 every other k stayed 1.0. Correcting a belief pays off only when it changes which *set*
 of actions is taken, not just their order. Greedy selection converged on the same set
 either way, and his own record-keeping grows the ledger and memory each cycle, so the goal
-went unmet in both arms. The repo's compression figures are inconsistent across files
+went unmet in both arms. Caveat: in learning-arm runs 2–5 (where the rank change
+appears), the organism started about 24.5 KB larger with a quota about 35 KB larger than
+in every ablated run, so the arms did not start identically, contrary to
+`docs/JOURNAL.md` M7. Both H4a and the "freed marginally less" outcome are confounded with
+that starting state. The repo's compression figures are inconsistent across files
 ("~7×", "~5.7×", "~2× → ~1.74×"). The 1.74 is the learned k (actual/predicted), not a
 compression ratio.
 
@@ -1414,6 +1468,10 @@ recovery paths, while `write_recovery_snapshot` spends storage to create one.
   `resources.own.recovery_paths`, ran `write_recovery_snapshot`, and recovery paths went
   1 → 2, meeting the objective.
 
+The harness deletes all snapshots before each arm so recovery paths start scarce; an
+earlier configuration left fear no actionable lever (recovery sensitivity 0.0). The
+verdict comes from one run per arm, and the fear-ON arm acted once, in a single cycle.
+
 The measured sensitivities were continuity 0.667 and recovery 0.333. No action moves the
 host disk, so lever selection chose recovery. The first pass used fear as a multiplier
 (at most a ~17% nudge, which could not flip an ordering) and was reported as COSMETIC.
@@ -1424,8 +1482,10 @@ simply omits the mortality drive.
 **Live internet (E1–E5).** Run on 2026-09-10:
 
 - **E1:** 5/5 anchor hosts resolved.
-- **E2:** the inventory kept usable, requires-human (network) and absent (money)
-  distinct.
+- **E2:** requires-human (network) and absent (money) were kept distinct, but
+  `usable_now` listed `qwen3-coder:30b` (17.3 GiB) as usable with 2.4 GiB of RAM
+  available, because `usable_now` ignores affordability. The PASS criterion is only that
+  the inventory is non-empty.
 - **E3:** the top constraint was his own footprint, 6,401,368 bytes against a
   2,097,152-byte quota (305%).
 - **E4:** a frugality goal was derived with no subject string.
@@ -1437,13 +1497,14 @@ internet. It is verbatim in `experiments/live_internet/first_live_utterance.txt`
 result files do not record whether `net.http` was approved interactively or with
 `--approve`.
 
-**Explore.** The six targets were CLAUDE, AZURE, EFC, VSCODE, ELEVENLABS and GROQ, all
-names taken from environment-variable prefixes:
+**Explore.** The six targets were names taken from environment-variable prefixes on the
+author's machine (listed in `experiments/explore/results.json`; `docs/JOURNAL.md` says
+such names should be scrubbed before anything is made public, so they are not repeated
+here):
 
 - four returned HTTP 404;
-- one (EFC) was a disambiguation page;
-- one "hit" was the Wikipedia article "Claude (singer)", a name match to an unrelated
-  subject.
+- one was a disambiguation page;
+- one "hit" was a Wikipedia article about an unrelated subject that shares the name.
 
 The local model was not among his top curiosities. The harness describes this as
 exposure, not autonomy.
@@ -1532,7 +1593,8 @@ DEFAULTS (kernel/config.py)  <  config/default.json  <  DO_<SECTION>__<KEY> env 
 | `stt.seconds` / `mic_device` / `model_dir` / `venv_python` | 5 / `""` / `D:/do-models/…` | voice in |
 
 Declared but never read anywhere in `src/do`: `budget.max_ticks`, `stt.enabled`,
-`comms.voice.speak_utterances`, `creator.name`, `creator.channel`, `creator.present`.
+`comms.voice.speak_utterances`, `creator.name`, `creator.channel`, `creator.present`,
+`resources.disk_free_bytes_floor`.
 
 ---
 
@@ -1606,7 +1668,7 @@ DO/
 ├── experiments/            committed results
 │   ├── first_boot/         genesis record, latest/, RESULTS.md, matrix*.json
 │   ├── h4_learning/        results.json
-│   ├── fear_ablation/      results.json, trials/
+│   ├── fear_ablation/      results.json (trials/ is leftover workspace padding, not results)
 │   ├── live_internet/      results.json, first_live_utterance.txt
 │   ├── explore/            results.json
 │   ├── brain_b1/           results.json
@@ -1632,7 +1694,7 @@ DO/
 | [`docs/DO_INTERNET_HABITAT.md`](docs/DO_INTERNET_HABITAT.md) | Habitat model, world-entity states, resources under the zero-money condition, the internet boundary, 24/7 operation. It says STT is absent; `do listen` now exists. |
 | [`docs/DO_VOICE.md`](docs/DO_VOICE.md) | Voice as an interface, providers, the ElevenLabs situation, the "Sir" relationship. It says STT is not built and omits `talk`, `reply`, `listen` and the inbox. |
 | [`docs/ROADMAP.md`](docs/ROADMAP.md) | Eleven phases, each with a falsification condition, and what would make the author stop |
-| [`docs/JOURNAL.md`](docs/JOURNAL.md) | Chronological build log M0–M9, security incidents, and what has been genuinely autonomous |
+| [`docs/JOURNAL.md`](docs/JOURNAL.md) | Chronological build log M0–M9, security incidents, and what has been genuinely autonomous. It has no entries for the voice, habitat, internet E1–E5, `do serve`, STT, explore or conversation-layer work, and its "single session on 2026-09-10" line predates M9. |
 
 ---
 
@@ -1645,16 +1707,16 @@ says what exists and what has not been run.
 | Phase | Status | Evidence |
 |---|---|---|
 | 0 Concept and architecture | **done** | `DO_CONCEPT.md`, `ARCHITECTURE.md`, `SAFETY.md` |
-| 1 The seed | **done** | first-boot protocol; H1a, H2, H5 supported; H1b weak |
+| 1 The seed | **done** | first-boot protocol; H1a, H2, H5 supported; H1b weak, so H1 overall WEAK (not supported) |
 | 2 Memory that earns the name | not started as specified | non-destructive revision exists; the MEMORY_REVISION experiment has not been run |
-| 3 Models that predict | partial, synthetic only | B1: the brain beats the persistence baseline in all six synthetic worlds. Prediction on the real machine (PREDICTION_ERROR, B6) has not been run. |
+| 3 Models that predict | partial | Housekeeping actions predict before acting and are calibrated (H4). The research brain beats persistence in six synthetic worlds but is not D.O.'s self/world model and is not connected. PREDICTION_ERROR on the real machine (B6) has not been run. |
 | 4 Internet perception | partial | read-only E1–E5 and explore. The SOURCE_TRUST injection gate has not been run; corroboration is never called. |
 | 5 Tool acquisition | not started | no MCP client |
 | 6 Capability creation | not started | gate G1 not passed; `proc.exec` denied; only retained compositions of seeded actions |
 | 7 Learning and evaluation | partial | H4 run: decision changed, outcome did not. The full held-out S0/S1/S0′ protocol has not been run. |
 | 8 Self-improvement | not started | — |
 | 9 Resource intelligence | partial | frugality and fear experiments on real and controlled workspaces. The simulated resource world and BINDING_CONSTRAINT have not been run. |
-| 10 Persistence and distribution | partial | `do serve`, single-instance lock, Windows logon task. No ledger replication or migration; CONTINUITY not run; G4 not demonstrated. |
+| 10 Persistence and distribution | not started | Prerequisite G4 has not been demonstrated. No replication, migration or supervised restart exists; CONTINUITY not run. (`do serve` and the logon task exist but are not this phase's deliverables.) |
 
 Brain milestones B3–B7 are tracked separately in `docs/BRAIN.md` §7.
 
@@ -1676,7 +1738,8 @@ been run. The brain does learn a predictive model, but only in synthetic worlds,
 is not connected to the organism.
 
 Not autonomous in any broad sense. His planner chooses among eight actions, seven on his
-own footprint and one read-only lookup, all through a gate whose policy he cannot write.
+own footprint and one read-only lookup. Network, subprocess and sandboxed file effects go
+through a gate whose policy he cannot write; his own bookkeeping writes do not.
 Constraints he cannot act on, such as the host disk and the single habitat, are
 escalated to the creator, not pursued.
 
