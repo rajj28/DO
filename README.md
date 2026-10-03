@@ -65,6 +65,8 @@ do verify            re-walk the ledger hash chain
 do kill / do resume  engage or release the kill switch
 do reset             archive all runtime state (asks first; moves, never deletes)
 do experiment first-boot     the DO_FIRST_BOOT protocol
+do experiment brain          B1: the brain vs traditional predictors (docs/BRAIN.md)
+do experiment brain-memory   B2: a life stored as the brain's residuals, replayed exactly
 ```
 
 Flags: `--core reflex|llm`, `--provider ollama|gemini|openai|anthropic`, `--model NAME`,
@@ -195,6 +197,7 @@ spend.
 | `docs/FIRST_BOOT.md` | The experiment protocol, the result, and three flaws it found in itself |
 | `docs/ROADMAP.md` | Eleven phases, each with a falsification condition |
 | `docs/JOURNAL.md` | Chronological build log: every milestone, why, and what it returned |
+| `docs/BRAIN.md` | The brain: one objective (bits), units that pay rent, residual memory; B1/B2 results and open problems |
 | `docs/DO_EXPERIMENTS.md` | All experiment results, honesty ledger, first live utterance |
 | `docs/DO_INTERNET_HABITAT.md` | Habitat model, world-states, zero-money resources |
 | `docs/DO_VOICE.md` | How to talk to him; voice/chat; the "Sir" relationship |

@@ -334,3 +334,54 @@ threatened, snapshot."** The chain is: trend → p_interrupt → p_loss → mort
 **What is still seeded:** the mortality drive's weight (1.5), the horizon (20
 operations), and `CONTINUITY_METRICS` — the three resources whose exhaustion counts as
 an interruption. Those are assumptions, not discoveries.
+
+---
+
+## M9 — A brain with one objective (B1, B2)
+
+**Question.** Can D.O. have a brain with no vector index and no retrieval step that
+predicts its world better than traditional methods, and is it smaller for it?
+
+**Design** (`docs/BRAIN.md`). The first proposal (seven "organs", Hebbian edges, TD) was
+taken apart first; §1 of BRAIN.md lists nine drawbacks. Its replacement has one
+objective, the code length of D.O.'s own life in bits. Knowledge lives in conjunctive
+*units* that are born from surprise via contrastive episodic recall, pooled
+log-linearly, pay rent in exact leave-one-out bits, forget when their own rule ruptures,
+and die when they stop paying.
+
+**What iteration found, in order** (each step was measured before the next was tried):
+
+1. *v1 baseline diverged.* With ~30 cues active, Rescorla–Wagner at 0.05 overshoots.
+   Its step was scaled per cue and its readout tuned in its favour before any comparison.
+2. *Newborns with influence made the brain confidently wrong* (4.4 bits/tick of excess
+   early). Newborn weight 0: no say until code length grants it.
+3. *Random structure search wrapped the right XOR pair in junk symbols.* Contrastive
+   recall ("what differed between the times it went this way and the times it went
+   that way?") plus generalization on success: excess on XOR fell from 1.17 to ~0.05.
+4. *Every target sat at capacity with untested junk.* Evidence-gated births, existence
+   rent, and fertility as a measured success rate made the brain 5–15× smaller at equal
+   accuracy. Rupture detection cut rule-change excess 3×.
+5. *Hidden mode stayed bad.* The hypothesis that rupture was misfiring was wrong (it
+   never fired there). The ideal Bayesian filter bound was computed (0.09), and inner
+   senses (feeding expectations back as input) were tried twice: **worse.** Switching
+   rent from a tax to a mortgage helped a little; a dense innate first-order layer fixes
+   it at 2–7× the units. Neither closes the gap. Reported as the open problem.
+
+**Results** (5 seeds × 3,000 ticks × 6 worlds):
+
+- B1: the brain beats all five classic baselines in every world, usually by 2–25×.
+  It beats logistic regression by 13× on XOR and 2.6× on delayed effects after
+  learning, ties on distractors and rule change, and **loses on hidden_mode** (0.36 vs
+  0.23). It is 1.5–9× smaller than logistic regression.
+- B2: the life stored as arithmetic-coded residuals of the brain is **0.7–11.6% above
+  the entropy floor**. The best general compressor is 24–111% above it, even when given
+  one byte per value. Replay is bit-exact in all six worlds.
+
+**Ablations:** contrastive recall is the mechanism everything depends on (without it
+habitat excess goes from 0.92 to 3.28).
+
+**What is seeded:** ~12 mechanism constants (window 3, order 3, half-lives, thresholds).
+None names a variable, a value, or a relation.
+
+**Not yet:** hidden causes (B3), acting through the model (B4), curiosity as compression
+progress (B5), D.O.'s real trace (B6), grounded words (B7). All synthetic so far.
