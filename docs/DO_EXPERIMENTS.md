@@ -13,6 +13,7 @@ do experiment first-boot --core llm --provider groq --approve llm.generate
 do experiment h4                  # learning ablation
 do experiment fear                # mortality / fear ablation
 do experiment live-internet --approve net.http,net.dns
+do experiment h8                  # learning what an action is worth (simulated habitat)
 ```
 
 ---
@@ -36,6 +37,12 @@ do experiment live-internet --approve net.http,net.dns
 | E3 | constraint discovery | **PASS** | own footprint over quota | — |
 | E4 | goal emergence | **PASS** | derived, no subject string | — |
 | E5 | acquire knowledge not in initial state | **PASS** | fetched a fact, stored `reported` conf 0.35 | one unverified source only |
+| H8a | learning happened (§C protocol, simulated habitat) | **SUPPORTED** | S0−S1 +0.0597 [+0.0563, +0.0630]; S0 == S0′ | — |
+| H8b | learned values improve *outcomes* (the H4b question) | **SUPPORTED** | td(0.9) 0.0056 vs H4's planner 0.0094 (−41%), best one-step 0.0070 (−20%) | — |
+| H8c | it is temporal credit assignment | **SUPPORTED** | γ=0.9 vs γ=0: −25%; flow action 94% vs 27% of runs | same-cycle payoff confound caught in pilot, fixed before test |
+| H8d | the gain lives where flows dominate | **SUPPORTED** | γ gap high − low growth +0.0036 [+0.0024, +0.0052] | — |
+| H8e | remove the flow action, the gain goes | **SUPPORTED** | gap +0.0019 → −0.0003 [−0.0007, +0.0001] | — |
+| H8f | hand-written flow term vs the learner | **HAND-WRITTEN BETTER** | 0.0037 vs 0.0056; learner recovers 44% of it unaided | 12k training runs worse than 4k (instability) |
 
 ---
 
@@ -57,6 +64,8 @@ fluent readout compresses harder.**
 **H4.** Carried experience changed *which action ranked first* (SUPPORTED) but not the
 *outcome* (NOT SUPPORTED): correcting a belief only pays off if it changes which *set*
 of actions is taken, not their order. Honest ceiling of the mechanism.
+
+**H8.** The H4b question asked again with a learner whose target is the drive, in a simulated habitat with the live host's dynamics. TD at γ = 0.9 cut error 41% against H4's calibrated planner; the same learner at γ = 0 was 25% worse, and removing the one action whose payoff lies in the future erased that difference. A hand-written term still beat the learner. Write-up: `H8_FLOWS.md`.
 
 **Fear.** First pass: COSMETIC — the signal rose correctly but a multiplier channel
 could not flip an ordering, and cranking it would have been the hidden rule the design
@@ -97,11 +106,11 @@ total bytes?
 | | |
 |---|---|
 | **What was genuinely autonomous** | finding the binding constraint; forming the goal (derived, no subject strings); classifying components safe/unsafe from the registry; choosing to investigate; correcting its own compression estimate; promoting the corrected action; switching to state-preservation under threat |
-| **What was seeded** | the action primitives; the stage order (diagnose→reduce); `CONTINUITY_METRICS`; the mortality drive's weight and horizon; the salience weights |
-| **What was learned** | one calibration factor (compression ~2×→~1.74×) and its effect on action ranking |
+| **What was seeded** | the action primitives; the stage order (diagnose→reduce); `CONTINUITY_METRICS`; the mortality drive's weight and horizon; the salience weights; for H8, the whole habitat, its flow action and the learner's features |
+| **What was learned** | one calibration factor (the learned correction k ≈ 1.74 against a 2.0× prior) and its effect on action ranking; in the simulated habitat (H8), action values from the drive signal, including the worth of a flow action no score could see |
 | **What was composed** | one retained procedure: `resolve:frugality:diagnose_footprint+clear_experiment_matrix` (primitives seeded, composition not) |
 | **What failed** | H1b, H3 (then fixed), H4b, the first fear pass (then fixed); ElevenLabs voice (paid-plan wall) |
-| **What we expected but did not observe** | learning improving *outcomes*, not just decisions (H4b); an LLM improving observation (it degraded it) |
+| **What we expected but did not observe** | learning improving *outcomes*, not just decisions (H4b; observed in simulation by H8, not yet on the live organism); an LLM improving observation (it degraded it); more training helping the H8 learner (12k runs did worse than 4k) |
 | **What D.O. could not do** | create a second habitat; discover an external resource autonomously; use a paid voice; run STT |
 | **What D.O. asked the creator** | to resolve constraints it has no action for (host disk, single-habitat dependency) — escalations, not goals |
 

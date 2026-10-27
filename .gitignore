@@ -16,3 +16,5 @@ __pycache__/
 # per-condition experiment scratch (regenerable by re-running)
 experiments/first_boot/matrix/
 experiments/survival_loop/trials/
+# H8 dress rehearsals on validation worlds and quick smoke runs; the record is h8_flows/
+experiments/h8_flows_*/

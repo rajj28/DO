@@ -9,7 +9,8 @@ chain (measurement → drive error → gap priority → attention → speech act
 which every step is written to a hash-chained ledger. A separate research component, the
 brain in `src/do/brain/`, predicts the next frame of a world and is scored in bits. It
 has been tested on synthetic worlds only and is **not yet connected** to the running
-organism.
+organism. A simulated habitat in `src/do/sim/`, built from his storage dynamics, tests
+whether he can learn what an action is *worth* (H8).
 
 **Zero dependencies.** Python 3.11+ and the standard library. There is no `pip install`,
 no model download and no API key. The seed must not be able to fail for infrastructural
@@ -18,8 +19,18 @@ to be interpretable. Voice input, a paid voice and a language model are optional
 outside the seed.
 
 **Status:** v0.2.0 (`src/do/__init__.py`) · Python 3.11+, standard library only ·
-**36 tests, all passing** (`python -m unittest discover -s tests`, run on Python 3.11.15
-on 2026-10-03) · research prototype, not a product.
+**47 tests, all passing** (`python -m unittest discover -s tests`, run on Python 3.12.10
+on 2026-10-27) · research prototype, not a product.
+
+### At a glance
+
+| | result |
+|---|---|
+| Behaviour from state | His first utterance tracks his measured state: content changed under all 11 perturbations (H1a), and he found his own binding constraint, a 98%-full disk, unprompted (H5). Attention re-targeting is only WEAK (H1b). |
+| Negatives, kept | H3 falsified, then fixed. H4: calibrating his action models changed decisions, not outcomes. A language model made him sound better and say less. |
+| Learning to predict | The brain, an online learner scored in bits, beats four counting baselines in all 6 synthetic worlds and online logistic regression 13× on XOR, and loses to it on hidden state (B1). His life stored as its residuals lands 0.7–11.6% above the entropy floor (B2). |
+| Learning what actions are worth | In a simulated habitat with his storage dynamics, TD learning on his own drive signal cut drive error 41% against H4's calibrated planner on 300 held-out worlds. Looking ahead is the cause: remove the one action whose payoff lies in the future and the gain disappears. A hand-written term still beats the learner (H8, [`docs/H8_FLOWS.md`](docs/H8_FLOWS.md)). |
+| Instrumentation | Integrity gates refuse to report contaminated runs. They caught 10/13 silent LLM fallbacks, a treatment that never reached its subject, and a same-cycle payoff confound in H8's own habitat. |
 
 The author refers to the organism as "he" and to the human as "the creator". This README
 does the same.
@@ -475,6 +486,7 @@ and exits with code 2.
 | `do experiment survival` | `survival-loop` | survival-loop protocol (H3′, H7, MAPE-based H4, live run) |
 | `do experiment brain` | `brain-b1`, `b1` | B1: brain vs traditional predictors |
 | `do experiment brain-memory` | `memory`, `b2` | B2: a life stored as the brain's residuals |
+| `do experiment h8 [--quick] [--validate]` | `flows`, `h8-flows` | H8: learning what an action is worth, in the simulated habitat (`--validate` runs on validation worlds, `--quick` uses 3 seeds) |
 
 `--full` is accepted but currently unused: `first_boot.run()` ignores it. Note that
 `do experiment memory` runs B2, not the `do memory` command, and that an unrecognised
@@ -588,7 +600,8 @@ confidence and the number of alternatives considered.
 | `resources/` | Resource inventory that keeps availability and authorization separate |
 | `comms/` | `converse.py` (conversation layer), `voice.py` (TTS providers, playback, address), `notify.py` (notifications, outbox) |
 | `brain/` | Research cortex: `cortex.py`, `codec.py`, `worlds.py`, `baselines.py`. Not wired into the cycle. |
-| `experiments/` | One harness per experiment (first_boot, h4_learning, fear_ablation, live_internet, explore, survival_loop, brain_b1, brain_memory) |
+| `sim/` | Simulated habitat with his storage dynamics and the live frugality drive as reward (`habitat.py`); agents that see only observations: the live planner unmodified, H4's calibration, linear Q-learning (`agents.py`). Not wired into the cycle. |
+| `experiments/` | One harness per experiment (first_boot, h4_learning, fear_ablation, live_internet, explore, survival_loop, brain_b1, brain_memory, h8_flows) |
 
 ---
 
@@ -1391,6 +1404,7 @@ prominently as successes.
 | `do experiment survival` | H3′ (`tick()` vs `cycle()`), H7 (does acting relieve the drive?), H4 by prediction error with a calibration wipe; its last step runs 6 `cycle()`s on the real organism | **no committed results** | `experiments/survival_loop/results.json`, `RESULTS.md` (written when run) |
 | `do experiment brain` | B1: does the brain predict better than traditional methods? | beats all counting baselines and v1 in all six worlds; against flat pooling (logistic regression) its falsifier is **SUPPORTED** in 3/6 worlds over the whole life and 4/6 after learning, **FALSIFIED** on hidden_mode and (by a hair) rule_change, and on habitat over the whole life only | `experiments/brain_b1/results.json` |
 | `do experiment brain-memory` | B2: is a brain-coded life smaller than the best compressors? | 0.7–11.6% above the floor vs 24–111% for the best general compressor; exact replay 6/6 | `experiments/brain_memory/results.json` |
+| `do experiment h8` | H8: in a simulated habitat with his storage dynamics, does learning what actions are worth improve outcomes where H4's calibration could not? 300 held-out worlds, 10 seeds, S0/S1/S0′ | H8a–H8e **SUPPORTED**: TD at γ = 0.9 0.0056 error/cycle vs H4's calibrated planner 0.0094 and the best one-step planner 0.0070; γ = 0 0.0074; removing the flow action erases the γ gain · H8f: a hand-written flow term **beats the learner** (0.0037) | `experiments/h8_flows/` (results.json, RESULTS.md, figures); `docs/H8_FLOWS.md` |
 
 ### Notes
 
@@ -1458,6 +1472,16 @@ that starting state. The repo's compression figures are inconsistent across file
 ("~7×", "~5.7×", "~2× → ~1.74×"). The 1.74 is the learned k (actual/predicted), not a
 compression ratio.
 
+**H8.** H4's goal went unmet because his own bookkeeping grew ~23 KB per cycle and ate
+half of what his actions freed. The binding problem was a flow, and the planner, which
+rejects any action predicting zero bytes, can only value stocks. H8 rebuilt those
+dynamics as a simulated habitat with one hypothetical flow action
+(`consolidate_bookkeeping`, not in the live registry), the live frugality `Drive` as
+reward, and seven integrity gates. Learning per se bought little (γ = 0 roughly matches
+the planner acting every cycle). Credit assignment through time paid (γ = 0.9: −25%), and
+only through the flow action. The hand-written term that wins was written after the
+diagnosis. Details and limits: `docs/H8_FLOWS.md`.
+
 **Fear.** There are two opposed actions: `prune_snapshots` reclaims storage and destroys
 recovery paths, while `write_recovery_snapshot` spends storage to create one.
 
@@ -1524,16 +1548,18 @@ exposure, not autonomy.
 ## Tests
 
 ```bash
-python -m unittest discover -s tests -v     # 36 tests, stdlib only, ~20 s here
+python -m unittest discover -s tests -v     # 47 tests, stdlib only, ~30 s here
 ```
 
-Measured on 2026-10-03 (Python 3.11.15): `Ran 36 tests … OK`.
+Measured on 2026-10-03 (Python 3.11.15): `Ran 36 tests … OK`. Re-measured with
+`test_sim.py` on 2026-10-27 (Python 3.12.10): `Ran 47 tests … OK`.
 
 | File | Tests | What they check |
 |---|---|---|
 | `tests/test_invariants.py` | 13 | **Gate chokepoint:** no module outside `do.effectors` imports network/process modules; the inverse (the gate does import `socket` and `urllib`); core effect kinds are routed in `Gate._perform`. **Zero dependency:** every import is stdlib or `do`. **Honesty:** memory writes require provenance; belief revision is non-destructive; web content is never OBSERVED. **Ledger:** tampering is detected at the right `seq`; DECISION payloads contain no reasoning trace. **Policy:** default deny; the kill switch halts effects; a `../../` sandbox escape is blocked; the budget is metered and not refilled. |
 | `tests/test_cognition.py` | 16 | Question text is derived from slot keys; drive error flows into gap priority; an actionable gap outranks an unactionable one; no gap when a resource is abundant; the speech act is an argmax, not a constant; a perturbation changes the utterance; the utterance contains measured values; no subject strings in goal formation; a goal is derived from drive and registry; a second boot carries unresolved questions; identity survives restart; `installed_unaffordable` is its own state; an affordable model is available; ticks run with no human; `investigate_referent` moves the comprehension metric; a comprehension goal forms once survival is relieved. |
 | `tests/test_brain.py` | 7 | Finds the XOR pair (a paid-off `{a,b}` unit with p > 0.8, and excess under half of Markov-1's); noise targets get no paid-off units, while an `x=k@0 → y` unit is paid off; rupture recovers faster than no rupture; predictions are proper distributions; same seed gives the same brain; a 400-tick habitat life replays exactly at under 1/4 of packed size; a brain with a different `half_life` cannot read the record. |
+| `tests/test_sim.py` | 11 | H8's habitat and agents: the books balance over 300 random lives and nothing goes negative; the observation is the contract, read-only, and exposes no hidden parameter; the flow action's immediate reward equals WAIT's and it cuts growth later; rotation under-promises like the live registry; the reward is the live frugality `Drive`; a world is a pure function of its seed; the agents module never names a hidden parameter (AST); the live planner never chooses the flow action; features describe the situation; wiping restores the untrained agent exactly; a γ = 0 learner cannot separate the flow action from WAIT. |
 
 Not covered by any test: the conversation layer, voice, notifications, the LLM provider
 adapters, `do serve` and the survival loop end to end.
@@ -1672,9 +1698,10 @@ DO/
 │   ├── live_internet/      results.json, first_live_utterance.txt
 │   ├── explore/            results.json
 │   ├── brain_b1/           results.json
-│   └── brain_memory/       results.json
+│   ├── brain_memory/       results.json
+│   └── h8_flows/           results.json, RESULTS.md, learning_curve.svg, ablation.svg
 ├── src/do/                 the organism and the brain (see Package map)
-├── tests/                  test_invariants.py, test_cognition.py, test_brain.py
+├── tests/                  test_invariants.py, test_cognition.py, test_brain.py, test_sim.py
 └── var/                    runtime state; created on first boot; gitignored
 ```
 
@@ -1690,11 +1717,12 @@ DO/
 | [`docs/FIRST_BOOT.md`](docs/FIRST_BOOT.md) | The DO_FIRST_BOOT protocol and the original reflex-core result, three flaws the experiment found in itself, and the lossy-readout finding. §4 does not mention the H3 fix. |
 | [`docs/DO_EXPERIMENTS.md`](docs/DO_EXPERIMENTS.md) | Results table for every experiment, the honesty ledger, integrity gates that fired, and the first live-internet utterance |
 | [`docs/LLM_COMPARISON.md`](docs/LLM_COMPARISON.md) | Reflex vs LLM on the same plan: fluency up, observation down; how the comparison nearly went wrong |
+| [`docs/H8_FLOWS.md`](docs/H8_FLOWS.md) | H8: why H4's learner could not improve outcomes (stocks vs flows), the simulated habitat, the pre-registration and validation pilot, results, and what they do not show |
 | [`docs/BRAIN.md`](docs/BRAIN.md) | The brain: critique of the first design, architecture, prior art, B1/B2 results, negative results, milestones B3–B7 |
 | [`docs/DO_INTERNET_HABITAT.md`](docs/DO_INTERNET_HABITAT.md) | Habitat model, world-entity states, resources under the zero-money condition, the internet boundary, 24/7 operation. It says STT is absent; `do listen` now exists. |
 | [`docs/DO_VOICE.md`](docs/DO_VOICE.md) | Voice as an interface, providers, the ElevenLabs situation, the "Sir" relationship. It says STT is not built and omits `talk`, `reply`, `listen` and the inbox. |
 | [`docs/ROADMAP.md`](docs/ROADMAP.md) | Eleven phases, each with a falsification condition, and what would make the author stop |
-| [`docs/JOURNAL.md`](docs/JOURNAL.md) | Chronological build log M0–M9, security incidents, and what has been genuinely autonomous. It has no entries for the voice, habitat, internet E1–E5, `do serve`, STT, explore or conversation-layer work, and its "single session on 2026-09-10" line predates M9. |
+| [`docs/JOURNAL.md`](docs/JOURNAL.md) | Chronological build log M0–M10, security incidents, and what has been genuinely autonomous. It has no entries for the voice, habitat, internet E1–E5, `do serve`, STT, explore or conversation-layer work, and its "single session on 2026-09-10" line predates M9. |
 
 ---
 
@@ -1713,9 +1741,9 @@ says what exists and what has not been run.
 | 4 Internet perception | partial | read-only E1–E5 and explore. The SOURCE_TRUST injection gate has not been run; corroboration is never called. |
 | 5 Tool acquisition | not started | no MCP client |
 | 6 Capability creation | not started | gate G1 not passed; `proc.exec` denied; only retained compositions of seeded actions |
-| 7 Learning and evaluation | partial | H4 run: decision changed, outcome did not. The full held-out S0/S1/S0′ protocol has not been run. |
+| 7 Learning and evaluation | partial | H4 run: decision changed, outcome did not. H8 ran the full held-out S0/S1/S0′ protocol in a simulated habitat: SUPPORTED. It has not been run on the live organism. |
 | 8 Self-improvement | not started | — |
-| 9 Resource intelligence | partial | frugality and fear experiments on real and controlled workspaces. The simulated resource world and BINDING_CONSTRAINT have not been run. |
+| 9 Resource intelligence | partial | frugality and fear experiments on real and controlled workspaces; a first simulated resource world (`sim/habitat.py`: one drive, storage only) used by H8. BINDING_CONSTRAINT has not been run. |
 | 10 Persistence and distribution | not started | Prerequisite G4 has not been demonstrated. No replication, migration or supervised restart exists; CONTINUITY not run. (`do serve` and the logon task exist but are not this phase's deliverables.) |
 
 Brain milestones B3–B7 are tracked separately in `docs/BRAIN.md` §7.
@@ -1731,11 +1759,13 @@ Not alive and not self-aware. Not a "digital organism" in the sense the artifici
 literature established for that phrase (Tierra, Avida), which requires real replication
 under real selection. He has neither.
 
-Not, on the project's own definition, shown to learn. One calibration factor is learned
-and it changes which action ranks first (H4a). It has not been shown to improve outcomes
-(H4b NOT SUPPORTED), and the full held-out ablation protocol in `DO_CONCEPT.md` §C has not
-been run. The brain does learn a predictive model, but only in synthetic worlds, and it
-is not connected to the organism.
+Not, on the project's own definition, shown to learn **on the live organism**. One
+calibration factor is learned and it changes which action ranks first (H4a); it has not
+been shown to improve live outcomes (H4b NOT SUPPORTED). In a simulated habitat built from
+his storage dynamics, the full held-out protocol has now been run (H8): a TD learner on
+his own drive signal improves outcomes, and a hand-written term still does better. The
+brain does learn a predictive model, but only in synthetic worlds, and it is not
+connected to the organism.
 
 Not autonomous in any broad sense. His planner chooses among eight actions, seven on his
 own footprint and one read-only lookup. Network, subprocess and sandboxed file effects go
