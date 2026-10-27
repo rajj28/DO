@@ -392,3 +392,53 @@ None names a variable, a value, or a relation.
 
 **Not yet:** hidden causes (B3), acting through the model (B4), curiosity as compression
 progress (B5), D.O.'s real trace (B6), grounded words (B7). All synthetic so far.
+
+---
+
+## M10 — H8: learning what an action is worth
+
+**Question.** H4 showed D.O. learning what its actions *do* and never what happens as a
+result. Can a learner whose target is the drive itself improve outcomes, and is the gain
+the learning or the looking ahead?
+
+**The diagnosis that set it up.** Every H4 run freed ~210 KB and shrank the footprint by
+only ~100 KB: bookkeeping grew ~23 KB per cycle. The binding problem was a flow, and the
+planner can only value stocks. `planner.evaluate` rejects any action predicting zero
+bytes before scoring it, and calibration's error signal is one-step too, so it cannot
+repair that.
+
+**Built.** `src/do/sim/`: a simulated habitat with the live host's storage dynamics
+(ranges bracketing H4's measurements), one hypothetical flow action
+(`consolidate_bookkeeping`, not in the live registry), and the live frugality `Drive` as
+reward. Agents: the live planner called unmodified, H4's calibration, linear Q-learning
+at γ = 0 and γ = 0.9, and a planner with a hand-written flow term.
+`experiments/h8_flows.py` runs the §C protocol: 300 held-out worlds, 10 seeds,
+S0/S1/S0′, paired bootstrap, and seven integrity gates. The verdict rules were written
+before the test worlds were touched.
+
+**What the validation pilot caught first.** My own habitat let consolidation pay off in
+the same cycle, so a γ = 0 learner could half-see its value. That would have blurred the
+one distinction H8 exists to make. It now takes effect from the next cycle, and a unit
+test pins its immediate reward to WAIT's. The pilot also showed 12,000 training runs doing
+worse than 4,000, so the budget was fixed at 4,000 and the instability is reported.
+
+**Result** (test worlds, three runs with identical numbers; between them only docstrings
+and the code-hash computation changed):
+
+| | error / cycle | |
+|---|---|---|
+| td(0.9) | 0.0056 | 41% below H4's calibrated planner (0.0094), 20% below the best one-step planner (0.0070) |
+| td(0) | 0.0074 | 25% worse than γ = 0.9; finds the flow action in 27% of runs (chance) vs 94% |
+| hand-written flow term | 0.0037 | **beats the learner**; the learner found 44% of its improvement with no hint |
+
+All six verdicts came out as predicted: H8a–H8e SUPPORTED, and H8f HAND-WRITTEN TERM
+BETTER. Removing the flow action erases the advantage of lookahead (−0.0003, CI spans
+zero).
+
+**What it teaches.** Learning per se bought little: γ = 0 roughly matches the planner that
+acts every cycle. Credit assignment through time is what paid, and only where a payoff
+lay in the future. A designer who already knows the missing term still wins. The case
+for learning has to be made on structure nobody anticipated, and that is the next test.
+
+**Not yet.** The live organism (the flow action does not exist there), acting through the
+brain (B4), and a habitat I did not write. Full write-up: `docs/H8_FLOWS.md`.

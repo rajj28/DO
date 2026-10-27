@@ -19,6 +19,7 @@
     do experiment survival              the survival-loop protocol
     do experiment brain                 B1: the brain vs traditional predictors
     do experiment brain-memory          B2: a life stored as the brain's residuals
+    do experiment h8 [--quick] [--validate]   H8: learning what an action is worth
 
 Global flags:
     --core reflex|llm        which cognition core verbalizes the utterance
@@ -610,6 +611,10 @@ def main(argv: list[str] | None = None) -> int:
         if which in ("survival", "survival-loop"):
             from .experiments.survival_loop import run as srun
             return srun(config)
+        if which in ("h8", "flows", "h8-flows"):
+            from .experiments.h8_flows import run as h8run
+            return h8run(config, quick="--quick" in rest,
+                         on_validation="--validate" in rest)
         from .experiments.first_boot import run
         return run(config, full="--full" in rest)
 
