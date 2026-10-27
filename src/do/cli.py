@@ -17,6 +17,8 @@
     do experiment live-internet         E1-E5 read-only internet perception
     do experiment explore               investigate his own top unknowns online
     do experiment survival              the survival-loop protocol
+    do experiment brain                 B1: the brain vs traditional predictors
+    do experiment brain-memory          B2: a life stored as the brain's residuals
 
 Global flags:
     --core reflex|llm        which cognition core verbalizes the utterance
@@ -599,6 +601,12 @@ def main(argv: list[str] | None = None) -> int:
         if which in ("fear", "fear-ablation", "mortality"):
             from .experiments.fear_ablation import run as frun
             return frun(config)
+        if which in ("brain-memory", "memory", "b2"):
+            from .experiments.brain_memory import run as mrun
+            return mrun(config)
+        if which in ("brain", "brain-b1", "b1"):
+            from .experiments.brain_b1 import run as brun
+            return brun(config)
         if which in ("survival", "survival-loop"):
             from .experiments.survival_loop import run as srun
             return srun(config)
